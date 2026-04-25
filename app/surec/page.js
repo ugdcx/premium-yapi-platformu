@@ -43,8 +43,8 @@ const roles = [
   },
   {
     icon: LayoutDashboard,
-    title: "Admin",
-    text: "Başvuruları, teklifleri, fiyat girişlerini, müşteri iletişimini ve operasyon durumlarını yönetir."
+    title: "Yönetim Ekibi",
+    text: "Başvuruları, teklifleri, fiyat girişlerini, müşteri iletişimini ve operasyon durumlarını tek merkezden yönetir."
   }
 ];
 
@@ -65,7 +65,7 @@ const fieldCards = [
 
 const adminCards = [
   ["Başvurular", "Yeni talepleri hizmet tipine ve önceliğe göre inceler."],
-  ["Kanban süreç yönetimi", "Yeni, inceleniyor, teklif hazır ve onaylandı kolonlarıyla takip eder."],
+  ["Kontrollü süreç yönetimi", "Yeni başvuru, inceleme, teklif ve onay aşamalarını düzenli şekilde takip eder."],
   ["Teklif oluşturma", "Kapsamı ve yol haritasını müşteri için netleştirir."],
   ["Fiyat girişi", "Tek fiyat ve ödeme bilgisini panele işler."],
   ["Müşteri iletişimi", "Telefon ve WhatsApp üzerinden hızlı geri dönüş sağlar."],
@@ -74,9 +74,9 @@ const adminCards = [
 
 export default function ProcessPage() {
   return (
-    <main className="min-h-screen bg-cream px-6 py-10 text-stoneDark">
+    <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6 sm:py-10">
       <div className="mx-auto max-w-7xl">
-        <header className="rounded-[2rem] bg-stoneDark p-8 text-white md:p-12">
+        <header className="rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-12">
           <div className="flex flex-wrap gap-5 text-sm text-white/55">
             <a href="/">Ana sayfa</a>
             <a href="/hizmetler">Hizmetler</a>
@@ -87,7 +87,7 @@ export default function ProcessPage() {
             <p className="text-sm uppercase tracking-[0.3em] text-white/35">
               Süreç Yönetimi
             </p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight md:text-7xl">
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
               Dijital Proje Kontrol Süreci
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
@@ -97,7 +97,7 @@ export default function ProcessPage() {
           </div>
         </header>
 
-        <section className="mt-10 rounded-[2rem] border border-black/10 bg-white/70 p-6 md:p-8">
+        <section className="mt-8 rounded-[2rem] border border-border bg-surface p-5 sm:p-6 md:mt-10 md:p-8">
           <SectionHeading
             eyebrow="Süreç Zaman Çizgisi"
             title="Her aşama görünür, kayıtlı ve takip edilebilir."
@@ -118,7 +118,7 @@ export default function ProcessPage() {
         <section className="mt-10">
           <SectionHeading
             eyebrow="Rol Bazlı Akış"
-            title="Müşteri, saha ekibi ve admin aynı operasyon modelinde çalışır."
+            title="Müşteri, saha ekibi ve yönetim ekibi aynı operasyon modelinde çalışır."
           />
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
             {roles.map((role) => {
@@ -126,13 +126,13 @@ export default function ProcessPage() {
               return (
                 <article
                   key={role.title}
-                  className="rounded-[2rem] border border-black/10 bg-white/70 p-7"
+                  className="rounded-[2rem] border border-border bg-surface p-7"
                 >
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-stoneDark text-white">
                     <Icon size={25} />
                   </div>
                   <h3 className="mt-8 text-2xl font-semibold">{role.title}</h3>
-                  <p className="mt-4 leading-7 text-black/60">{role.text}</p>
+                  <p className="mt-4 leading-7 text-muted">{role.text}</p>
                 </article>
               );
             })}
@@ -154,16 +154,16 @@ export default function ProcessPage() {
         />
 
         <CardGrid
-          eyebrow="Admin Ne Kontrol Eder?"
+          eyebrow="Yönetim Ekibi Ne Kontrol Eder?"
           title="Operasyon kararları tek merkezden yönetilir."
           items={adminCards}
           icon={BriefcaseBusiness}
         />
 
-        <section className="mt-10 rounded-[2rem] bg-stoneDark p-8 text-white md:p-12">
+        <section className="mt-8 rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:mt-10 md:p-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
+              <h2 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
                 Süreci kontrol altına almak için ilk başvuruyu oluşturun.
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-white/60">
@@ -193,11 +193,11 @@ function CardGrid({ eyebrow, title, items, icon: Icon }) {
         {items.map(([itemTitle, text]) => (
           <article
             key={itemTitle}
-            className="rounded-[1.5rem] border border-black/10 bg-white/70 p-6"
+            className="rounded-[1.5rem] border border-border bg-surface p-6"
           >
             <Icon className="text-gold" size={24} />
             <h3 className="mt-6 text-xl font-semibold">{itemTitle}</h3>
-            <p className="mt-3 text-sm leading-6 text-black/60">{text}</p>
+            <p className="mt-3 text-sm leading-6 text-muted">{text}</p>
           </article>
         ))}
       </div>
@@ -211,7 +211,7 @@ function SectionHeading({ eyebrow, title }) {
       <p className="text-sm uppercase tracking-[0.3em] text-black/40">
         {eyebrow}
       </p>
-      <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl">
+      <h2 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
         {title}
       </h2>
     </div>

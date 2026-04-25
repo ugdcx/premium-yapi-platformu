@@ -1,0 +1,167 @@
+CREATE A TRUST-BUILDING TIMELINE AND PHOTO PROOF SYSTEM.
+
+Important:
+- UI language must be Turkish
+- Focus on /client and /field
+- Do not add backend
+- Do not add real upload
+- Use demo data only
+- Keep design system consistency
+- Do not break login/auth
+
+Goal:
+Create a clear visual progress system where customers can see project updates with timestamp, area, note, photo count and proof status.
+
+---
+
+1. SHARED DEMO UPDATES
+
+If useful, create or update shared demo data for project updates.
+
+Each update should include:
+- id
+- date
+- time
+- area
+- note
+- photoCount
+- status
+- stage
+
+Areas:
+- Mutfak
+- Banyo
+- Salon
+- Dış Cephe
+- Elektrik
+- Tesisat
+
+Stages:
+- Öncesi
+- Süreç
+- Sonrası
+- Malzeme
+- Sorun
+
+Statuses:
+- Admin Onayında
+- Yayında
+- Sorun Var
+- Malzeme Eksik
+- Tamamlandı
+
+Example update:
+Bugün 14:30
+Alan: Mutfak
+Not: Mutfak dolap söküm işlemi tamamlandı.
+Fotoğraf: 8
+Stage: Süreç
+Status: Yayında
+
+---
+
+2. /FIELD IMPROVEMENT
+
+In /field recent updates:
+- Show updates as compact timeline cards
+- Include:
+  - time
+  - area
+  - note
+  - photo count
+  - stage chip
+  - status chip
+
+When worker submits a new update:
+- Add it to recent updates list locally if possible
+- Status should be “Admin Onayında”
+- Stage can default to “Süreç” unless selected
+
+Add stage selector chips:
+- Öncesi
+- Süreç
+- Sonrası
+- Malzeme
+- Sorun
+
+Keep it simple.
+
+---
+
+3. /CLIENT IMPROVEMENT
+
+Create or improve a section:
+“Kanıtlı İlerleme”
+
+Customer must see:
+- Timeline view
+- Gallery view style preview
+
+Timeline item must show:
+- Date/time
+- Area
+- Short note
+- Photo count
+- Stage chip
+- Status chip
+
+Add filters:
+- Tümü
+- Mutfak
+- Banyo
+- Salon
+- Dış Cephe
+- Elektrik
+- Tesisat
+
+Add stage filters:
+- Tümü
+- Öncesi
+- Süreç
+- Sonrası
+- Malzeme
+- Sorun
+
+Photo proof cards:
+- Use elegant placeholder blocks
+- Show area
+- stage
+- date/time
+- photo count
+- note
+
+Copy:
+“Yüklenen görseller, sahadaki ilerlemeyi tarih ve alan bazlı takip etmenizi sağlar.”
+
+---
+
+4. DESIGN RULES
+
+- Premium
+- Clear
+- Mobile-first
+- Trust-building
+- Not cluttered
+- Timeline should feel like proof, not social media feed
+- Use design system chips and cards
+
+---
+
+5. TECHNICAL
+
+- useState for filters
+- Demo data only
+- No backend
+- No real upload
+- Build must pass
+
+---
+
+After finishing:
+Run npm run build
+
+Summarize:
+- Timeline improvements
+- Photo proof improvements
+- Field update improvements
+- Build result

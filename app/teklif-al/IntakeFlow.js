@@ -206,30 +206,41 @@ export default function IntakeFlow() {
 
   if (submitted) {
     return (
-      <main className="min-h-screen bg-cream px-6 py-10 text-stoneDark">
+      <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6 sm:py-10">
         <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl items-center justify-center">
-          <section className="w-full rounded-[2rem] border border-black/10 bg-white/70 p-8 text-center shadow-2xl shadow-black/5 md:p-12">
+          <section className="w-full rounded-[2rem] border border-border bg-surface p-6 text-center shadow-2xl shadow-black/5 sm:p-8 md:p-12">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stoneDark text-gold">
               <CheckCircle2 size={32} />
             </div>
             <h1 className="mt-8 text-5xl font-semibold tracking-tight">
               Başvurunuz Alındı
             </h1>
-            <p className="mx-auto mt-5 max-w-xl leading-8 text-black/60">
+            <p className="mx-auto mt-5 max-w-xl leading-8 text-muted">
               Bilgileriniz şirket paneline iletildi. Ekibimiz inceleme sonrası
               sizinle iletişime geçecek.
             </p>
             <div className="mx-auto mt-6 w-fit rounded-full bg-cream px-5 py-2 text-sm font-medium text-stoneDark">
               Başvuru No: AG-2026-001
             </div>
-            <div className="mx-auto mt-8 grid max-w-lg gap-3 text-left">
+            <div className="mx-auto mt-8 grid max-w-2xl gap-4 text-left md:grid-cols-2">
+              <SummaryCard title="Hizmet tipi">
+                <p className="font-semibold">{selectedService?.title || "Tadilat & Değer Artırma Çalışmaları"}</p>
+              </SummaryCard>
+              <SummaryCard title="İletişim özeti">
+                <SummaryLine label="Ad Soyad" value={data.contact.name || "Ali Atmaca"} />
+                <SummaryLine label="Telefon" value={data.contact.phone || "Belirtilmedi"} />
+                <SummaryLine label="E-posta" value={data.contact.email || "Belirtilmedi"} />
+              </SummaryCard>
+            </div>
+            <div className="mx-auto mt-6 grid max-w-lg gap-3 text-left">
               {[
                 "Başvurunuz incelenir",
                 "Ekibimiz sizinle iletişime geçer",
                 "Teklif ve yol haritası hazırlanır",
+                "Onay sonrası süreç başlatılır",
                 "Süreç panelden takip edilir"
               ].map((item, index) => (
-                <div key={item} className="rounded-2xl bg-cream p-4 text-sm text-black/65">
+                <div key={item} className="rounded-2xl bg-cream p-4 text-sm text-muted">
                   {index + 1}. {item}
                 </div>
               ))}
@@ -239,13 +250,13 @@ export default function IntakeFlow() {
                 href="/client"
                 className="inline-flex justify-center rounded-full bg-stoneDark px-7 py-4 text-white"
               >
-                Müşteri Panelini Gör
+                Paneli Gör
               </a>
               <button
                 onClick={resetFlow}
-                className="inline-flex justify-center rounded-full border border-black/10 px-7 py-4"
+                className="inline-flex justify-center rounded-full border border-border px-7 py-4"
               >
-                Yeni Başvuru Oluştur
+                Ön Başvuru Oluştur
               </button>
             </div>
           </section>
@@ -255,9 +266,9 @@ export default function IntakeFlow() {
   }
 
   return (
-    <main className="min-h-screen bg-cream px-6 py-8 text-stoneDark">
+    <main className="min-h-screen bg-cream px-4 py-6 text-stoneDark sm:px-6 sm:py-8">
       <div className="mx-auto max-w-7xl">
-        <header className="grid gap-8 rounded-[2rem] bg-stoneDark p-8 text-white md:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
+        <header className="grid gap-6 rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
             <div className="flex gap-5">
               <a href="/" className="text-sm text-white/55">
@@ -270,7 +281,7 @@ export default function IntakeFlow() {
             <p className="mt-12 text-sm uppercase tracking-[0.3em] text-white/35">
               Akıllı Ön Başvuru
             </p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight md:text-7xl">
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
               Proje Yolculuğunuzu Başlatın
             </h1>
             <p className="mt-6 max-w-2xl leading-8 text-white/60">
@@ -288,7 +299,7 @@ export default function IntakeFlow() {
           </div>
         </header>
 
-        <section className="mt-8 rounded-[2rem] border border-black/10 bg-white/70 p-5 md:p-7">
+        <section className="mt-6 rounded-[2rem] border border-border bg-surface p-4 sm:p-5 md:p-7">
           <Stepper current={step} />
 
           <div className="mt-8">
@@ -309,7 +320,7 @@ export default function IntakeFlow() {
                         className={`rounded-[2rem] border p-6 text-left ${
                           isSelected
                             ? "border-gold bg-stoneDark text-white"
-                            : "border-black/10 bg-cream hover:border-gold hover:bg-white"
+                            : "border-border bg-cream hover:border-gold hover:bg-white"
                         }`}
                       >
                         <div
@@ -322,7 +333,7 @@ export default function IntakeFlow() {
                         <h3 className="text-2xl font-semibold">{service.title}</h3>
                         <p
                           className={`mt-4 leading-7 ${
-                            isSelected ? "text-white/60" : "text-black/60"
+                            isSelected ? "text-white/60" : "text-muted"
                           }`}
                         >
                           {service.value}
@@ -358,7 +369,7 @@ export default function IntakeFlow() {
               <StepShell
                 eyebrow="3. Adım"
                 title="Fotoğraf ve belge ekleyin."
-                description="Bu ilk sürümde dosyalar örnek etiketlerle temsil edilir."
+                description="Fotoğraf ve belgeler başvuru kapsamının doğru değerlendirilmesi için kullanılır."
               >
                 <button
                   onClick={addDemoFiles}
@@ -368,7 +379,7 @@ export default function IntakeFlow() {
                   <strong className="mt-5 text-2xl">
                     Dosyaları buraya sürükleyin veya seçin
                   </strong>
-                  <span className="mt-3 max-w-2xl leading-7 text-black/55">
+                  <span className="mt-3 max-w-2xl leading-7 text-muted">
                     Fotoğraf, tapu, imar durumu veya mevcut ilan görsellerinizi
                     buraya ekleyebilirsiniz.
                   </span>
@@ -383,7 +394,7 @@ export default function IntakeFlow() {
                     {data.files.map((file) => (
                       <span
                         key={file}
-                        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm text-black/65"
+                        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm text-muted"
                       >
                         <FileImage size={16} />
                         {file}
@@ -420,13 +431,13 @@ export default function IntakeFlow() {
                     placeholder="ornek@firma.com"
                   />
                   <label className="grid gap-2 md:col-span-2">
-                    <span className="text-sm font-medium text-black/60">
+                    <span className="text-sm font-medium text-muted">
                       Not / Ek açıklama
                     </span>
                     <textarea
                       value={data.contact.note}
                       onChange={(event) => setContact("note", event.target.value)}
-                      className="min-h-36 rounded-2xl border border-black/10 bg-cream px-5 py-4 outline-none placeholder:text-black/35"
+                      className="min-h-36 rounded-2xl border border-border bg-cream px-5 py-4 outline-none placeholder:text-black/35"
                       placeholder="Öncelikleriniz, zaman baskısı veya özel beklentiler"
                     />
                   </label>
@@ -461,7 +472,7 @@ export default function IntakeFlow() {
                     </div>
                   </SummaryCard>
                   <SummaryCard title="Dosyalar">
-                    <p className="text-black/60">
+                    <p className="text-muted">
                       {data.files.length
                         ? data.files.join(", ")
                         : "Dosya eklenmedi"}
@@ -472,11 +483,11 @@ export default function IntakeFlow() {
             )}
           </div>
 
-          <div className="mt-8 flex flex-col-reverse gap-3 border-t border-black/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-8 flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
             <button
               onClick={previousStep}
               disabled={step === 0}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-black/10 px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-35"
             >
               <ArrowLeft size={17} />
               Geri
@@ -496,7 +507,7 @@ export default function IntakeFlow() {
                 onClick={() => setSubmitted(true)}
                 className="inline-flex items-center justify-center rounded-full bg-gold px-7 py-4 text-sm font-medium text-stoneDark"
               >
-                Ön Başvuruyu Oluştur
+                Ön Başvuru Oluştur
               </button>
             )}
           </div>
@@ -540,7 +551,7 @@ function StepShell({ eyebrow, title, description, children }) {
       <h2 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">
         {title}
       </h2>
-      <p className="mt-4 max-w-3xl leading-8 text-black/60">{description}</p>
+      <p className="mt-4 max-w-3xl leading-8 text-muted">{description}</p>
       <div className="mt-8">{children}</div>
     </section>
   );
@@ -551,7 +562,7 @@ function Question({ question, value, onChange, onToggle }) {
     const selectedValues = question.type === "multi" ? value || [] : [value];
     return (
       <div className="rounded-[1.5rem] bg-cream p-5">
-        <p className="mb-4 text-sm font-medium text-black/65">{question.label}</p>
+        <p className="mb-4 text-sm font-medium text-muted">{question.label}</p>
         <div className="flex flex-wrap gap-2">
           {question.options.map((option) => {
             const isSelected = selectedValues.includes(option);
@@ -566,7 +577,7 @@ function Question({ question, value, onChange, onToggle }) {
                 className={`rounded-full px-4 py-2 text-sm ${
                   isSelected
                     ? "bg-stoneDark text-white"
-                    : "bg-white text-black/60 hover:bg-stoneDark hover:text-white"
+                    : "bg-white text-muted hover:bg-stoneDark hover:text-white"
                 }`}
               >
                 {option}
@@ -591,11 +602,11 @@ function Question({ question, value, onChange, onToggle }) {
 function Field({ label, value, onChange, placeholder }) {
   return (
     <label className="grid gap-2 rounded-[1.5rem] bg-cream p-5">
-      <span className="text-sm font-medium text-black/65">{label}</span>
+      <span className="text-sm font-medium text-muted">{label}</span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="rounded-2xl border border-black/10 bg-white px-5 py-4 outline-none placeholder:text-black/35"
+        className="rounded-2xl border border-border bg-white px-5 py-4 outline-none placeholder:text-black/35"
         placeholder={placeholder}
       />
     </label>

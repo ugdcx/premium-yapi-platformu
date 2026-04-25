@@ -1,0 +1,199 @@
+REBUILD THE ADMIN PANEL INTO A SCALABLE COMPANY OPERATIONS CENTER.
+
+Important:
+- UI language must be Turkish.
+- Focus on /admin.
+- Do not add backend.
+- Use demo data only.
+- Keep the design system from Task-26.
+- Keep role-based auth from Task-27.
+- Do not break login protection.
+
+Goal:
+The admin panel must feel like a real company management center, not a simple dashboard.
+
+Page:
+- /admin
+
+Required admin sections:
+1. Ana Ekran
+2. Gelen Başvurular
+3. Giden Teklifler
+4. Projeler
+5. Müşteriler
+6. Ustalar / Saha Ekibi
+7. Güncellemeler
+8. Ödemeler
+9. Belgeler
+10. Talepler
+11. Ayarlar
+
+Layout:
+- Use a premium sidebar or tab navigation.
+- Desktop: sidebar preferred.
+- Mobile: horizontal tabs or compact menu.
+- The selected section should be clear.
+
+1. Ana Ekran
+Show metric cards:
+- Yeni başvurular
+- İncelenen başvurular
+- Gönderilen teklifler
+- Onaylanan işler
+- Aktif projeler
+- Bekleyen müşteri talepleri
+
+Also show:
+- Recent activity list
+- Quick actions:
+  - Yeni başvuru incele
+  - Teklif hazırla
+  - Usta ata
+  - Güncelleme kontrol et
+
+2. Gelen Başvurular
+Create a professional applications management screen.
+
+Each application row/card must show:
+- Başvuru No
+- Müşteri adı
+- Telefon
+- Hizmet tipi
+- Konum
+- Tarih
+- Durum
+
+Statuses:
+- Yeni
+- İnceleniyor
+- Teklif Hazırlanıyor
+- Teklif Gönderildi
+- Onaylandı
+- Reddedildi
+
+Clicking an application opens a detail panel/modal with:
+- Customer information
+- Application answers
+- Service-specific details
+- Photo/file demo area
+- Internal admin note
+- Status update buttons
+- “Teklif Hazırla” button
+
+3. Giden Teklifler
+Create a professional offer management screen.
+
+Each offer row/card must show:
+- Teklif No
+- Müşteri
+- Hizmet tipi
+- Tutar
+- Durum
+- Geçerlilik tarihi
+- PDF durumu
+
+Statuses:
+- Taslak
+- Gönderildi
+- Revize İstendi
+- Onaylandı
+- Süresi Doldu
+
+Clicking an offer opens a detail panel/modal with:
+- Offer amount
+- Scope summary
+- Included items
+- Excluded items
+- Validity date
+- Demo PDF preview button
+- Status update buttons
+
+4. Projeler
+Professional placeholder section:
+- Active projects
+- Project status
+- Responsible worker/team
+- Progress percentage
+
+5. Müşteriler
+Professional placeholder section:
+- Customer list
+- Contact info
+- Related application/project
+- Status
+
+6. Ustalar / Saha Ekibi
+Professional placeholder section:
+- Worker list
+- Phone
+- Access code
+- Specialty
+- Assigned project
+- Active/passive status
+Example worker:
+- Mehmet Usta
+- 0532 001 00 02
+- 32001
+- Elektrik
+- Villa Renovasyon Süreci
+- Aktif
+
+7. Güncellemeler
+Professional placeholder:
+- Field updates pending admin review
+- Photo count
+- Area
+- Worker
+
+8. Ödemeler
+Professional placeholder:
+- Payment milestones
+- Paid / remaining
+- Upcoming payments
+
+9. Belgeler
+Professional placeholder:
+- Proposal PDFs
+- Contracts
+- Invoices
+- Warranty documents
+
+10. Talepler
+Professional placeholder:
+- Customer requests
+- Revision requests
+- Service requests
+- Status
+
+11. Ayarlar
+Professional placeholder:
+- Company info
+- Demo users
+- Notification preferences
+- Service categories
+
+Design:
+- Premium admin dashboard.
+- Clean and scalable.
+- Not cluttered.
+- Strong hierarchy.
+- Use tables/cards appropriately.
+- Mobile-friendly.
+- Use the established color/button/card/status system.
+
+Technical:
+- Use useState for selected section and selected detail item.
+- Demo data only.
+- No backend.
+- Build must pass.
+- Do not create unnecessary complexity.
+- Keep code maintainable.
+- If needed, split into app/admin/AdminKanban.js or components inside app/admin.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Admin sections created
+  2. Application/offer detail behavior
+  3. Demo data added
+  4. Build result

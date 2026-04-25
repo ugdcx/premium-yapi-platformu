@@ -1,0 +1,109 @@
+SIMPLIFY AND OPTIMIZE THE FIELD WORKER / USTA PANEL.
+
+Important:
+- UI language must be Turkish.
+- Focus on /field.
+- Do not add backend.
+- Use demo data only.
+- Keep design system from Task-26.
+- Keep role-based auth from Task-27.
+- Do not break route protection.
+
+Goal:
+The field worker panel must be extremely simple, fast, and mobile-first.
+A worker should be able to submit a site update in under 10 seconds.
+
+Page:
+- /field
+
+Core principle:
+3-click flow:
+1. Fotoğraf Seç / Çek
+2. Kısa Not Yaz
+3. Güncellemeyi Gönder
+
+Required layout:
+
+1. Header
+- Title: “Saha Güncellemesi”
+- Current assigned project:
+  “Villa Renovasyon Süreci”
+- Worker name:
+  “Mehmet Usta”
+- Logout button
+
+2. Today’s quick action cards
+Large touch-friendly buttons:
+- İş Tamamlandı
+- Sorun Var
+- Malzeme Eksik
+
+Clicking a quick action should update a selected status chip in the form.
+
+3. Main update form
+Fields:
+- Proje: preselected demo project
+- Alan:
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+  - Elektrik
+  - Tesisat
+  - Diğer
+- Fotoğraf Seç / Çek button
+- Kısa not textarea
+- Selected status:
+  - Normal
+  - İş Tamamlandı
+  - Sorun Var
+  - Malzeme Eksik
+
+4. Photo demo behavior
+- No real upload required.
+- Clicking/selecting photo button should add demo photo chips/cards.
+- Show:
+  - photo count
+  - selected tags
+- Add helper text:
+  “Net, geniş açı ve iyi ışıklı fotoğraflar müşteri takibini güçlendirir.”
+
+5. Submit
+Primary button:
+- “Güncellemeyi Gönder”
+
+After submit:
+Show success state:
+- “Güncelleme gönderildi.”
+- “Admin kontrolünden sonra müşteri panelinde yayınlanacaktır.”
+
+6. Recent Updates
+Show compact recent updates:
+- Time
+- Area
+- Note
+- Photo count
+- Status chip
+
+Design:
+- Mobile-first
+- Very large touch targets
+- Minimal text
+- No clutter
+- Premium but practical
+- Should be usable by non-technical workers
+- Beige / cream / stone / black / muted gold palette
+
+Technical:
+- useState for selected area, note, status, photo chips, submit success.
+- No backend.
+- No real upload.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Field worker UX simplifications
+  2. 3-click flow implementation
+  3. Demo interactions
+  4. Build result

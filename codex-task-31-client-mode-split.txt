@@ -1,0 +1,137 @@
+REFINE CLIENT PANEL WITH CLEAR APPLICATION MODE AND PROJECT MODE.
+
+Important:
+- UI language must be Turkish.
+- Focus on /client.
+- Do not add backend.
+- Use demo data only.
+- Keep design system from Task-26.
+- Keep role-based auth from Task-27.
+- Keep intake/admin/client consistency from Task-30.
+- Do not break existing functionality.
+
+Goal:
+The client panel must not feel overwhelming.
+It should clearly show different experiences depending on whether the customer is still in application/review stage or has an active project.
+
+Page:
+- /client
+
+Required structure:
+
+1. Top Status Hero
+Always show:
+- Customer name
+- Başvuru No or Proje No
+- Current status
+- Next step
+- Primary CTA based on status
+
+Status examples:
+- Başvuru alındı
+- İnceleniyor
+- Teklif hazırlanıyor
+- Teklif hazır
+- Proje başladı
+- Tamamlandı
+
+2. Mode tabs
+Create clear tabs:
+- Başvuru Takibi
+- Proje Takibi
+- Teklif & Ödeme
+- Belgeler
+- Talepler
+
+Default tab:
+- Başvuru Takibi
+
+3. Başvuru Takibi mode
+This is for customers who just created an application.
+
+Show:
+- Başvuru No: AG-2026-001
+- Service type
+- Submitted date
+- Current status
+- Next step message
+- Application process timeline:
+  1. Başvuru alındı
+  2. İnceleme başladı
+  3. Teklif hazırlanacak
+  4. Onay sonrası proje başlatılacak
+- Contact buttons:
+  - WhatsApp
+  - Telefon
+
+Keep this mode simple and reassuring.
+
+4. Proje Takibi mode
+This is for active projects.
+
+Show:
+- Progress percentage
+- Recent timeline updates
+- Visual progress preview
+- Area filters:
+  - Tümü
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+
+Do not show every detail at once. Keep it structured.
+
+5. Teklif & Ödeme mode
+Show:
+- Offer summary
+- Tek fiyat
+- Included / excluded items
+- Payment summary:
+  - Toplam
+  - Ödenen
+  - Kalan
+  - Sıradaki ödeme
+- Buttons:
+  - Teklifi Onayla
+  - Revize Talebi Gönder
+
+6. Belgeler mode
+Show document cards:
+- Teklif PDF
+- Sözleşme Taslağı
+- Faturalar
+- Garanti Belgeleri
+- Teslim Tutanağı
+
+7. Talepler mode
+Show:
+- Request form
+- Request type
+- Related area
+- Message
+- Request list with statuses
+
+Design:
+- Very simple and premium.
+- The first view must not be crowded.
+- Use tabs or segmented control.
+- Mobile-first.
+- Strong hierarchy.
+- The customer must immediately understand what is happening.
+- Avoid showing too many modules at once.
+
+Technical:
+- useState for selected tab.
+- useState for approval/request demo if needed.
+- Demo data only.
+- No backend.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Client panel structure changes
+  2. Modes/tabs added
+  3. Simplification improvements
+  4. Build result

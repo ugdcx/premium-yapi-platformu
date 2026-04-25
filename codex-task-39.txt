@@ -1,0 +1,131 @@
+CLEAN PUBLIC DEMO LANGUAGE AND MAKE THE SITE FEEL PRODUCTION-READY.
+
+Important:
+- UI language must be Turkish
+- Do not add backend
+- Do not redesign whole platform
+- Focus on public-facing clarity and trust
+
+Pages:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+
+Goal:
+Public pages should not feel like a demo or prototype.
+They should feel like a real premium service platform.
+
+Tasks:
+1. Remove public-facing demo language
+- Remove or hide phrases like:
+  - demo
+  - placeholder
+  - first version
+  - test
+  - sample
+from public pages.
+
+2. Keep demo language only where appropriate:
+- /admin internal areas can mention "Demo veri" if needed.
+- /client and /field should avoid strong demo wording except subtle development hints if necessary.
+
+3. Replace weak/cheap language
+Avoid:
+- ucuz
+- ekonomik
+- her bütçeye uygun
+- sıradan contractor language
+
+Use:
+- şeffaf süreç
+- kanıtlı ilerleme
+- dijital takip
+- tek merkezden yönetim
+- profesyonel süreç yönetimi
+- kontrollü proje akışı
+
+4. CTA consistency:
+- Ön Başvuru Oluştur
+- Süreci İncele
+- Giriş Yap
+- Paneli Gör
+- Teklifi Onayla
+- Revize Talebi Gönder
+
+5. Check footer:
+- No public demo disclaimer
+- Consistent brand placeholder
+- Contact placeholders polished
+
+6. Check navigation:
+- No "Teklif Al" label
+- Use "Ön Başvuru Oluştur"
+
+Technical:
+- Build must pass
+
+After finishing:
+Run npm run build
+Summarize:
+1. Public copy cleaned
+2. Demo wording removed
+3. CTA consistency
+4. Build result
+
+
+FINAL RELEASE CHECK BEFORE DEPLOYMENT.
+
+Important:
+- Do not add new features
+- Do not redesign pages
+- Only fix critical release issues
+- UI language must remain Turkish
+
+Routes to check:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+Checklist:
+1. npm run build passes
+2. All routes load
+3. No broken imports
+4. No visible accidental placeholder text
+5. No English UI text visible to users
+6. No broken links
+7. Header links work
+8. Footer links work
+9. CTA links work:
+   - Ön Başvuru Oluştur → /teklif-al
+   - Giriş Yap → /login
+   - Süreci İncele → /surec
+   - Paneli Gör → /client
+10. Login demo works:
+   - Admin: 0500 000 00 01 / 10001 → /admin
+   - Client: 0500 000 00 02 / 20001 → /client
+   - Field: 0532 001 00 02 / 32001 → /field
+11. Protected routes work
+12. /teklif-al flow can be completed
+13. /admin main sections open
+14. /client tabs work
+15. /field update form works
+16. Mobile layout acceptable
+
+If issues are found:
+- Fix only minimal critical issues.
+- Do not restructure the whole app.
+
+After finishing:
+Run npm run build
+Summarize:
+1. Issues found
+2. Issues fixed
+3. Remaining non-critical improvements
+4. Build result

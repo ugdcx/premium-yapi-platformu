@@ -1,0 +1,190 @@
+CREATE A COMPLETE DESIGN SYSTEM FOR THE PLATFORM.
+
+Important:
+- UI language must be Turkish.
+- Do not change business logic.
+- Focus only on visual system, consistency, and premium UI.
+- Apply changes globally across all pages.
+
+Goal:
+Establish a consistent premium design system that will be used across the entire platform.
+
+---
+
+1. COLOR SYSTEM
+
+Define and use the following palette consistently:
+
+Background:
+#F5EFE6
+
+Surface (cards, panels):
+#FFFFFF
+
+Primary text:
+#1C1B19
+
+Muted text:
+#6B665E
+
+Gold accent:
+#C6A85B
+
+Border:
+rgba(0,0,0,0.08)
+
+Dark section:
+#1C1B19
+
+Rules:
+- Background must not be pure white
+- Cards must sit on surface color
+- Gold should be used minimally (hover, accents, highlights)
+- Avoid too many colors
+
+---
+
+2. TYPOGRAPHY SYSTEM
+
+Create hierarchy:
+
+H1:
+- Large, strong, minimal
+- Used in hero and page titles
+
+H2:
+- Section titles
+
+H3:
+- Card titles
+
+Body:
+- Clean, readable
+
+Caption:
+- Small meta text
+
+Rules:
+- Avoid cramped text
+- Use spacing instead of heavy borders
+- Maintain consistent font sizing
+
+---
+
+3. BUTTON SYSTEM
+
+Define 4 button types:
+
+Primary:
+- Dark background
+- White text
+- Main actions
+
+Secondary:
+- Border + transparent background
+
+Accent:
+- Gold highlight
+- Used sparingly
+
+Ghost:
+- Text only
+
+Rules:
+- Same radius everywhere
+- Same padding everywhere
+- Hover states must be subtle
+
+---
+
+4. CARD SYSTEM
+
+All cards must follow:
+
+- Border radius (consistent)
+- Soft border
+- Light shadow
+- Padding (consistent)
+- Clear separation from background
+
+No raw text blocks floating without structure.
+
+---
+
+5. STATUS CHIP SYSTEM
+
+Create consistent chips:
+
+Yeni
+İnceleniyor
+Teklif Hazır
+Onaylandı
+Uygulamada
+Tamamlandı
+
+Each must have:
+- Background color
+- Text color
+- Small rounded style
+
+---
+
+6. SPACING SYSTEM
+
+Use consistent spacing:
+
+- Section spacing
+- Card spacing
+- Button spacing
+
+Rules:
+- Avoid clutter
+- Prefer whitespace over borders
+
+---
+
+7. GLOBAL POLISH
+
+Improve:
+- Hover states
+- Focus states
+- Input styles
+- Form consistency
+- Selection color
+
+---
+
+8. APPLY TO ALL PAGES
+
+Apply system to:
+
+/
+ /hizmetler
+ /surec
+ /teklif-al
+ /login
+ /client
+ /admin
+ /field
+
+Do NOT redesign layouts completely.
+Only normalize and improve visual consistency.
+
+---
+
+Technical:
+- Use existing Tailwind or CSS structure
+- Do not add new dependencies
+- Do not break layout
+- Build must pass
+
+---
+
+After finishing:
+
+1. Run npm run build
+2. Summarize:
+   - What changed globally
+   - Which components were updated
+   - Visual improvements made
+   - Build result

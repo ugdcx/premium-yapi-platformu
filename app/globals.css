@@ -2,19 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg: #f5efe6;
+  --color-surface: #ffffff;
+  --color-text: #1c1b19;
+  --color-muted: #6b665e;
+  --color-gold: #c6a85b;
+  --color-border: rgb(0 0 0 / 0.08);
+  --color-dark: #1c1b19;
+}
+
 * {
   box-sizing: border-box;
 }
 
 ::selection {
-  background: #b89b5e;
-  color: #1f1d1a;
+  background: var(--color-gold);
+  color: var(--color-dark);
 }
 
 body {
-  background: #f5f0e8;
-  color: #1f1d1a;
+  background: var(--color-bg);
+  color: var(--color-text);
   line-height: 1.5;
+  overflow-x: hidden;
   font-feature-settings: "liga" 1, "kern" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,7 +51,7 @@ textarea {
 
 a:hover,
 button:hover {
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 button,
@@ -48,15 +59,124 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button,
+[role="button"],
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+select {
+  min-height: 48px;
+}
+
+input,
+textarea {
+  min-height: 48px;
+}
+
+button:not(:disabled),
+a,
+select {
+  cursor: pointer;
+}
+
 button:focus-visible,
-a:focus-visible {
-  outline: 2px solid #b89b5e;
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-gold);
   outline-offset: 3px;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #b89b5e;
-  box-shadow: 0 0 0 3px rgb(184 155 94 / 16%);
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgb(198 168 91 / 18%);
+}
+
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  button,
+  a,
+  select,
+  input {
+    min-height: 50px;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h2 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h3 {
+    @apply font-semibold;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply text-stoneDark placeholder:text-black/35;
+  }
+}
+
+@layer components {
+  .ds-card {
+    @apply rounded-[1.5rem] border border-border bg-surface p-5 shadow-premium sm:p-6;
+  }
+
+  .ds-card-compact {
+    @apply rounded-2xl border border-border bg-surface p-4 shadow-sm shadow-black/5;
+  }
+
+  .ds-button-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-stoneDark px-5 py-4 font-medium text-white;
+  }
+
+  .ds-button-secondary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-border bg-transparent px-5 py-4 font-medium text-stoneDark;
+  }
+
+  .ds-button-accent {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-gold px-5 py-4 font-medium text-stoneDark;
+  }
+
+  .ds-button-ghost {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 px-2 py-2 font-medium text-stoneDark;
+  }
+
+  .mobile-scroll {
+    @apply -mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+
+  .mobile-scroll > * {
+    @apply shrink-0;
+    scroll-snap-align: start;
+  }
+
+  .admin-scroll {
+    @apply -mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
 }

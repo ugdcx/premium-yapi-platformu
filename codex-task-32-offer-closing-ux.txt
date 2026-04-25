@@ -1,0 +1,118 @@
+CREATE A HIGH-CONVERSION OFFER / CLOSING EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Focus on /client and /admin.
+- Do not add backend.
+- Use demo data only.
+- Keep design system from Task-26.
+- Keep role-based auth from Task-27.
+- Keep admin architecture from Task-29.
+- Keep client tabs/modes from Task-31.
+- Do not break existing functionality.
+
+Goal:
+The offer experience must feel serious, premium, and easy to approve.
+The customer should clearly understand:
+1. What is the price?
+2. What is included?
+3. What is not included?
+4. What happens after approval?
+5. How can they request a revision?
+
+Pages:
+- /client
+- /admin
+
+/client requirements:
+In the “Teklif & Ödeme” tab/mode, create a strong offer section.
+
+Offer hero:
+- Title: “Teklifiniz Hazır”
+- Big price display: ₺1.250.000
+- Status chip: “Teklif Hazır”
+- Validity: “Geçerlilik: 7 gün”
+
+Offer details:
+- Kapsam özeti
+- Dahil olan işler
+- Hariç olan işler
+- Tahmini başlangıç planı
+- Ödeme planı summary
+
+Included items example:
+- Mutfak ve banyo yenileme
+- Elektrik ve tesisat kontrolü
+- Seramik, boya ve zemin uygulamaları
+- Günlük görsel ilerleme takibi
+
+Excluded items example:
+- Ruhsat ve belediye harçları
+- Müşteri tarafından sonradan talep edilen ek işler
+- Marka değişiminden doğan fiyat farkları
+
+Primary CTA:
+- “Teklifi Onayla”
+
+Secondary CTA:
+- “Revize Talebi Gönder”
+
+After clicking “Teklifi Onayla”:
+- Show confirmation state:
+  “Teklif onaylandı.”
+  “Ekibimiz sözleşme ve başlangıç planı için sizinle iletişime geçecek.”
+
+After clicking “Revize Talebi Gönder”:
+- Show textarea:
+  “Revize talebinizi yazın”
+- Button:
+  “Revize Talebini İlet”
+- Success state:
+  “Revize talebiniz alındı.”
+
+/admin requirements:
+In “Giden Teklifler” or application/offer detail panel:
+Create/improve offer creation and management area.
+
+Admin offer fields:
+- Teklif başlığı
+- Tek fiyat
+- Kapsam özeti
+- Dahil olan işler
+- Hariç olan işler
+- Geçerlilik tarihi
+- Admin iç notu
+
+Offer actions:
+- “Taslak Kaydet”
+- “Teklif Gönderildi İşaretle”
+- “Onaylandı İşaretle”
+- “Revize İstendi İşaretle”
+
+Demo PDF:
+- Add button “Teklif PDF Önizleme”
+- No real PDF generation needed.
+- Show premium disabled/demo state or simple modal preview.
+
+Design:
+- Premium and trust-building.
+- The price must be visually strong.
+- Avoid clutter.
+- Use cards, sections, and hierarchy.
+- Mobile-first.
+- Keep it serious, not playful.
+
+Technical:
+- useState for approval/revision state on /client.
+- useState for offer status on /admin if needed.
+- Demo data only.
+- No backend.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Client offer UX changes
+  2. Admin offer management changes
+  3. Demo interactions added
+  4. Build result

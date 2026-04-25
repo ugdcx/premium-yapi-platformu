@@ -1,0 +1,80 @@
+CLEAN UP GLOBAL NAVIGATION AND CTA LANGUAGE.
+
+Important:
+- UI language must be Turkish.
+- Focus on global navigation, header, footer, and CTA consistency.
+- Do not change business logic.
+- Do not add backend.
+- Keep the design system from Task-26.
+- Keep role-based login behavior from Task-27.
+
+Goal:
+Make navigation simple, premium, and conversion-focused.
+
+Current problem:
+The platform has overlapping CTA language like “Teklif Al” and “Ön Başvuru Oluştur”.
+This creates confusion. Use only “Ön Başvuru Oluştur” for the main conversion action.
+
+Header navigation:
+Use this structure everywhere:
+
+Left:
+- Brand name / logo placeholder
+
+Center:
+- Hizmetler → /hizmetler
+- Süreç → /surec
+
+Right:
+- Ön Başvuru Oluştur → /teklif-al
+- Giriş Yap → /login
+
+Remove:
+- “Teklif Al” text from all navigation, buttons, links, and footer areas.
+- Any duplicate CTA that competes with “Ön Başvuru Oluştur”.
+
+CTA language:
+Use these labels consistently:
+- Ön Başvuru Oluştur
+- Süreci İncele
+- Giriş Yap
+- Paneli Gör
+
+Footer:
+Update footer links:
+- Hizmetler
+- Süreç
+- Ön Başvuru Oluştur
+- Giriş Yap
+
+Public pages:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+
+Admin/client/field:
+- Keep internal navigation functional.
+- Do not expose admin/field links in public header unless already logged in.
+- Public users should not see direct Admin or Saha links.
+
+Design:
+- Premium, simple header.
+- Right side CTA should be visually clear.
+- Header must work on mobile.
+- Avoid clutter.
+
+Technical:
+- Update components/Header.js and Footer.js if they exist.
+- Search project for “Teklif Al” and replace/remove where appropriate.
+- Do not break routes. /teklif-al route can stay, but the visible label should be “Ön Başvuru Oluştur”.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Navigation changes
+  2. CTA text changes
+  3. Removed duplicate labels
+  4. Build result

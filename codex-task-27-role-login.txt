@@ -1,0 +1,93 @@
+CREATE A ROLE-BASED DEMO LOGIN SYSTEM.
+
+Important:
+- UI language must be Turkish.
+- Focus on /login and route access behavior.
+- Do not add real backend.
+- Do not add external dependencies.
+- Use localStorage/sessionStorage demo auth.
+- Keep the design system from Task-26.
+
+Goal:
+Remove visible role selection from the login screen and simulate realistic role-based login.
+
+Current problem:
+The login page shows role buttons for customer/admin/field worker. In a real product, customers should not see admin or field worker access buttons.
+
+New login behavior:
+- Login page only shows:
+  - Telefon numarası
+  - Şifre / erişim kodu
+  - Giriş Yap
+- The system checks demo credentials and redirects based on role.
+
+Demo users:
+1. Admin
+   phone: 0500 000 00 01
+   password: 10001
+   role: admin
+   redirect: /admin
+
+2. Müşteri
+   phone: 0500 000 00 02
+   password: 20001
+   role: client
+   redirect: /client
+
+3. Usta / Saha Ekibi
+   phone: 0532 001 00 02
+   password: 32001
+   role: field
+   redirect: /field
+
+Login UI:
+- Title: “Giriş Yap”
+- Subtitle: “Telefon numaranız ve erişim kodunuz ile proje alanınıza güvenli şekilde erişin.”
+- Inputs:
+  - Telefon numarası
+  - Şifre / erişim kodu
+- Primary button:
+  - “Giriş Yap”
+- Error message:
+  - “Telefon numarası veya erişim kodu hatalı.”
+- Remove public role buttons:
+  - Do not show “Admin Panelini Aç”
+  - Do not show “Saha Panelini Aç”
+  - Do not show “Müşteri Panelini Aç”
+
+Demo hint:
+- For development only, add a small collapsed “Demo erişim bilgileri” area at the bottom.
+- It should be subtle and not visually dominant.
+- Later this can be removed before real launch.
+
+Route protection:
+- If user is not logged in:
+  - /admin redirects to /login
+  - /client redirects to /login
+  - /field redirects to /login
+
+Role protection:
+- admin can access /admin only
+- client can access /client only
+- field can access /field only
+- If role mismatch, redirect to their own dashboard.
+
+Logout:
+- Add small “Çıkış Yap” button/link in /admin, /client, /field
+- Clears demo auth and redirects to /login
+
+Technical:
+- Use localStorage or sessionStorage for demo auth.
+- No real backend.
+- No database.
+- Keep build passing.
+- Avoid overengineering.
+- If shared auth helpers are useful, create lib/demoAuth.js.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Login changes
+  2. Route protection changes
+  3. Demo credentials
+  4. Build result

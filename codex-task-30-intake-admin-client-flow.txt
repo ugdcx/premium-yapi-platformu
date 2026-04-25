@@ -1,0 +1,115 @@
+CREATE A CONSISTENT INTAKE → ADMIN → CLIENT FLOW SIMULATION.
+
+Important:
+- UI language must be Turkish.
+- Do not add backend.
+- Do not add database.
+- Use demo data only.
+- Keep the design system from Task-26.
+- Keep role-based auth from Task-27.
+- Do not break admin architecture from Task-29.
+
+Goal:
+Make the platform feel like one connected workflow:
+Visitor creates a preliminary application → Company admin sees it → Customer can track the application status.
+
+Pages:
+- /teklif-al
+- /admin
+- /client
+
+1. /teklif-al success state
+After the user completes the application flow, show a premium success screen:
+
+Title:
+“Başvurunuz Alındı”
+
+Subtitle:
+“Bilgileriniz şirket paneline iletildi. Ekibimiz inceleme sonrası sizinle iletişime geçecek.”
+
+Show:
+- Başvuru No: AG-2026-001
+- Hizmet tipi
+- İletişim özeti
+- Sonraki adımlar:
+  1. Başvurunuz incelenir
+  2. Ekibimiz sizinle iletişime geçer
+  3. Teklif ve yol haritası hazırlanır
+  4. Onay sonrası süreç başlatılır
+  5. Süreç panelden takip edilir
+
+Buttons:
+- “Müşteri Panelini Gör” → /client
+- “Yeni Başvuru Oluştur” → reset flow
+
+2. Shared demo application
+Create or update shared demo data if appropriate.
+
+Use consistent application:
+- Başvuru No: AG-2026-001
+- Customer: Ali Atmaca
+- Phone: +90 5XX XXX XX XX
+- Email: ali@example.com
+- Location: Sakarya / Akyazı
+- Service: Tadilat & Değer Artırma Çalışmaları
+- Status: İnceleniyor
+- Source: Ön Başvuru Formu
+- Application date: 25 Nisan 2026
+
+3. /admin
+In “Gelen Başvurular”:
+- Show the same AG-2026-001 application in the “Yeni” or “İnceleniyor” list.
+- Detail panel should show:
+  - Başvuru No
+  - Source
+  - Customer info
+  - Service type
+  - Form answers
+  - Photo/file demo area
+  - Internal note
+  - Status update actions
+  - “Teklif Hazırla” action
+
+4. /client
+Customer should show an application tracking mode before the project starts.
+
+If status is not yet project_active:
+Show “Başvuru Takibi” mode:
+- Başvuru No: AG-2026-001
+- Durum: İnceleniyor
+- Sonraki adım: “Ekibimiz başvurunuzu değerlendiriyor.”
+- Timeline:
+  1. Başvuru alındı
+  2. İnceleme başladı
+  3. Teklif hazırlanacak
+  4. Onay sonrası proje başlatılacak
+- Contact CTA:
+  - “WhatsApp ile iletişime geç”
+  - “Telefonla ara”
+
+If project mode already exists, keep it but make it secondary or under tabs:
+- Başvuru Takibi
+- Proje Takibi
+
+Default view should be “Başvuru Takibi”.
+
+Design:
+- Premium, calm, trust-building.
+- The user must feel: “My application is recorded and being handled.”
+- Avoid clutter.
+- Mobile-first.
+
+Technical:
+- Demo data only.
+- No real persistence required.
+- No backend.
+- Build must pass.
+- Do not remove existing useful client/admin sections; reorganize if needed.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Intake success changes
+  2. Admin application mapping
+  3. Client application tracking mode
+  4. Build result

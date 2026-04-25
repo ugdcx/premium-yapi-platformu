@@ -33,7 +33,7 @@ const serviceAreas = [
       "Dijital süreç raporlama",
       "Anahtar teslim teslimat"
     ],
-    cta: "Bu hizmet için başvuru oluştur"
+    cta: "Ön Başvuru Oluştur"
   },
   {
     icon: Hammer,
@@ -53,7 +53,7 @@ const serviceAreas = [
       "Uygulama takibi",
       "Öncesi / sonrası raporlama"
     ],
-    cta: "Dönüşüm başvurusu oluştur"
+    cta: "Ön Başvuru Oluştur"
   },
   {
     icon: Home,
@@ -73,7 +73,7 @@ const serviceAreas = [
       "Portföy takibi",
       "Müşteri görüşme süreci"
     ],
-    cta: "Danışmanlık başvurusu oluştur"
+    cta: "Ön Başvuru Oluştur"
   }
 ];
 
@@ -86,9 +86,9 @@ const crossServiceItems = [
 
 export default function ServicesPage() {
   return (
-    <main className="min-h-screen bg-cream px-6 py-10 text-stoneDark">
+    <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6 sm:py-10">
       <div className="mx-auto max-w-7xl">
-        <header className="rounded-[2rem] bg-stoneDark p-8 text-white md:p-12">
+        <header className="rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-12">
           <div className="flex flex-wrap gap-5 text-sm text-white/55">
             <a href="/">Ana sayfa</a>
             <a href="/login">Giriş Yap</a>
@@ -98,7 +98,7 @@ export default function ServicesPage() {
             <p className="text-sm uppercase tracking-[0.3em] text-white/35">
               Hizmetler
             </p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight md:text-7xl">
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
               Hizmet Alanlarımız
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/60">
@@ -115,13 +115,13 @@ export default function ServicesPage() {
           </div>
         </header>
 
-        <section className="mt-10 grid gap-8">
+        <section className="mt-8 grid gap-6 md:mt-10 md:gap-8">
           {serviceAreas.map((service, index) => {
             const Icon = service.icon;
             return (
               <article
                 key={service.title}
-                className="grid gap-8 rounded-[2rem] border border-black/10 bg-white/65 p-6 md:p-8 lg:grid-cols-[0.8fr_1.2fr]"
+                className="grid gap-6 rounded-[2rem] border border-border bg-surface p-5 sm:p-6 md:p-8 lg:grid-cols-[0.8fr_1.2fr]"
               >
                 <div>
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-stoneDark text-white">
@@ -133,7 +133,7 @@ export default function ServicesPage() {
                   <h2 className="mt-3 text-4xl font-semibold tracking-tight">
                     {service.title}
                   </h2>
-                  <p className="mt-5 leading-8 text-black/60">{service.intro}</p>
+                  <p className="mt-5 leading-8 text-muted">{service.intro}</p>
                   <a
                     href="/teklif-al"
                     className="mt-7 inline-flex items-center gap-2 rounded-full bg-stoneDark px-6 py-3 text-sm font-medium text-white"
@@ -161,7 +161,7 @@ export default function ServicesPage() {
           })}
         </section>
 
-        <section className="mt-10 rounded-[2rem] bg-stoneDark p-8 text-white md:p-10">
+        <section className="mt-8 rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:mt-10 md:p-10">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
               <div className="mb-7 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-gold">
@@ -170,7 +170,7 @@ export default function ServicesPage() {
               <p className="text-sm uppercase tracking-[0.3em] text-white/35">
                 Çapraz Strateji
               </p>
-              <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
                 Tek bir ihtiyacı değil, tüm süreci yönetiyoruz.
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-white/60">
@@ -194,13 +194,13 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="mt-10 rounded-[2rem] border border-black/10 bg-white/70 p-8 md:p-12">
+        <section className="mt-8 rounded-[2rem] border border-border bg-surface p-6 sm:p-8 md:mt-10 md:p-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
+              <h2 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
                 Hangi hizmete ihtiyacınız olduğunu birlikte netleştirelim.
               </h2>
-              <p className="mt-5 max-w-2xl leading-8 text-black/60">
+              <p className="mt-5 max-w-2xl leading-8 text-muted">
                 Akıllı ön başvuru akışı, ihtiyacınızı doğru hizmet alanına
                 bağlayarak ekibimizin daha hızlı ve doğru değerlendirme yapmasını
                 sağlar.
@@ -210,7 +210,7 @@ export default function ServicesPage() {
               href="/teklif-al"
               className="inline-flex justify-center rounded-full bg-gold px-8 py-4 font-medium text-stoneDark"
             >
-              Akıllı Ön Başvuruya Başla
+              Ön Başvuru Oluştur
             </a>
           </div>
         </section>
@@ -232,7 +232,7 @@ function CheckItem({ children }) {
   return (
     <div className="flex items-start gap-3">
       <CheckCircle2 className="mt-0.5 shrink-0 text-gold" size={18} />
-      <span className="text-sm leading-6 text-black/65">{children}</span>
+      <span className="text-sm leading-6 text-muted">{children}</span>
     </div>
   );
 }

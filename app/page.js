@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   WalletCards
 } from "lucide-react";
+import { statusChipClass } from "../lib/designSystem";
 
 const services = [
   {
@@ -50,23 +51,23 @@ const steps = [
 const trustItems = [
   ["Şeffaf süreç", "Kapsam, bütçe ve ilerleme görünür kalır."],
   ["Kanıtlı ilerleme", "Saha kayıtları fotoğraf ve zaman bilgisiyle desteklenir."],
-  ["Tek merkezden yönetim", "Müşteri, admin ve saha ekibi aynı akışa bağlanır."],
+  ["Tek merkezden yönetim", "Müşteri, yönetim ekibi ve saha ekibi aynı akışa bağlanır."],
   ["Profesyonel raporlama", "Teklif, ödeme, belge ve teslim kayıtları düzenli tutulur."]
 ];
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-cream text-stoneDark">
-      <section className="px-6 py-24">
+      <section className="px-4 py-16 sm:px-6 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
           <div>
-            <div className="mb-6 inline-flex rounded-full border border-black/10 bg-white/45 px-4 py-2 text-sm text-black/60">
+            <div className="mb-6 inline-flex rounded-full border border-border bg-surface/80 px-4 py-2 text-sm text-muted">
               Yapı · Dönüşüm · Gayrimenkul operasyonları
             </div>
-            <h1 className="max-w-4xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
+            <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
               Yapı, dönüşüm ve gayrimenkul süreçlerinizi tek merkezden yönetin.
             </h1>
-            <p className="mt-7 max-w-3xl text-lg leading-8 text-black/65">
+            <p className="mt-7 max-w-3xl text-lg leading-8 text-muted">
               Anahtar teslim inşaat, değer artırma çalışmaları ve gayrimenkul
               danışmanlığı süreçlerini şeffaf, kontrollü ve dijital olarak takip
               edilebilir hale getiriyoruz.
@@ -82,7 +83,7 @@ export default function HomePage() {
               </a>
               <a
                 href="/client"
-                className="inline-flex items-center justify-center rounded-full border border-black/15 px-7 py-4 font-medium"
+                className="inline-flex items-center justify-center rounded-full border border-border px-7 py-4 font-medium"
               >
                 Paneli Gör
               </a>
@@ -93,7 +94,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="px-6 py-20">
+      <section className="px-4 py-14 sm:px-6 md:py-20">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow="Hizmet Yapısı"
@@ -107,13 +108,13 @@ export default function HomePage() {
               return (
                 <article
                   key={service.title}
-                  className="rounded-[2rem] border border-black/10 bg-white/60 p-8 shadow-xl shadow-black/5"
+                  className="rounded-[2rem] border border-border bg-surface p-5 shadow-xl shadow-black/5 sm:p-8"
                 >
                   <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-stoneDark text-white">
                     <Icon size={26} />
                   </div>
                   <h3 className="text-2xl font-semibold">{service.title}</h3>
-                  <p className="mt-4 leading-7 text-black/60">{service.text}</p>
+                  <p className="mt-4 leading-7 text-muted">{service.text}</p>
                   <a
                     href="/teklif-al"
                     className="mt-7 inline-flex items-center gap-2 text-sm font-medium"
@@ -128,7 +129,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-stoneDark px-6 py-24 text-white">
+      <section className="bg-stoneDark px-4 py-16 text-white sm:px-6 md:py-24">
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <SectionHeading
             eyebrow="Dijital Proje Kontrol"
@@ -151,7 +152,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="px-6 py-24">
+      <section className="px-4 py-16 sm:px-6 md:py-24">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow="Nasıl Çalışır"
@@ -163,7 +164,7 @@ export default function HomePage() {
             {steps.map((step, index) => (
               <div
                 key={step}
-                className="rounded-[1.5rem] border border-black/10 bg-white/55 p-6"
+                className="rounded-[1.5rem] border border-border bg-surface p-6"
               >
                 <p className="text-sm text-black/35">
                   {String(index + 1).padStart(2, "0")}
@@ -187,11 +188,11 @@ export default function HomePage() {
             {trustItems.map(([title, text]) => (
               <article
                 key={title}
-                className="rounded-[1.5rem] border border-black/10 bg-white/60 p-6"
+                className="rounded-[1.5rem] border border-border bg-surface p-6"
               >
                 <ShieldCheck className="text-gold" size={24} />
                 <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-                <p className="mt-3 text-sm leading-6 text-black/60">{text}</p>
+                <p className="mt-3 text-sm leading-6 text-muted">{text}</p>
               </article>
             ))}
           </div>
@@ -199,10 +200,10 @@ export default function HomePage() {
       </section>
 
       <section className="px-6 pb-24">
-        <div className="mx-auto max-w-7xl rounded-[2rem] bg-stoneDark p-10 text-white md:p-16">
+        <div className="mx-auto max-w-7xl rounded-[2rem] bg-stoneDark p-6 text-white sm:p-10 md:p-16">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
+              <h2 className="max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-6xl">
                 Projenizi kontrollü bir sisteme taşıyın.
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-white/60">
@@ -225,7 +226,7 @@ export default function HomePage() {
 
 function DashboardMockup() {
   return (
-    <div className="rounded-[2rem] border border-black/10 bg-white/60 p-4 shadow-2xl shadow-black/10">
+    <div className="rounded-[2rem] border border-border bg-surface p-4 shadow-2xl shadow-black/10">
       <div className="rounded-[1.5rem] bg-stoneDark p-6 text-white">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -234,7 +235,7 @@ function DashboardMockup() {
               Villa Renovasyon Süreci
             </h2>
           </div>
-          <span className="rounded-full bg-gold px-4 py-2 text-sm text-stoneDark">
+          <span className={statusChipClass("Teklif Hazır")}>
             Teklif Hazır
           </span>
         </div>
@@ -309,7 +310,7 @@ function SectionHeading({ eyebrow, title, text, dark = false }) {
       </h2>
       <p
         className={`mt-5 max-w-2xl leading-8 ${
-          dark ? "text-white/60" : "text-black/60"
+          dark ? "text-white/60" : "text-muted"
         }`}
       >
         {text}

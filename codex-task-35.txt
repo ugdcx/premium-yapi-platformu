@@ -1,0 +1,212 @@
+IMPROVE PAYMENTS AND DOCUMENTS MANAGEMENT.
+
+Important:
+- UI language must be Turkish
+- Focus on /client and /admin
+- Do not add backend
+- Demo data only
+- Keep design system consistency
+- Do not break login/auth
+
+Goal:
+Make payments and documents feel transparent, professional and easy to understand.
+
+CLIENT REQUIREMENTS:
+Create/improve "Ödemeler" tab/section:
+- Toplam teklif
+- Ödenen
+- Kalan
+- Sıradaki ödeme
+- Payment milestone timeline:
+  1. Ön ödeme
+  2. Malzeme başlangıcı
+  3. Ara ödeme
+  4. Teslim ödemesi
+
+Each payment item:
+- Amount
+- Due date
+- Status: Ödendi / Bekliyor / Yaklaşan
+
+Create/improve "Belgeler" section:
+- Teklif PDF
+- Sözleşme Taslağı
+- Faturalar
+- Garanti Belgeleri
+- Teslim Tutanağı
+
+Each document card:
+- Document name
+- Type
+- Status: Hazır / Bekleniyor / İnceleniyor
+- Demo action: Görüntüle
+
+ADMIN REQUIREMENTS:
+In /admin relevant sections:
+- Add payment plan demo management
+- Add document list demo management
+- Add buttons:
+  - Belge Ekle
+  - Hazır İşaretle
+  - Bekleniyor İşaretle
+
+Design:
+- Premium
+- Clear financial hierarchy
+- Mobile-first
+- No clutter
+
+Technical:
+- useState if needed
+- No real upload
+- No payment integration
+- Build must pass
+
+After finishing:
+Run npm run build
+Summarize changes and build result.
+
+
+CREATE A CONTROLLED CUSTOMER REQUEST AND MESSAGE SYSTEM.
+
+Important:
+- UI language must be Turkish
+- Focus on /client and /admin
+- No backend
+- Demo data only
+- Keep design system consistency
+
+Goal:
+Customers should be able to send structured requests instead of relying only on WhatsApp.
+
+CLIENT REQUIREMENTS:
+Create/improve "Talepler" tab/section.
+
+Request form:
+- Talep tipi:
+  - Revize Talebi
+  - Ek İş Talebi
+  - Soru
+  - Sorun Bildirimi
+- İlgili alan:
+  - Genel
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+  - Ödeme
+  - Belgeler
+- Mesaj textarea
+- Button: Talebi Gönder
+
+After submit:
+- Show success message:
+  "Talebiniz alındı. Ekibimiz değerlendirdikten sonra sizinle iletişime geçecek."
+
+Request list:
+- Date/time
+- Type
+- Area
+- Status:
+  - Açık
+  - İnceleniyor
+  - Yanıtlandı
+  - Tamamlandı
+- Short preview
+
+ADMIN REQUIREMENTS:
+In /admin Talepler section:
+- Show customer requests
+- Show customer name, type, area, message, status
+- Admin can change status:
+  - İnceleniyor
+  - Yanıtlandı
+  - Tamamlandı
+- Internal note textarea
+- Optional response textarea demo
+
+Design:
+- Not a noisy chat app
+- Controlled request management
+- Premium, calm, simple
+- Mobile-first
+
+Technical:
+- useState for demo request creation/status changes
+- Build must pass
+
+After finishing:
+Run npm run build
+Summarize changes and build result.
+
+CREATE A PREMIUM HANDOVER AND WARRANTY EXPERIENCE.
+
+Important:
+- UI language must be Turkish
+- Focus on /client and /admin
+- No backend
+- Demo data only
+- Keep design system consistency
+
+Goal:
+After project completion, the system should continue with delivery, warranty and service request flow.
+
+CLIENT REQUIREMENTS:
+Create/improve "Teslim ve Garanti" section.
+
+Show:
+- Project completion status
+- Delivery date
+- Warranty start date
+- Warranty end date
+- Responsible contact person
+
+Final checklist:
+- İş kapsamı tamamlandı
+- Alan temizliği yapıldı
+- Malzeme ve uygulama kontrol edildi
+- Belgeler teslim edildi
+- Garanti süreci başlatıldı
+
+Each item status:
+- Tamamlandı
+- Bekliyor
+
+Buttons:
+- Teslim Tutanağını Görüntüle
+- Servis Talebi Oluştur
+
+Service request mini form:
+- Alan
+- Konu
+- Açıklama
+- Button: Servis Talebi Gönder
+
+After submit:
+- Success state:
+  "Servis talebiniz alındı."
+
+ADMIN REQUIREMENTS:
+In /admin:
+- Add Teslim & Garanti management section
+- Delivery checklist management demo
+- Warranty dates
+- Service request list
+- Buttons:
+  - Teslim Tamamlandı
+  - Garanti Sürecini Başlat
+  - Servis Talebini Tamamlandı İşaretle
+
+Design:
+- High-end handover system
+- Premium, calm, trust-building
+- Clear checklist UI
+- Mobile-first
+
+Technical:
+- useState for checklist/service request demo behavior
+- Build must pass
+
+After finishing:
+Run npm run build
+Summarize changes and build result.
