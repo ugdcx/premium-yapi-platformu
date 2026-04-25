@@ -1,0 +1,34 @@
+FINAL RELEASE CHECK FOR V1.
+
+Important:
+- Do not redesign pages.
+- Do not add new features.
+- Only verify and fix critical issues preventing clean release.
+
+Check:
+1. npm run build passes.
+2. All routes work:
+   - /
+   - /hizmetler
+   - /surec
+   - /teklif-al
+   - /login
+   - /client
+   - /admin
+   - /field
+3. No broken imports.
+4. No visible accidental placeholder text.
+5. No English UI text except technical file names or internal code.
+6. Header links work.
+7. CTA buttons route correctly.
+8. Mobile layout is acceptable.
+9. package.json is stable for Vercel deployment.
+10. .gitignore prevents .next, node_modules, .vercel and env files from being committed.
+
+If issues are found:
+- Fix only critical issues.
+- Keep changes minimal.
+
+After finishing:
+- Run npm run build.
+- Summarize release readiness.

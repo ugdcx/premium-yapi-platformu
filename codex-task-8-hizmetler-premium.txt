@@ -1,0 +1,117 @@
+REDESIGN THE /hizmetler PAGE INTO A PREMIUM SERVICE OVERVIEW PAGE.
+
+Important:
+- UI language must be Turkish.
+- Focus only on /hizmetler.
+- Do not break other pages.
+
+Goal:
+Make /hizmetler clearly explain the 3 main business areas in a premium and professional way.
+
+Page:
+- /hizmetler
+
+Main sections:
+
+1. Page Hero
+Title:
+“Hizmet Alanlarımız”
+
+Subtitle:
+“Yapı geliştirme, değer artırma ve gayrimenkul danışmanlığını tek merkezden yöneten bütüncül bir hizmet modeli.”
+
+CTA:
+“Ön Başvuru Oluştur” → /teklif-al
+
+2. Service Area 1:
+Anahtar Teslim Yapı Geliştirme
+
+Explain:
+- Kimler için?
+- Arsa sahibi
+- Villa / müstakil ev yaptırmak isteyen
+- Süreci tek elden yürütmek isteyen
+
+Include service bullets:
+- Proje planlama
+- Kaba ve ince yapı uygulamaları
+- Malzeme ve ekip organizasyonu
+- Şantiye takibi
+- Dijital süreç raporlama
+- Anahtar teslim teslimat
+
+CTA:
+“Bu hizmet için başvuru oluştur”
+
+3. Service Area 2:
+Tadilat & Değer Artırma Çalışmaları
+
+Explain:
+- Mevcut evini yenilemek isteyen
+- Satış veya kiralama öncesi değer artırmak isteyen
+- Mutfak, banyo, komple ev, dış cephe gibi alanları dönüştürmek isteyen
+
+Include service bullets:
+- Mevcut durum analizi
+- Fotoğraf üzerinden ön inceleme
+- İş kapsamı belirleme
+- Malzeme seçimi
+- Uygulama takibi
+- Öncesi / sonrası raporlama
+
+CTA:
+“Dönüşüm başvurusu oluştur”
+
+4. Service Area 3:
+Gayrimenkul Satış Danışmanlığı
+
+Explain:
+- Satmak, kiraya vermek, satın almak veya yatırım yapmak isteyen kişiler için
+- Gayrimenkulü doğru fiyat, doğru sunum ve doğru strateji ile konumlandırma
+
+Include service bullets:
+- Piyasa ve fiyat analizi
+- Satış/kiralama stratejisi
+- İlan hazırlığı
+- Değer artırma önerileri
+- Portföy takibi
+- Müşteri görüşme süreci
+
+CTA:
+“Danışmanlık başvurusu oluştur”
+
+5. Cross-Service Strategy Section
+Explain:
+Sometimes one service leads to another:
+- Satış öncesi tadilat
+- Tadilat sonrası kiralama
+- Arsa arayışı sonrası yapı geliştirme
+- Gayrimenkul değerlendirme sonrası değer artırma çalışması
+
+Title:
+“Tek bir ihtiyacı değil, tüm süreci yönetiyoruz.”
+
+6. Final CTA
+Title:
+“Hangi hizmete ihtiyacınız olduğunu birlikte netleştirelim.”
+Button:
+“Akıllı Ön Başvuruya Başla” → /teklif-al
+
+Design:
+- Premium editorial layout
+- Beige / cream / stone / black / gold palette
+- Large headings
+- Clean cards
+- High whitespace
+- Mobile-first
+- Avoid cheap contractor website feeling
+- Avoid too much technical jargon
+
+Technical:
+- Keep code clean.
+- No backend.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

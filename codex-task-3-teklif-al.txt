@@ -1,0 +1,105 @@
+CREATE A PREMIUM SMART INTAKE / APPLICATION FLOW FOR /teklif-al.
+
+Important:
+- The UI language must be Turkish.
+- The prompt/code structure can be English.
+- Focus only on /teklif-al.
+- Do not break other pages.
+
+Goal:
+Turn /teklif-al into a premium decision-tree intake experience.
+This is not a simple contact form. It is the main lead generation engine.
+
+Page:
+- /teklif-al
+
+Main concept:
+“Proje Yolculuğunuzu Başlatın”
+
+The visitor chooses one of three service paths:
+1. Anahtar Teslim Yapı Geliştirme
+2. Tadilat & Değer Artırma Çalışmaları
+3. Gayrimenkul Satış Danışmanlığı
+
+Flow:
+Step 1 — Service Selection
+- Show 3 premium cards.
+- Each card has title, short value proposition, and icon.
+
+Step 2 — Dynamic Questions
+Show different questions depending on selected service.
+
+For Anahtar Teslim Yapı:
+- Arsanız var mı? Evet / Hayır
+- Konum
+- Hedef yapı tipi: Villa / Müstakil Konut / Ticari Yapı
+- Yaklaşık m²
+- Kat sayısı
+- Oda sayısı
+- Hedef kalite: Select / Signature / Ultra
+- Başlama zamanı
+- Bütçe aralığı
+
+For Tadilat & Değer Artırma:
+- Kapsam: Komple Ev / Mutfak / Banyo / Salon / Dış Cephe / Satışa Hazırlık
+- Ev şu an boş mu? Boş / İçinde yaşanıyor
+- Konum
+- Yaklaşık m²
+- Hedef: Konfor / Değer Artışı / Satışa Hazırlık / Kiraya Hazırlık / Modern Görünüm
+- Kritik sorunlar: Elektrik / Tesisat / Zemin / Nem / Mobilya / Boya
+- Başlama zamanı
+- Bütçe aralığı
+
+For Gayrimenkul Satış Danışmanlığı:
+- İhtiyaç tipi: Satmak / Kiraya Vermek / Satın Almak / Yatırım Danışmanlığı
+- Gayrimenkul tipi: Daire / Villa / Arsa / Ticari
+- Konum
+- Yaklaşık m²
+- Beklenti: Hızlı satış / Maksimum değer / Önce değer artırma
+- Mevcut ilan linki
+- Beklenen fiyat veya bütçe aralığı
+
+Step 3 — File / Photo Upload Demo
+- Create premium drag-and-drop style upload area.
+- No real upload required.
+- Turkish copy:
+  “Fotoğraf, tapu, imar durumu veya mevcut ilan görsellerinizi buraya ekleyebilirsiniz.”
+- Show small demo uploaded file chips after clicking/selecting.
+- Add helper text about better photos.
+
+Step 4 — Contact Info
+- Ad Soyad
+- Telefon
+- E-posta
+- Not / Ek açıklama
+
+Step 5 — Summary & Submit
+- Show selected service
+- Show key answers
+- Show contact summary
+- Button: “Ön Başvuruyu Oluştur”
+- After submit, show success state:
+  “Başvurunuz Alındı”
+  “Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.”
+
+UI/UX:
+- Premium, minimal, clear.
+- Beige / cream / stone / black / gold palette.
+- Mobile-first.
+- Smooth stepper/progress indicator.
+- Use chips/buttons instead of long dropdowns where possible.
+- Avoid overwhelming the user.
+- One primary action per step.
+- It must feel like a high-end digital advisory intake, not a cheap form.
+
+Technical:
+- Use useState or useReducer.
+- No database.
+- Demo data only.
+- Keep the code clean.
+- Build must pass.
+- If shared components are useful, create them carefully without breaking existing pages.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

@@ -1,0 +1,77 @@
+IMPROVE THE OFFER / PROPOSAL AND APPROVAL EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Focus on /client and /admin.
+- Do not implement real backend or PDF generation.
+- Use demo behavior only.
+- Do not break other pages.
+
+Goal:
+Make the offer process feel professional:
+Admin reviews an application, enters one single price, marks offer as ready.
+Client sees the offer, reviews scope, approves or requests revision.
+
+Pages:
+- /admin
+- /client
+
+/admin requirements:
+In the application detail panel/modal:
+- Add a professional “Teklif Oluştur” section.
+- Fields:
+  - Teklif başlığı
+  - Tek fiyat input: ₺
+  - Kapsam özeti
+  - Dahil olan işler
+  - Hariç olan işler
+  - Geçerlilik tarihi
+  - Admin iç notu
+- Buttons:
+  - “Teklifi Hazırla”
+  - “Teklif Hazır Olarak İşaretle”
+- Add demo PDF button:
+  - “PDF Önizleme” or “Teklif PDF Demo”
+  - It does not need to generate a real PDF; show a premium disabled/demo state.
+- When marked ready, move card to “Teklif Hazır” column if possible.
+
+Client requirements:
+Create a stronger “Teklif” section:
+- Title: “Teklifiniz Hazır”
+- Show:
+  - Tek fiyat
+  - Kapsam özeti
+  - Dahil olan işler
+  - Hariç olan işler
+  - Geçerlilik tarihi
+- Primary button:
+  - “Teklifi Onayla”
+- Secondary button:
+  - “Revize Talebi Gönder”
+- After approval:
+  - Show success state:
+    “Teklif onaylandı. Ekibimiz sözleşme ve başlangıç planı için sizinle iletişime geçecek.”
+- After revision:
+  - Show small textarea for revision note and submit button.
+  - Success state:
+    “Revize talebiniz alındı.”
+
+Design:
+- Premium, clear, simple.
+- Avoid long complicated forms.
+- Make the offer look high-value and serious.
+- Beige / cream / stone / black / gold palette.
+- Mobile-first.
+- Strong hierarchy: price, scope, actions.
+
+Technical:
+- useState for approval/revision/demo status.
+- Demo data only.
+- No backend.
+- No real PDF generation.
+- Build must pass.
+- Avoid breaking existing kanban/client functionality.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

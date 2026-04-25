@@ -1,0 +1,61 @@
+IMPROVE MOBILE UX AND PREMIUM POLISH ACROSS THE PLATFORM.
+
+Important:
+- UI language must be Turkish.
+- Do not redesign everything from scratch.
+- Focus on mobile usability, spacing, hierarchy, and premium polish.
+- Do not break existing pages.
+
+Pages to review and polish:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+Goal:
+Make the platform feel polished, premium, and usable on mobile.
+
+Mobile UX requirements:
+- Buttons must be large and easy to tap.
+- Forms must not feel cramped.
+- Cards must stack cleanly.
+- Kanban on /admin should be horizontally scrollable on mobile.
+- /field must be extremely simple and thumb-friendly.
+- /client must show status, timeline, offer, photos, payments, requests and warranty clearly without feeling overwhelming.
+- Header must not break on small screens.
+- Footer must stack cleanly.
+
+Premium polish:
+- Consistent border radius.
+- Consistent spacing.
+- Consistent button styles.
+- Consistent status chips.
+- Consistent typography hierarchy.
+- Better empty states where needed.
+- Better hover/focus states on desktop.
+- Smooth but subtle transitions.
+- Avoid cheap template look.
+- Avoid too many colors.
+- Keep beige / cream / stone / black / gold palette.
+
+Accessibility:
+- Inputs should have visible focus states.
+- Buttons should be readable.
+- Text contrast should be acceptable.
+- Important actions should be visually clear.
+
+Technical:
+- Do not add unnecessary dependencies.
+- No backend.
+- Build must pass.
+- Run npm run build after changes.
+
+After finishing:
+- Summarize:
+  1. Which pages were polished
+  2. What mobile improvements were made
+  3. Build result

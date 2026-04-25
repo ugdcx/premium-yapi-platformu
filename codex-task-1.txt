@@ -1,0 +1,8 @@
+Bu Next.js projesini analiz et ve premium bir yapı, tadilat ve gayrimenkul platformuna dönüştür.
+
+Eksikleri listele.
+UI'ı geliştir.
+Ana sayfa, hizmetler, teklif-al, client ve admin sayfalarını düzenle.
+Premium ve sade tasarım yap.
+Build hatası olmasın.
+Vercel uyumlu olsun.

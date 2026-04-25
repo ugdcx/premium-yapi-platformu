@@ -1,0 +1,84 @@
+CREATE A PREMIUM FIELD WORKER / USTA PANEL.
+
+Important:
+- UI language must be Turkish.
+- Focus only on /field.
+- This screen must be extremely simple and mobile-first.
+- Field workers must be able to upload progress photos quickly.
+
+Page:
+- /field
+
+Goal:
+Create a saha ekibi paneli where workers can quickly add project updates.
+
+Main use case:
+A worker opens the page from mobile, selects project/area, takes or selects photos, writes a short note, and submits the update.
+
+UI structure:
+
+1. Header
+- Title: “Saha Güncellemesi”
+- Subtitle: “Bugünkü iş ilerlemesini fotoğraf ve kısa not ile ekleyin.”
+- Show selected project name: “Villa Renovasyon Süreci”
+
+2. Quick Status Cards
+Show 3 large action buttons:
+- “İş Tamamlandı”
+- “Malzeme Eksik”
+- “Sorun Var”
+
+3. Update Form
+Fields:
+- Proje seçimi (demo select)
+- Alan seçimi:
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+  - Elektrik
+  - Tesisat
+  - Diğer
+- Yapılan iş kısa açıklaması
+- Fotoğraf yükleme demo area
+  - Drag & drop style on desktop
+  - Mobile-friendly “Fotoğraf Seç / Çek” button
+  - No real upload needed
+  - Show demo uploaded image/file chips after selecting
+- Saat bilgisi should be shown automatically as current time display, but no backend needed
+
+4. Submit
+Primary button:
+- “Güncellemeyi Yükle”
+
+After submit:
+Show success state:
+- “Güncelleme Kaydedildi”
+- “Müşteri panelinde yayınlanmak üzere admin kontrolüne gönderildi.”
+
+5. Recent Updates
+Show demo recent field updates:
+- time
+- area
+- short note
+- number of photos
+- status chip
+
+Design:
+- Mobile-first
+- Very large touch targets
+- Premium but practical
+- Beige / cream / stone / black / gold palette
+- Avoid clutter
+- It must be usable by a non-technical worker
+
+Technical:
+- Use useState
+- No real backend or upload
+- Demo data only
+- Do not break other pages
+- Build must pass
+
+After finishing:
+- Run npm run build
+- Summarize changed files and build result

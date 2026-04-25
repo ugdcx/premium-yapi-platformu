@@ -1,0 +1,110 @@
+OPTIMIZE THE GLOBAL UI/UX, COLOR SYSTEM, AND PREMIUM VISUAL LANGUAGE.
+
+Important:
+- UI language must be Turkish.
+- Do not change the business logic.
+- Do not add backend.
+- Do not redesign every page from scratch.
+- Improve the visual quality, color consistency, spacing, and premium feel across the platform.
+
+Pages to review:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+Goal:
+Make the platform look more premium, modern, calm, and trustworthy.
+It should not look like a cheap construction website or generic template.
+
+Visual direction:
+- Warm premium neutral palette
+- Cream / ivory backgrounds
+- Deep stone / near-black text
+- Muted gold accent
+- Soft borders
+- Subtle shadows
+- Large white space
+- Editorial premium feel
+- Clean SaaS/product dashboard feel for panels
+
+Recommended palette:
+- Background: #F6F0E7 or #F5EFE6
+- Surface: #FFFDF8 or rgba white surface
+- Text dark: #1F1D1A
+- Muted text: rgba(31, 29, 26, 0.62)
+- Gold accent: #B89B5E
+- Border: rgba(31, 29, 26, 0.10)
+- Dark section: #1F1D1A
+
+Tasks:
+
+1. Global CSS polish
+- Improve body background
+- Improve text rendering
+- Add smooth transitions
+- Add consistent focus states
+- Add selection color
+- Ensure inputs and buttons feel premium
+
+2. Button consistency
+Create or normalize styles for:
+- Primary dark button
+- Secondary outline button
+- Gold accent button
+- Ghost link button
+
+3. Card consistency
+Cards should have:
+- Rounded corners
+- Soft border
+- Subtle shadow
+- Proper padding
+- Consistent spacing
+
+4. Typography
+- Stronger hierarchy
+- Large page titles
+- Readable body text
+- Avoid cramped sections
+
+5. Status chips
+Make status chips consistent:
+- Yeni
+- İnceleniyor
+- Teklif Hazır
+- Onaylandı
+- Uygulamada
+- Tamamlandı
+
+6. Mobile polish
+- Better spacing on small screens
+- Buttons full width where appropriate
+- Forms easier to read
+- Admin kanban usable on mobile
+- Field page very easy to tap
+
+7. Public pages
+- Homepage, hizmetler, surec should feel editorial and premium.
+- Avoid visual clutter.
+
+8. Internal panels
+- Client, admin, field should feel like a modern premium operations platform.
+- Use clear surfaces, status chips, and hierarchy.
+
+Technical:
+- Prefer Tailwind class improvements and global CSS refinements.
+- Avoid adding new dependencies.
+- Build must pass.
+- Do not break existing routes or interactions.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Global visual improvements
+  2. Pages polished
+  3. Build result

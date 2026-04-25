@@ -1,0 +1,75 @@
+CREATE A CONSISTENT INTAKE-TO-ADMIN SIMULATION.
+
+Important:
+- UI language must be Turkish.
+- Do not add real backend.
+- Do not redesign the whole platform.
+- Focus on making the /teklif-al application flow feel connected to /admin.
+
+Goal:
+When a visitor completes /teklif-al, the product should conceptually feel like the application is sent to the company admin panel.
+
+Pages:
+- /teklif-al
+- /admin
+- /client
+
+Requirements:
+
+1. /teklif-al success state
+After the user submits the application:
+- Show a premium success screen:
+  “Başvurunuz Alındı”
+  “Bilgileriniz şirket paneline iletildi. Ekibimiz inceleme sonrası sizinle iletişime geçecek.”
+- Show an application reference number:
+  Example: “Başvuru No: AG-2026-001”
+- Show next steps:
+  1. Başvurunuz incelenir
+  2. Ekibimiz sizinle iletişime geçer
+  3. Teklif ve yol haritası hazırlanır
+  4. Süreç panelden takip edilir
+- Add buttons:
+  - “Müşteri Panelini Gör” → /client
+  - “Yeni Başvuru Oluştur” → reset form
+
+2. /admin kanban
+Make sure a matching demo application appears in the “Yeni” column:
+- Customer: Ali Atmaca
+- Application No: AG-2026-001
+- Service: Tadilat & Değer Artırma Çalışmaları
+- Location: Sakarya / Akyazı
+- Status: Yeni
+- Source: Ön Başvuru Formu
+
+3. /admin detail panel
+Show:
+- Başvuru No
+- Hizmet tipi
+- Müşteri bilgileri
+- Form cevapları
+- Fotoğraf/belge demo alanı
+- Admin notu
+- Tek fiyat inputu
+- Durum değiştirme buttons
+
+4. /client
+Show the same reference number:
+- Başvuru No: AG-2026-001
+- Status should feel connected:
+  “Başvurunuz inceleniyor”
+
+Design:
+- Premium, calm, clear.
+- Keep the current style.
+- Do not overcomplicate.
+- Mobile-friendly.
+
+Technical:
+- Demo data only.
+- No database.
+- No real persistence required.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

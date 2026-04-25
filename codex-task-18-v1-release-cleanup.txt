@@ -1,0 +1,87 @@
+PREPARE THE PLATFORM FOR A CLEAN V1 DEMO RELEASE.
+
+Important:
+- UI language must be Turkish.
+- Do not add backend.
+- Do not redesign the whole platform from scratch.
+- Focus on making the current product presentable to a real potential customer.
+
+Pages to review:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+Goal:
+Make the platform feel ready for a controlled demo presentation.
+
+Tasks:
+
+1. Remove or hide anything that feels unfinished
+- Placeholder texts that look accidental
+- Broken demo notes
+- Inconsistent labels
+- Empty sections
+- Repeated copy
+- Technical explanations visible to customers
+
+2. Make CTA language consistent
+Use these labels consistently:
+- “Ön Başvuru Oluştur”
+- “Süreci İncele”
+- “Giriş Yap”
+- “Paneli Gör”
+- “Teklifi Onayla”
+- “Revize Talebi Gönder”
+
+3. Improve premium copywriting
+The platform should communicate:
+- Şeffaf süreç
+- Kanıtlı ilerleme
+- Dijital takip
+- Tek merkezden yönetim
+- Profesyonel teklif ve süreç yönetimi
+
+Avoid:
+- Cheap contractor language
+- “Ucuz”
+- “Her bütçeye uygun”
+- Overly technical jargon
+- Unnecessary English in the UI
+
+4. Add demo-safe disclaimers only where needed
+For admin/internal screens:
+- It is okay to show “Demo veri”
+For customer-facing public pages:
+- Do not overuse “demo” wording.
+
+5. Check navigation
+Make sure all links work:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+6. Check responsive layout
+- Desktop
+- Tablet
+- Mobile
+
+7. Final build
+Run:
+- npm run build
+
+After finishing:
+Summarize:
+- Cleaned pages
+- Removed/adjusted issues
+- Build result
+- Remaining recommended improvements for V2

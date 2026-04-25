@@ -1,0 +1,61 @@
+PREPARE BRAND AND DOMAIN READINESS FOR V1.
+
+Important:
+- UI language must be Turkish.
+- Do not redesign all pages.
+- Focus on brand consistency and deployment readiness.
+- Do not add backend.
+
+Goal:
+Prepare the platform for connecting a custom domain and presenting it as a real brand.
+
+Tasks:
+
+1. Brand consistency
+Check all pages and make sure the brand name is consistent.
+Use a temporary brand name if no final name exists:
+“AG Yapı Platformu”
+
+2. Metadata
+Improve metadata in app/layout.js:
+- title
+- description
+- open graph basics if appropriate
+- Turkish description
+- premium positioning
+
+Suggested:
+Title:
+“AG Yapı Platformu | Yapı, Tadilat ve Gayrimenkul Yönetimi”
+
+Description:
+“Anahtar teslim yapı geliştirme, değer artırma çalışmaları ve gayrimenkul danışmanlığı süreçlerini dijital olarak yöneten premium platform.”
+
+3. Footer contact placeholders
+Make contact fields consistent:
+- Telefon
+- WhatsApp
+- E-posta
+- Hizmet bölgeleri
+
+4. Domain readiness note
+Add a short README section:
+“Custom Domain Setup”
+Include:
+- Vercel dashboard → Project → Settings → Domains
+- Add domain
+- Update DNS records from domain provider
+- Wait for verification
+
+5. Remove risky unfinished text
+Remove anything that makes the product feel experimental on public pages.
+Internal/admin pages may still say “Demo veri”.
+
+6. Build check
+Run npm run build.
+
+After finishing:
+- Summarize metadata changes
+- Summarize brand consistency changes
+- Summarize domain readiness notes
+- Report build result

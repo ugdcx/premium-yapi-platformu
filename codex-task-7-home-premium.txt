@@ -1,0 +1,102 @@
+REDESIGN THE HOMEPAGE INTO A PREMIUM LANDING PAGE.
+
+Important:
+- UI language must be Turkish.
+- Focus only on the homepage: /
+- Do not break other pages.
+
+Goal:
+Make the homepage feel like a premium digital construction, renovation, and real estate operations platform.
+
+Positioning:
+This is not a cheap construction website.
+It is a high-trust platform for:
+1. Anahtar Teslim Yapı Geliştirme
+2. Tadilat & Değer Artırma Çalışmaları
+3. Gayrimenkul Satış Danışmanlığı
+
+Homepage sections:
+
+1. Premium Header
+- Logo/name
+- Navigation:
+  - Hizmetler
+  - Proje Kontrol Paneli
+  - Teklif Al
+  - Giriş Yap
+- Primary CTA: “Ön Başvuru Oluştur”
+
+2. Hero Section
+Headline:
+“Yapı, dönüşüm ve gayrimenkul süreçlerinizi tek merkezden yönetin.”
+
+Subtitle:
+“Anahtar teslim inşaat, değer artırma çalışmaları ve gayrimenkul danışmanlığı süreçlerini şeffaf, kontrollü ve dijital olarak takip edilebilir hale getiriyoruz.”
+
+Buttons:
+- “Ön Başvuru Oluştur” → /teklif-al
+- “Müşteri Panelini Gör” → /client
+
+Hero visual:
+- Premium dashboard mockup card
+- Show status, timeline, photos, offer summary
+
+3. Three Service Pillars
+Cards:
+- Anahtar Teslim Yapı Geliştirme
+- Tadilat & Değer Artırma Çalışmaları
+- Gayrimenkul Satış Danışmanlığı
+
+Each card should explain:
+- Who it is for
+- What value it provides
+- CTA
+
+4. Digital Project Control
+Explain:
+- Günlük iş takibi
+- Fotoğraf/video akışı
+- Malzeme ve fatura kontrolü
+- Teklif ve ödeme takibi
+- Onay süreçleri
+
+5. How It Works
+Steps:
+1. Başvuru oluştur
+2. Bilgileri ve görselleri ekle
+3. Ekibimiz incelesin
+4. Teklif ve yol haritası hazırlansın
+5. Süreç panelden takip edilsin
+
+6. Trust / Premium Value
+Cards:
+- Şeffaf süreç
+- Kanıtlı ilerleme
+- Tek merkezden yönetim
+- Profesyonel raporlama
+
+7. Final CTA
+Headline:
+“Projenizi kontrollü bir sisteme taşıyın.”
+Button:
+“Ön Başvuru Oluştur”
+
+Design:
+- Premium, minimal, editorial feel
+- Beige / cream / stone / black / gold palette
+- Large typography
+- Strong whitespace
+- Responsive
+- Avoid clutter
+- Avoid cheap template look
+- Avoid generic stock image layout
+
+Technical:
+- Keep code clean
+- Use existing styling conventions
+- No backend
+- Build must pass
+
+After finishing:
+- Run npm run build
+- Summarize changed files and build result

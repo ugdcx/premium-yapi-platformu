@@ -1,0 +1,78 @@
+CREATE A PREMIUM ADMIN KANBAN PANEL.
+
+Important:
+- UI language must be Turkish.
+- This is the core operational system.
+- Keep it simple, fast, and mobile-friendly.
+
+Page:
+- /admin
+
+Goal:
+Turn admin panel into a Kanban-style lead management system.
+
+Columns:
+1. Yeni
+2. İnceleniyor
+3. Teklif Hazır
+4. Onaylandı
+
+Data:
+- Use demo data only.
+- Create sample applications.
+- Each item represents a müşteri başvurusu.
+
+Each card must show:
+- Müşteri adı
+- Telefon
+- Konum
+- Hizmet tipi (Tadilat / Anahtar Teslim / Gayrimenkul)
+- Tarih
+
+UI:
+- Cards should be clean and premium.
+- Columns scroll horizontally on mobile.
+- Minimal colors, strong hierarchy.
+
+Interaction:
+- Cards must be clickable.
+
+When clicking a card:
+Open a side panel or modal with:
+
+Details:
+- Full form data
+- All answers from teklif-al
+- Photo/file demo section
+
+Admin tools:
+- Not ekleme alanı
+- Tek fiyat inputu (₺)
+- Butonlar:
+  - “İnceleniyor”
+  - “Teklif Hazır”
+  - “Onaylandı”
+
+Behavior:
+- When clicking buttons, move card to that column (state update).
+- No backend needed.
+
+Extra:
+- Add quick call button (telefon link)
+- Add “WhatsApp ile iletişim” link
+
+Design:
+- Premium dashboard look
+- Beige / cream / dark tones
+- Clean spacing
+- Avoid clutter
+
+Technical:
+- useState for data
+- Component-based structure
+- No drag & drop required yet (simple state move is enough)
+- Must not break build
+
+After finishing:
+- Run npm run build
+- Summarize changes

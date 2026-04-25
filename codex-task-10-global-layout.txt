@@ -1,0 +1,78 @@
+CREATE A CONSISTENT PREMIUM GLOBAL NAVIGATION AND FOOTER.
+
+Important:
+- UI language must be Turkish.
+- Improve global consistency across the site.
+- Do not redesign all pages from scratch.
+- Focus on navigation, footer, CTA consistency, and premium polish.
+
+Goal:
+Make the whole site feel like one coherent premium platform.
+
+Pages to check:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+Global header:
+Create or improve a reusable Header component if appropriate.
+
+Header items:
+- Logo / brand name
+- Hizmetler → /hizmetler
+- Süreç → /surec
+- Teklif Al → /teklif-al
+- Giriş Yap → /login
+
+Primary CTA:
+- “Ön Başvuru Oluştur” → /teklif-al
+
+Header behavior:
+- Desktop nav
+- Mobile-friendly simple menu or stacked layout
+- Premium minimal style
+- Cream/stone/black/gold palette
+
+Footer:
+Create or improve a reusable Footer component if appropriate.
+
+Footer content:
+- Brand name
+- Short premium positioning statement
+- Hizmetler links
+- Platform links
+- Contact placeholders:
+  - Telefon
+  - WhatsApp
+  - E-posta
+- Legal/demo note:
+  “Bu platform ilk sürüm demo yapısındadır.”
+
+CTA consistency:
+Use consistent button labels:
+- “Ön Başvuru Oluştur”
+- “Giriş Yap”
+- “Süreci İncele”
+- “Paneli Gör”
+
+Design:
+- Premium, minimal, clean
+- Strong spacing
+- Avoid clutter
+- Avoid cheap template look
+- Mobile-first
+
+Technical:
+- If useful, create components/Header.js and components/Footer.js
+- Import them where appropriate
+- Do not break admin/client/field functionality
+- Build must pass
+
+After finishing:
+- Run npm run build
+- Summarize changed files and build result

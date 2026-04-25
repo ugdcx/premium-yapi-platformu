@@ -1,0 +1,103 @@
+CREATE A PREMIUM CLIENT PROJECT PANEL.
+
+Important:
+- UI language must be Turkish.
+- Focus only on /client.
+- This page is for the customer after they create an application or after a project starts.
+- The customer must instantly understand:
+  1. What is the current status?
+  2. What happened recently?
+  3. Is there a proposal/price?
+  4. What should I approve?
+
+Page:
+- /client
+
+Goal:
+Turn /client into a premium and very clear customer-facing project dashboard.
+
+Main sections:
+
+1. Project Status Hero
+- Project title: “Villa Renovasyon Süreci”
+- Status chip:
+  - İnceleniyor
+  - Teklif Hazır
+  - Uygulamada
+  - Tamamlandı
+- Progress bar
+- Estimated delivery / next step
+- One primary CTA depending on status:
+  - “Teklifi İncele”
+  - “Revize Talebi Gönder”
+  - “Proje Güncellemelerini Gör”
+
+2. Timeline / Updates
+This is the most important section.
+Show updates like:
+- time
+- date
+- area
+- short description
+- photo count
+- status chip
+Example:
+“Bugün 14:30 — Mutfak dolap sökümü tamamlandı — 8 fotoğraf”
+
+3. Photo / Video Preview
+- Premium gallery preview
+- Room/area chips:
+  - Tümü
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+- Show demo photo cards, no real images needed. Use elegant placeholders.
+
+4. Proposal / Offer Section
+- Tek fiyat display
+- Kapsam özeti
+- Included services list
+- Button:
+  - “Teklifi Onayla”
+  - “Revize İste”
+- After approval button is clicked, show success state:
+  “Teklif onaylandı. Ekibimiz sizinle iletişime geçecek.”
+
+5. Payments
+- Toplam teklif
+- Ödenen
+- Kalan
+- Next payment reminder
+- Keep it simple.
+
+6. Documents
+- Sözleşme
+- Teklif PDF
+- Faturalar
+- Garanti belgeleri
+Use demo cards.
+
+7. Contact
+- WhatsApp button
+- Phone button
+
+Design:
+- Very premium, simple and clear.
+- Beige / cream / stone / black / gold palette.
+- Big typography.
+- Mobile-first.
+- Avoid clutter and technical complexity.
+- The customer should feel safe and informed.
+- Not a cheap construction website. It must feel like a private project control room.
+
+Technical:
+- useState for approval status and gallery filter.
+- Demo data only.
+- No real backend.
+- Do not break other pages.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

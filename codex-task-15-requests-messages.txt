@@ -1,0 +1,88 @@
+CREATE A PREMIUM CUSTOMER REQUEST / REVISION / MESSAGE EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Focus on /client and /admin.
+- No real backend.
+- Demo behavior only.
+- Do not break existing pages.
+
+Goal:
+Create a simple but professional request system where the customer can send revision requests, additional work requests, or questions, and admin can see them.
+
+Pages:
+- /client
+- /admin
+
+/client requirements:
+Create or improve a section:
+“Talep ve Mesajlar”
+
+Customer can create a request with:
+- Request type:
+  - Revize Talebi
+  - Ek İş Talebi
+  - Soru
+  - Sorun Bildirimi
+- Related area:
+  - Genel
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+  - Ödeme
+  - Belgeler
+- Message textarea
+- Button: “Talebi Gönder”
+
+After submit:
+- Show success state:
+  “Talebiniz alındı. Ekibimiz değerlendirdikten sonra sizinle iletişime geçecek.”
+
+Show demo request list:
+- Date/time
+- Type
+- Area
+- Status:
+  - Açık
+  - İnceleniyor
+  - Yanıtlandı
+  - Tamamlandı
+- Short message preview
+
+/admin requirements:
+In admin project/application detail modal:
+Add “Müşteri Talepleri” section:
+- List requests from demo data
+- Show:
+  - Customer name
+  - Type
+  - Area
+  - Message
+  - Status
+- Admin tools:
+  - Status change buttons:
+    - İnceleniyor
+    - Yanıtlandı
+    - Tamamlandı
+  - Internal note textarea
+  - Optional response textarea demo
+
+Design:
+- Premium, calm, easy.
+- Not a noisy chat app.
+- It should feel like a controlled request management system.
+- Beige / cream / stone / black / gold palette.
+- Mobile-first.
+- Clear status chips.
+
+Technical:
+- useState for demo request creation and status changes.
+- Demo data only.
+- No backend.
+- Build must pass.
+- Avoid overcomplication.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

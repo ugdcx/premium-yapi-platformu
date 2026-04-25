@@ -1,0 +1,83 @@
+CREATE CONSISTENT DEMO DATA ACROSS THE PLATFORM.
+
+Important:
+- UI language must be Turkish.
+- Do not redesign pages from scratch.
+- Focus on making all pages feel connected to the same platform and same demo workflow.
+
+Goal:
+The platform should feel like one coherent product.
+The customer application created from /teklif-al should conceptually appear in /admin, /client, and /field as the same project story.
+
+Create or improve a shared demo data structure if useful:
+- data/demoData.js
+or
+- lib/demoData.js
+
+Use consistent demo entities:
+
+Customer:
+- Name: Ali Atmaca
+- Phone: +90 5XX XXX XX XX
+- Location: Sakarya / Akyazı
+- Email: ali@example.com
+
+Project:
+- Title: Villa Renovasyon Süreci
+- Service Type: Tadilat & Değer Artırma Çalışmaları
+- Status: İnceleniyor / Teklif Hazır / Uygulamada depending on screen
+- Budget / Offer: ₺1.250.000
+- Paid: ₺350.000
+- Remaining: ₺900.000
+- Areas: Mutfak, Banyo, Salon, Dış Cephe
+
+Timeline updates:
+- Mutfak söküm işlemleri tamamlandı
+- Elektrik altyapı kontrolü yapıldı
+- Banyo seramik teslimatı sahaya alındı
+- Dış cephe keşfi tamamlandı
+
+Materials:
+- Jotun İç Cephe Boya
+- VitrA Armatür
+- Bien 60x120 Seramik
+- Kalekim Yapıştırıcı
+
+Documents:
+- Teklif PDF
+- Sözleşme Taslağı
+- Fatura / Fiş Görselleri
+- Garanti Belgeleri
+
+Apply consistency to:
+- /admin
+- /client
+- /field
+- /teklif-al summary/demo areas if applicable
+
+Admin:
+- Kanban cards should use consistent customer/project data.
+- Card detail should show the same answers and same project info.
+
+Client:
+- Should show the same project, timeline, offer, payment, materials and documents.
+
+Field:
+- Should show the same project as selectable/current project.
+- Recent updates should match the timeline.
+
+Design:
+- Keep current premium direction.
+- Do not overload pages.
+- Improve clarity only where needed.
+
+Technical:
+- Keep build passing.
+- No backend.
+- No database.
+- Demo data only.
+- Avoid duplicating large data blocks in every page if possible.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

@@ -1,0 +1,49 @@
+CREATE A PREMIUM LOGIN PAGE FOR THE PLATFORM.
+
+Important:
+- The UI must be premium, minimal, and modern.
+- The language of the UI must be Turkish.
+- The code and structure can be in English.
+
+Page:
+- /login
+
+User roles:
+1. Müşteri (Client) → redirect to /client
+2. Admin (Company) → redirect to /admin
+3. Usta / Saha Ekibi (Field Worker) → redirect to /field
+
+Requirements:
+- Create app/login/page.js
+- If /field does not exist, create a simple placeholder page: app/field/page.js
+- Do NOT implement real authentication (no backend)
+- Use demo navigation (router push)
+
+UI Elements:
+- Title: “Hesabınıza Giriş Yapın”
+- Subtitle: kısa ve premium bir açıklama
+- Input: telefon veya e-posta
+- Primary button: “Giriş Bağlantısı Gönder”
+- Divider (or)
+- 3 quick access buttons:
+  - “Müşteri olarak devam et”
+  - “Admin olarak devam et”
+  - “Saha ekibi olarak devam et”
+
+Design:
+- Use beige / cream / stone / black / gold palette
+- Large typography
+- Clean spacing
+- Minimal UI
+- Mobile-first responsive design
+- Avoid cheap or template look
+- It must feel like a high-end digital platform
+
+Extra:
+- Add “Giriş Yap” link to homepage and /teklif-al page
+- Keep code clean and component-based
+- Make sure project builds successfully
+
+After finishing:
+- Run npm run build
+- Summarize what you changed

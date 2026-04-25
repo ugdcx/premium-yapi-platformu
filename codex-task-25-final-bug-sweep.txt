@@ -1,0 +1,50 @@
+FINAL BUG SWEEP BEFORE V1 DEPLOYMENT.
+
+Important:
+- Do not redesign pages.
+- Do not add new features.
+- Do not add backend.
+- Only fix critical bugs, broken links, broken layouts, visible mistakes, or build issues.
+- UI language must remain Turkish.
+
+Pages to check:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /login
+- /client
+- /admin
+- /field
+
+Checklist:
+1. All pages load without runtime errors.
+2. npm run build passes.
+3. No broken imports.
+4. No English UI text visible to users.
+5. No accidental placeholder text.
+6. No buttons with missing href/onClick if they visually look actionable.
+7. Header and footer links work.
+8. CTA links work:
+   - Ön Başvuru Oluştur → /teklif-al
+   - Giriş Yap → /login
+   - Süreci İncele → /surec
+   - Paneli Gör → /client
+9. /teklif-al flow can be completed.
+10. /admin kanban cards open detail panel.
+11. /field update form works in demo mode.
+12. /client approval/revision/request demo interactions work.
+13. Mobile layout is acceptable.
+
+If issues are found:
+- Fix only the smallest necessary change.
+- Do not rebuild the whole design.
+- Keep existing premium UI direction.
+
+After finishing:
+- Run npm run build.
+- Summarize:
+  1. Critical issues found
+  2. Issues fixed
+  3. Build result
+  4. Remaining non-critical improvements

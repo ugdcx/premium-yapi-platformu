@@ -1,0 +1,87 @@
+IMPROVE THE PHOTO / VISUAL PROGRESS EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Do not implement real file upload or backend.
+- Use demo behavior only.
+- Focus on /client and /field.
+- Do not break other pages.
+
+Goal:
+Make photo-based progress tracking feel premium, clear, and practical.
+
+Pages:
+- /field
+- /client
+
+/field requirements:
+Improve the photo upload demo area for workers.
+
+Field worker flow:
+1. Select project
+2. Select area
+3. Add short update note
+4. Add photos
+5. Submit update
+
+Photo upload UI:
+- Large mobile-friendly button: “Fotoğraf Seç / Çek”
+- Drag & drop style area on desktop
+- Show selected demo photo chips/cards
+- Add helper text:
+  “Net, geniş açı ve iyi ışıklı fotoğraflar müşteri takibini güçlendirir.”
+- Add quick tags:
+  - Öncesi
+  - Süreç
+  - Sonrası
+  - Malzeme
+  - Sorun
+- Add status buttons:
+  - Normal
+  - Sorun Var
+  - Malzeme Eksik
+
+After submit:
+- Show success state:
+  “Güncelleme admin kontrolüne gönderildi.”
+- Add the update to a demo recent updates list using useState if possible.
+
+/client requirements:
+Improve visual progress gallery.
+
+Client photo experience:
+- Section title: “Görsel İlerleme”
+- Area filters:
+  - Tümü
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+- Photo cards should show:
+  - Area
+  - Date/time
+  - Stage tag: Öncesi / Süreç / Sonrası
+  - Short note
+- Add a “timeline view” and “gallery view” feel if possible, without overcomplicating.
+- Use elegant placeholder image blocks or gradient cards; no real image needed.
+- Add copy:
+  “Yüklenen görseller, sahadaki ilerlemeyi tarih ve alan bazlı takip etmenizi sağlar.”
+
+Design:
+- Premium, simple, clean.
+- Mobile-first.
+- Very easy for field workers.
+- Elegant and reassuring for customers.
+- Beige / cream / stone / black / gold palette.
+- Large touch targets for /field.
+
+Technical:
+- useState for local demo updates where useful.
+- No backend.
+- No real upload.
+- Build must pass.
+- Avoid creating unnecessary complexity.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

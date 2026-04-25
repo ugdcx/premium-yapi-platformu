@@ -1,0 +1,55 @@
+CREATE A V1 QUALITY CHECKLIST INSIDE THE PROJECT.
+
+Important:
+- Do not redesign pages.
+- Do not add backend.
+- Focus on release quality and product clarity.
+- UI language must remain Turkish.
+
+Goal:
+Create a clear internal V1 quality checklist and fix only obvious issues.
+
+Tasks:
+
+1. Create or update README section:
+“V1 Quality Checklist”
+
+Include checklist:
+- Homepage loads
+- Hizmetler page loads
+- Süreç page loads
+- Teklif Al flow works
+- Login demo routes work
+- Client panel loads
+- Admin kanban loads
+- Field worker panel loads
+- Mobile layout acceptable
+- Header links work
+- CTA buttons work
+- No broken imports
+- npm run build passes
+- Vercel deployment ready
+
+2. Review all visible UI text:
+- Turkish only
+- Premium tone
+- No accidental placeholder text
+- No cheap language
+- No confusing demo copy on public pages
+
+3. Review buttons:
+Make sure important buttons route correctly where possible:
+- Ön Başvuru Oluştur → /teklif-al
+- Giriş Yap → /login
+- Süreci İncele → /surec
+- Paneli Gör → /client
+
+4. Fix only obvious route/link/text issues.
+Do not redesign the whole site.
+
+5. Run npm run build.
+
+After finishing:
+- Summarize fixed issues
+- Summarize checklist added
+- Report build result

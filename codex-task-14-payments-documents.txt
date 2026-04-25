@@ -1,0 +1,75 @@
+IMPROVE PAYMENTS AND DOCUMENTS EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Focus on /client and /admin.
+- No real backend.
+- No real payment integration.
+- No real file upload.
+- Demo behavior only.
+
+Goal:
+Make payment tracking and document management feel premium, transparent, and trustworthy.
+
+Pages:
+- /client
+- /admin
+
+/client requirements:
+Create or improve a clear “Ödemeler” section:
+- Toplam teklif
+- Ödenen
+- Kalan
+- Sıradaki ödeme
+- Ödeme planı timeline:
+  1. Ön ödeme
+  2. Malzeme başlangıcı
+  3. Ara ödeme
+  4. Teslim ödemesi
+- Each payment item should have:
+  - Amount
+  - Due date
+  - Status: Ödendi / Bekliyor / Yaklaşan
+- Add note:
+  “Ödeme planı proje kapsamı ve onaylanan teklif üzerinden güncellenir.”
+
+Create or improve a “Belgeler” section:
+- Teklif PDF
+- Sözleşme Taslağı
+- Faturalar
+- Garanti Belgeleri
+- Teslim Tutanağı
+Each document card should show:
+- Document name
+- Type
+- Status: Hazır / Bekleniyor / İnceleniyor
+- Demo action button: “Görüntüle”
+
+/admin requirements:
+In application/project detail modal:
+- Add “Ödeme Planı” demo section:
+  - Total offer
+  - Paid
+  - Remaining
+  - Add/edit payment milestone UI demo
+- Add “Belgeler” demo section:
+  - Upload document demo button
+  - Document list
+  - Mark as ready / waiting demo states
+
+Design:
+- Premium and calm.
+- Clear financial hierarchy.
+- Beige / cream / stone / black / gold palette.
+- Avoid clutter.
+- Mobile-first.
+
+Technical:
+- useState if needed for demo document/payment status.
+- Demo data only.
+- No backend.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

@@ -1,0 +1,81 @@
+CREATE A PREMIUM HANDOVER AND WARRANTY EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Focus on /client and /admin.
+- No real backend.
+- Demo behavior only.
+- Do not break existing pages.
+
+Goal:
+Add a professional delivery, completion, and warranty experience for completed projects.
+
+Pages:
+- /client
+- /admin
+
+/client requirements:
+Create or improve a section:
+“Teslim ve Garanti”
+
+Show:
+- Project completion status
+- Delivery date
+- Warranty start date
+- Warranty end date
+- Responsible contact person
+- Final checklist
+
+Final checklist items:
+- İş kapsamı tamamlandı
+- Alan temizliği yapıldı
+- Malzeme ve uygulama kontrol edildi
+- Belgeler teslim edildi
+- Garanti süreci başlatıldı
+
+Each item should have status:
+- Tamamlandı
+- Bekliyor
+
+Add buttons:
+- “Teslim Tutanağını Görüntüle” demo
+- “Servis Talebi Oluştur”
+
+Servis talebi mini form:
+- Alan
+- Konu
+- Açıklama
+- Button: “Servis Talebi Gönder”
+
+After submit:
+- Success state:
+  “Servis talebiniz alındı.”
+
+/admin requirements:
+In admin project/application detail modal:
+Add “Teslim & Garanti” section:
+- Delivery checklist management demo
+- Warranty dates
+- Service request list
+- Buttons:
+  - “Teslim Tamamlandı”
+  - “Garanti Sürecini Başlat”
+  - “Servis Talebini Tamamlandı İşaretle”
+
+Design:
+- Premium, calm, trust-building.
+- It should feel like a high-end project handover system.
+- Beige / cream / stone / black / gold palette.
+- Mobile-first.
+- Clear checklist UI.
+- Avoid clutter.
+
+Technical:
+- useState for checklist / service request demo behavior.
+- Demo data only.
+- No backend.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

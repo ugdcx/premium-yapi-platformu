@@ -1,0 +1,70 @@
+REFINE THE LOGIN PAGE EXPERIENCE.
+
+Important:
+- UI language must be Turkish.
+- Focus only on /login unless a small navigation fix is required.
+- Do not add real authentication.
+- Do not add backend.
+- Keep demo routing.
+
+Page:
+- /login
+
+Goal:
+Make the login screen feel premium, simple, and purposeful.
+
+Required structure:
+
+1. Left / Top Brand Area
+- Brand placeholder: “AG Yapı Platformu”
+- Headline:
+  “Projenize güvenli erişim sağlayın.”
+- Subtitle:
+  “Müşteri, saha ekibi ve şirket yönetimi için oluşturulan dijital proje kontrol alanına giriş yapın.”
+
+2. Login Card
+- Title:
+  “Giriş Yap”
+- Input:
+  “Telefon veya e-posta”
+- Primary button:
+  “Giriş Bağlantısı Gönder”
+- Helper text:
+  “Bu ilk sürümde girişler demo yönlendirme ile çalışır.”
+
+3. Quick Demo Access
+Show 3 premium role buttons:
+- “Müşteri Panelini Aç” → /client
+- “Admin Panelini Aç” → /admin
+- “Saha Panelini Aç” → /field
+
+4. Role Explanation
+Under the buttons, add short role explanations:
+- Müşteri: süreç, teklif, ödeme ve belgeleri takip eder.
+- Admin: başvuru, teklif ve operasyon akışını yönetir.
+- Saha Ekibi: fotoğraf ve günlük iş güncellemeleri ekler.
+
+5. Trust Strip
+Add 3 small trust items:
+- Şeffaf süreç
+- Kanıtlı ilerleme
+- Tek merkezden yönetim
+
+Design:
+- Very premium and clean.
+- No clutter.
+- Large spacing.
+- Beige / cream / stone / black / muted gold palette.
+- Desktop: balanced two-column layout if possible.
+- Mobile: single-column layout.
+- Buttons must feel high-end.
+- Avoid generic login template look.
+
+Technical:
+- Use useRouter for demo navigation if needed.
+- Do not implement real auth.
+- Build must pass.
+
+After finishing:
+- Run npm run build.
+- Summarize changed files and build result.

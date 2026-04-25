@@ -1,0 +1,83 @@
+CREATE A PREMIUM PROCESS / PROJECT CONTROL EXPERIENCE SECTION.
+
+Important:
+- UI language must be Turkish.
+- Create a new page: /surec
+- Also add navigation links to /surec from homepage header if possible.
+- Do not break other pages.
+
+Goal:
+Create a premium page explaining how the platform works after a customer creates an application.
+
+Page:
+- /surec
+
+Page title:
+“Dijital Proje Kontrol Süreci”
+
+Subtitle:
+“Başvurudan teslimata kadar tüm yapı, tadilat ve gayrimenkul süreçlerini kontrollü, kayıtlı ve şeffaf şekilde yönetiyoruz.”
+
+Sections:
+
+1. Process Timeline
+Show steps:
+1. Ön Başvuru
+2. Bilgi ve Görsel Toplama
+3. İnceleme
+4. Teklif ve Yol Haritası
+5. Onay
+6. Uygulama / Danışmanlık Süreci
+7. Günlük Takip
+8. Teslim / Sonuçlandırma
+
+2. Role-Based Flow
+Explain 3 roles:
+- Müşteri: süreci panelden takip eder
+- Saha Ekibi: fotoğraf ve iş güncellemesi yükler
+- Admin: başvuruları, teklifleri ve operasyonu yönetir
+
+3. What Customer Sees
+Cards:
+- Günlük güncellemeler
+- Fotoğraf/video akışı
+- Teklif ve ödeme özeti
+- Onay bekleyen kararlar
+- Belgeler ve teslim kayıtları
+
+4. What Field Team Does
+Cards:
+- Fotoğraf yükler
+- Kısa iş notu girer
+- Alan seçer
+- Sorun / malzeme eksikliği bildirir
+
+5. What Admin Controls
+Cards:
+- Başvurular
+- Kanban süreç yönetimi
+- Teklif oluşturma
+- Fiyat girişi
+- Müşteri iletişimi
+- Durum değişiklikleri
+
+6. Final CTA
+Title:
+“Süreci kontrol altına almak için ilk başvuruyu oluşturun.”
+Button:
+“Ön Başvuru Oluştur” → /teklif-al
+
+Design:
+- Premium, simple, high-end product page
+- Beige / cream / stone / black / gold palette
+- Visual process cards
+- Clear typography
+- Mobile-first
+- Avoid technical jargon
+- It should feel like a digital operations platform, not a static contractor website.
+
+Technical:
+- Create app/surec/page.js
+- Build must pass.
+- Run npm run build.
+- Summarize changed files and build result.

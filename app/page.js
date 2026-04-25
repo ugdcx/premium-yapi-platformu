@@ -1,285 +1,221 @@
 import {
+  ArrowRight,
+  BarChart3,
   Building2,
+  Camera,
+  CheckCircle2,
+  ClipboardCheck,
+  FileText,
   Hammer,
   Home,
-  Camera,
   ReceiptText,
   ShieldCheck,
-  BarChart3,
-  ArrowRight,
-  CheckCircle2
+  WalletCards
 } from "lucide-react";
 
 const services = [
   {
     icon: Building2,
     title: "Anahtar Teslim Yapı Geliştirme",
-    text: "Arsa aşamasından anahtar teslimine kadar tüm yapı üretim sürecini planlayan, yöneten ve uygulayan entegre hizmet modeli."
+    text: "Arsa, konsept, bütçe, uygulama ve teslim sürecini tek yönetim planında toplar."
   },
   {
     icon: Hammer,
-    title: "Tadilat & Değer Artırma Çalışmaları",
-    text: "Mevcut konutları modernize ederek kullanım kalitesini, estetik değerini ve piyasa karşılığını yükselten yenileme çözümleri."
+    title: "Tadilat & Değer Artırma",
+    text: "Mevcut yapıları daha kullanışlı, modern ve satışa hazır hale getirir."
   },
   {
     icon: Home,
-    title: "Gayrimenkul Satış Danışmanlığı",
-    text: "Gayrimenkulünüzü doğru strateji, doğru sunum ve değer artırıcı hazırlıklarla pazara taşıyan danışmanlık süreci."
+    title: "Gayrimenkul Danışmanlığı",
+    text: "Satış, kiralama ve yatırım kararlarını doğru fiyat ve doğru sunumla yönetir."
   }
 ];
 
-const panelItems = [
+const controlItems = [
   "Günlük iş takibi",
-  "Saatli fotoğraf ve video akışı",
-  "Malzeme, marka ve fatura kontrolü",
-  "Ödeme planı ve kalan bakiye takibi",
-  "Müşteri onay sistemi",
-  "Teslim ve garanti kayıtları"
+  "Fotoğraf/video akışı",
+  "Malzeme ve fatura kontrolü",
+  "Teklif ve ödeme takibi",
+  "Onay süreçleri"
+];
+
+const steps = [
+  "Başvuru oluştur",
+  "Bilgileri ve görselleri ekle",
+  "Ekibimiz incelesin",
+  "Teklif ve yol haritası hazırlansın",
+  "Süreç panelden takip edilsin"
+];
+
+const trustItems = [
+  ["Şeffaf süreç", "Kapsam, bütçe ve ilerleme görünür kalır."],
+  ["Kanıtlı ilerleme", "Saha kayıtları fotoğraf ve zaman bilgisiyle desteklenir."],
+  ["Tek merkezden yönetim", "Müşteri, admin ve saha ekibi aynı akışa bağlanır."],
+  ["Profesyonel raporlama", "Teklif, ödeme, belge ve teslim kayıtları düzenli tutulur."]
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-cream">
-      <header className="fixed top-0 z-50 w-full border-b border-black/10 bg-cream/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="text-xl font-semibold tracking-tight">
-            AG Yapı Platformu
-          </div>
-
-          <nav className="hidden gap-8 text-sm text-black/70 md:flex">
-            <a href="#alanlar">Alanlar</a>
-            <a href="#panel">Proje Paneli</a>
-            <a href="#surec">Süreç</a>
-            <a href="#iletisim">İletişim</a>
-          </nav>
-
-          <a
-            href="#iletisim"
-            className="rounded-full bg-stoneDark px-5 py-2 text-sm text-white"
-          >
-            Teklif Al
-          </a>
-        </div>
-      </header>
-
-      <section className="px-6 pt-36 pb-20">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
+    <main className="min-h-screen bg-cream text-stoneDark">
+      <section className="px-6 py-24">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
           <div>
-            <div className="mb-6 inline-flex rounded-full border border-black/10 px-4 py-2 text-sm text-black/60">
-              Yapı geliştirme · Değer artırma · Satış danışmanlığı
+            <div className="mb-6 inline-flex rounded-full border border-black/10 bg-white/45 px-4 py-2 text-sm text-black/60">
+              Yapı · Dönüşüm · Gayrimenkul operasyonları
             </div>
-
-            <h1 className="max-w-3xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
-              Yapı ve gayrimenkul süreçlerini tek merkezden yönetin.
+            <h1 className="max-w-4xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
+              Yapı, dönüşüm ve gayrimenkul süreçlerinizi tek merkezden yönetin.
             </h1>
-
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-black/65">
-              Anahtar teslim inşaat, renovasyon, değer artırma ve satış
-              danışmanlığı süreçlerini şeffaf, ölçülebilir ve dijital olarak
-              takip edilebilir bir modele dönüştürüyoruz.
+            <p className="mt-7 max-w-3xl text-lg leading-8 text-black/65">
+              Anahtar teslim inşaat, değer artırma çalışmaları ve gayrimenkul
+              danışmanlığı süreçlerini şeffaf, kontrollü ve dijital olarak takip
+              edilebilir hale getiriyoruz.
             </p>
 
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a
-                href="#panel"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-stoneDark px-7 py-4 text-white"
+                href="/teklif-al"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-stoneDark px-7 py-4 font-medium text-white"
               >
-                Proje kontrol sistemini incele
+                Ön Başvuru Oluştur
                 <ArrowRight size={18} />
               </a>
-
               <a
-                href="#alanlar"
-                className="inline-flex items-center justify-center rounded-full border border-black/15 px-7 py-4"
+                href="/client"
+                className="inline-flex items-center justify-center rounded-full border border-black/15 px-7 py-4 font-medium"
               >
-                Hizmet alanları
+                Paneli Gör
               </a>
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-black/10 bg-white/50 p-5 shadow-2xl shadow-black/10">
-            <div className="rounded-[1.5rem] bg-stoneDark p-6 text-white">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-white/50">Aktif Proje</p>
-                  <h3 className="mt-1 text-2xl font-semibold">
-                    Villa Renovasyon Süreci
-                  </h3>
-                </div>
-                <div className="rounded-full bg-white/10 px-4 py-2 text-sm">
-                  %68 tamamlandı
-                </div>
-              </div>
-
-              <div className="mt-8 h-3 rounded-full bg-white/10">
-                <div className="h-3 w-[68%] rounded-full bg-gold" />
-              </div>
-
-              <div className="mt-8 grid gap-4 md:grid-cols-3">
-                <Metric title="Bugün" value="7 kayıt" />
-                <Metric title="Fotoğraf" value="124 adet" />
-                <Metric title="Kalan" value="₺420.000" />
-              </div>
-
-              <div className="mt-8 rounded-2xl bg-white/10 p-5">
-                <p className="text-sm text-white/50">Son güncelleme</p>
-                <p className="mt-2">
-                  Mutfak dolap sökümü tamamlandı. Elektrik altyapı hazırlığı
-                  için saha kontrolü yapıldı.
-                </p>
-              </div>
-            </div>
-          </div>
+          <DashboardMockup />
         </div>
       </section>
 
-      <section id="alanlar" className="px-6 py-20">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-7xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-black/40">
-            Uzmanlık Alanları
-          </p>
-          <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
-            İnşaat, renovasyon ve satış sürecini birbirine bağlayan yapı.
-          </h2>
+          <SectionHeading
+            eyebrow="Hizmet Yapısı"
+            title="Üç ana hizmet, tek operasyon standardı."
+            text="Her proje tipi kendi başvuru akışı, teklif modeli ve dijital takip paneliyle yönetilir."
+          />
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {services.map((item) => {
-              const Icon = item.icon;
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {services.map((service) => {
+              const Icon = service.icon;
               return (
-                <div
-                  key={item.title}
-                  className="rounded-[2rem] border border-black/10 bg-white/55 p-8 shadow-xl shadow-black/5"
+                <article
+                  key={service.title}
+                  className="rounded-[2rem] border border-black/10 bg-white/60 p-8 shadow-xl shadow-black/5"
                 >
                   <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-stoneDark text-white">
                     <Icon size={26} />
                   </div>
-                  <h3 className="text-2xl font-semibold">{item.title}</h3>
-                  <p className="mt-4 leading-7 text-black/60">{item.text}</p>
-                </div>
+                  <h3 className="text-2xl font-semibold">{service.title}</h3>
+                  <p className="mt-4 leading-7 text-black/60">{service.text}</p>
+                  <a
+                    href="/teklif-al"
+                    className="mt-7 inline-flex items-center gap-2 text-sm font-medium"
+                  >
+                    Ön Başvuru Oluştur
+                    <ArrowRight size={16} />
+                  </a>
+                </article>
               );
             })}
           </div>
         </div>
       </section>
 
-      <section id="panel" className="bg-stoneDark px-6 py-24 text-white">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-white/35">
-              Dijital Proje Kontrol Paneli
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-              Müşteri, yapılan işi saatiyle ve kanıtıyla takip eder.
-            </h2>
-            <p className="mt-6 leading-8 text-white/60">
-              Her proje için özel bir müşteri paneli oluşturulur. Yapılan işler,
-              kullanılan malzemeler, faturalar, fotoğraflar, ödeme planı ve
-              onay bekleyen kararlar tek ekranda toplanır.
-            </p>
+      <section className="bg-stoneDark px-6 py-24 text-white">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <SectionHeading
+            eyebrow="Dijital Proje Kontrol"
+            title="Saha, müşteri ve yönetim aynı ekranda buluşur."
+            text="Projenin her aşaması kayıtlı, ölçülebilir ve kontrol edilebilir hale gelir."
+            dark
+          />
 
-            <div className="mt-8 grid gap-4">
-              {panelItems.map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <CheckCircle2 className="text-gold" size={20} />
-                  <span className="text-white/80">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-[2rem] bg-white p-5 text-stoneDark">
-            <div className="grid gap-4">
-              <PanelCard
-                icon={Camera}
-                title="Fotoğraf Akışı"
-                text="Bugün 18 yeni saha fotoğrafı eklendi."
-              />
-              <PanelCard
-                icon={ReceiptText}
-                title="Malzeme & Fatura"
-                text="Seramik, armatür ve boya faturaları yüklendi."
-              />
-              <PanelCard
-                icon={BarChart3}
-                title="Bütçe Takibi"
-                text="Toplam bütçenin %62’si kullanıldı."
-              />
-              <PanelCard
-                icon={ShieldCheck}
-                title="Onay Bekleyenler"
-                text="2 malzeme seçimi müşteri onayı bekliyor."
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="surec" className="px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-black/40">
-            Süreç Yönetimi
-          </p>
-          <h2 className="mt-4 text-4xl font-semibold tracking-tight md:text-5xl">
-            Kontrol edilebilir, raporlanabilir, şeffaf süreç.
-          </h2>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-4">
-            {[
-              "Ön Görüşme",
-              "Keşif & Analiz",
-              "Teklif & Planlama",
-              "Uygulama",
-              "Dijital Takip",
-              "Kalite Kontrol",
-              "Teslim",
-              "Garanti & Destek"
-            ].map((step, index) => (
+          <div className="grid gap-4">
+            {controlItems.map((item) => (
               <div
-                key={step}
-                className="rounded-3xl border border-black/10 bg-white/50 p-6"
+                key={item}
+                className="flex items-center gap-3 rounded-[1.5rem] border border-white/10 bg-white/10 p-5"
               >
-                <div className="mb-6 text-sm text-black/40">
-                  0{index + 1}
-                </div>
-                <h3 className="text-xl font-semibold">{step}</h3>
+                <CheckCircle2 className="text-gold" size={20} />
+                <span className="text-white/80">{item}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="iletisim" className="px-6 pb-24">
+      <section className="px-6 py-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Nasıl Çalışır"
+            title="Başvurudan teslim takibine kadar net bir yol."
+            text="Karmaşık yapı ve gayrimenkul kararları sade bir akışa dönüştürülür."
+          />
+
+          <div className="mt-12 grid gap-5 md:grid-cols-5">
+            {steps.map((step, index) => (
+              <div
+                key={step}
+                className="rounded-[1.5rem] border border-black/10 bg-white/55 p-6"
+              >
+                <p className="text-sm text-black/35">
+                  {String(index + 1).padStart(2, "0")}
+                </p>
+                <h3 className="mt-8 text-xl font-semibold">{step}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 pb-24">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="Güven ve Değer"
+            title="Özel proje kontrol odası gibi çalışan platform."
+            text="Müşteri kendini güvende hisseder; ekip kararları ve ilerlemeyi belgeli şekilde yönetir."
+          />
+
+          <div className="mt-12 grid gap-6 md:grid-cols-4">
+            {trustItems.map(([title, text]) => (
+              <article
+                key={title}
+                className="rounded-[1.5rem] border border-black/10 bg-white/60 p-6"
+              >
+                <ShieldCheck className="text-gold" size={24} />
+                <h3 className="mt-6 text-xl font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-black/60">{text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 pb-24">
         <div className="mx-auto max-w-7xl rounded-[2rem] bg-stoneDark p-10 text-white md:p-16">
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                Projenizi kontrollü ve şeffaf bir sisteme taşıyın.
+              <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
+                Projenizi kontrollü bir sisteme taşıyın.
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-white/60">
-                Anahtar teslim yapı, değer artırma çalışması veya satış
-                danışmanlığı için ilk değerlendirme talebi oluşturun.
+                Yapı, tadilat veya gayrimenkul hedefinizi paylaşın; ekibimiz
+                kapsamı, teklif yolunu ve takip modelini netleştirsin.
               </p>
             </div>
-
-            <form className="grid gap-4">
-              <input
-                className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 outline-none placeholder:text-white/35"
-                placeholder="Ad Soyad"
-              />
-              <input
-                className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 outline-none placeholder:text-white/35"
-                placeholder="Telefon"
-              />
-              <select className="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 outline-none">
-                <option>Hizmet alanı seçin</option>
-                <option>Anahtar teslim yapı geliştirme</option>
-                <option>Tadilat & değer artırma</option>
-                <option>Gayrimenkul satış danışmanlığı</option>
-              </select>
-              <button className="rounded-2xl bg-gold px-5 py-4 font-medium text-stoneDark">
-                Ön Talep Oluştur
-              </button>
-            </form>
+            <a
+              href="/teklif-al"
+              className="inline-flex justify-center rounded-full bg-gold px-8 py-4 font-medium text-stoneDark"
+            >
+              Ön Başvuru Oluştur
+            </a>
           </div>
         </div>
       </section>
@@ -287,23 +223,97 @@ export default function HomePage() {
   );
 }
 
-function Metric({ title, value }) {
+function DashboardMockup() {
+  return (
+    <div className="rounded-[2rem] border border-black/10 bg-white/60 p-4 shadow-2xl shadow-black/10">
+      <div className="rounded-[1.5rem] bg-stoneDark p-6 text-white">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm text-white/45">Aktif proje</p>
+            <h2 className="mt-1 text-2xl font-semibold">
+              Villa Renovasyon Süreci
+            </h2>
+          </div>
+          <span className="rounded-full bg-gold px-4 py-2 text-sm text-stoneDark">
+            Teklif Hazır
+          </span>
+        </div>
+
+        <div className="mt-8">
+          <div className="mb-3 flex justify-between text-sm text-white/50">
+            <span>İlerleme</span>
+            <span>%42</span>
+          </div>
+          <div className="h-3 rounded-full bg-white/10">
+            <div className="h-3 w-[42%] rounded-full bg-gold" />
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <MockMetric icon={Camera} label="Fotoğraf" value="124" />
+          <MockMetric icon={ReceiptText} label="Teklif" value="₺1.25M" />
+          <MockMetric icon={WalletCards} label="Kalan" value="₺1M" />
+        </div>
+
+        <div className="mt-8 grid gap-3">
+          <MockLine
+            icon={ClipboardCheck}
+            text="Bugün 14:30 — Mutfak sökümü tamamlandı — 8 fotoğraf"
+          />
+          <MockLine
+            icon={BarChart3}
+            text="Teklif kapsamı ve ödeme planı müşteri onayında"
+          />
+          <MockLine icon={FileText} text="Teklif PDF ve sözleşme taslağı hazırlandı" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MockMetric({ icon: Icon, label, value }) {
   return (
     <div className="rounded-2xl bg-white/10 p-4">
-      <p className="text-sm text-white/40">{title}</p>
+      <Icon className="text-gold" size={19} />
+      <p className="mt-3 text-sm text-white/45">{label}</p>
       <p className="mt-1 text-xl font-semibold">{value}</p>
     </div>
   );
 }
 
-function PanelCard({ icon: Icon, title, text }) {
+function MockLine({ icon: Icon, text }) {
   return (
-    <div className="rounded-3xl border border-black/10 bg-cream p-6">
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-stoneDark text-white">
-        <Icon size={22} />
-      </div>
-      <h3 className="text-xl font-semibold">{title}</h3>
-      <p className="mt-2 text-black/60">{text}</p>
+    <div className="flex items-center gap-3 rounded-2xl bg-white/10 p-4 text-sm text-white/70">
+      <Icon className="shrink-0 text-gold" size={18} />
+      <span>{text}</span>
+    </div>
+  );
+}
+
+function SectionHeading({ eyebrow, title, text, dark = false }) {
+  return (
+    <div>
+      <p
+        className={`text-sm uppercase tracking-[0.3em] ${
+          dark ? "text-white/35" : "text-black/40"
+        }`}
+      >
+        {eyebrow}
+      </p>
+      <h2
+        className={`mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-5xl ${
+          dark ? "text-white" : "text-stoneDark"
+        }`}
+      >
+        {title}
+      </h2>
+      <p
+        className={`mt-5 max-w-2xl leading-8 ${
+          dark ? "text-white/60" : "text-black/60"
+        }`}
+      >
+        {text}
+      </p>
     </div>
   );
 }
