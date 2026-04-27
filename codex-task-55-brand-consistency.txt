@@ -1,0 +1,47 @@
+FIX BRAND CONSISTENCY ACROSS THE ENTIRE PROJECT.
+
+IMPORTANT:
+- Brand must be: BLAAG Construction and Architecture
+- UI language must be Turkish.
+- Do not add backend.
+- Build must pass.
+
+GOAL:
+Remove old brand names and inconsistent platform language.
+
+SEARCH AND REPLACE / FIX:
+- AG Yapı Platformu
+- AG Yapı
+- premium-yapi
+- Premium Yapı Platformu
+- platform as a product if visible to customers
+- any old brand placeholder
+
+USE:
+BLAAG Construction and Architecture
+
+PUBLIC COPY RULE:
+Do not say we sell a platform.
+Say:
+- profesyonel yapı ve tadilat hizmeti
+- müşteriye özel takip ayrıcalığı
+- fotoğraflı süreç takibi
+- şeffaf uygulama yönetimi
+
+METADATA:
+Update app/layout.js metadata:
+Title:
+BLAAG Construction and Architecture | Yapı, Tadilat ve Gayrimenkul
+
+Description:
+Anahtar teslim yapı, tadilat ve gayrimenkul danışmanlığı süreçlerinde profesyonel uygulama ve müşteriye özel şeffaf takip deneyimi.
+
+FOOTER:
+Brand must be consistent.
+
+HEADER:
+Brand must be consistent.
+
+AFTER FINISHING:
+Run npm run build.
+Summarize brand fixes and build result.

@@ -16,30 +16,30 @@ import {
 
 const projectScenarios = [
   {
-    name: "A. T******",
+    name: "A. Y******",
     type: "Villa Anahtar Teslim",
-    today: ["Dış cephe uygulaması başladı", "7 fotoğraf eklendi"],
+    today: ["Mutfak söküm tamamlandı", "6 fotoğraf eklendi"],
     status: "Uygulama aşaması",
-    next: "İç mekan planlama"
+    next: "Elektrik altyapı"
   },
   {
     name: "M. K******",
     type: "Komple Daire Tadilatı",
-    today: ["Mutfak ölçüleri alındı", "Seramik numuneleri incelendi"],
-    status: "Planlama ve seçim",
-    next: "Malzeme onayı"
+    today: ["Banyo seramikleri söküldü", "Tesisat noktaları kontrol edildi"],
+    status: "Hazırlık aşaması",
+    next: "Su yalıtımı"
   },
   {
     name: "E. Y******",
     type: "Satışa Hazırlık",
-    today: ["Salon boya kontrolü yapıldı", "Öncesi fotoğraflar arşivlendi"],
+    today: ["Salon boya hazırlığı başladı", "Öncesi fotoğraflar eklendi"],
     status: "Değer artırma",
-    next: "Profesyonel çekim"
+    next: "Son kat boya"
   },
   {
     name: "D. A******",
     type: "Müstakil Konut",
-    today: ["Kaba yapı saha kontrolü tamamlandı", "Statik ekip notu eklendi"],
+    today: ["Şantiye alanı düzenlendi", "Cephe kontrolü yapıldı"],
     status: "Şantiye koordinasyonu",
     next: "İnce iş programı"
   },
@@ -53,7 +53,7 @@ const projectScenarios = [
   {
     name: "R. G******",
     type: "Gayrimenkul Danışmanlığı",
-    today: ["Portföy sunumu güncellendi", "Pazar notları eklendi"],
+    today: ["Portföy sunumu hazırlandı", "İlan görselleri seçildi"],
     status: "Strateji aşaması",
     next: "Alıcı görüşmeleri"
   },
@@ -63,13 +63,6 @@ const projectScenarios = [
     today: ["İskele kurulumu kontrol edildi", "Cephe renk alternatifi paylaşıldı"],
     status: "Saha hazırlığı",
     next: "Astar uygulaması"
-  },
-  {
-    name: "B. S******",
-    type: "Kiraya Hazırlık",
-    today: ["Elektrik kontrolleri tamamlandı", "Eksik listesi kapatıldı"],
-    status: "Son kontrol",
-    next: "Teslim fotoğrafları"
   }
 ];
 
@@ -77,19 +70,19 @@ const services = [
   {
     icon: Building2,
     title: "Anahtar Teslim Yapı Geliştirme",
-    text: "Arsa, konsept, ruhsat takibi, ekip organizasyonu, uygulama ve teslim sürecini tek sorumluluk altında yönetiriz.",
+    text: "Arsa ya da yatırım fikrinizin dağınık kararlar içinde kaybolmasını önler; planlama, saha koordinasyonu ve teslimi tek profesyonel akışta yönetiriz.",
     image: "Taş cepheli villa kütlesi, doğal ışık, temiz şantiye düzeni"
   },
   {
     icon: Hammer,
     title: "Tadilat & Değer Artırma",
-    text: "Mevcut yapıları yaşam konforu, satış değeri veya kiralama gücü için planlı ve kontrollü şekilde dönüştürürüz.",
+    text: "Mevcut yapınızı daha yaşanabilir, daha estetik ve daha değerli hale getirirken sürprizleri azaltan kontrollü bir yenileme planı kurarız.",
     image: "Mutfak, banyo ve yaşam alanı yenileme numune panosu"
   },
   {
     icon: Home,
     title: "Gayrimenkul Danışmanlığı",
-    text: "Satış, kiralama ve yatırım kararlarını doğru sunum, doğru fiyat ve doğru hazırlık stratejisiyle netleştiririz.",
+    text: "Satış, kiralama, satın alma veya yatırım kararınızı doğru değerleme, doğru sunum ve kullanım amacına uygun stratejiyle güçlendiririz.",
     image: "Portföy dosyası, anahtar, mimari plan ve saha notları"
   }
 ];
@@ -113,11 +106,11 @@ export default function HomePage() {
               BLAAG Construction and Architecture
             </p>
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-              Projenizi baştan sona kontrol altında tutun.
+              Kusursuz yapı, şeffaf süreç.
             </h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-white/65">
-              Tadilat, yapı ve gayrimenkul süreçlerinizi profesyonel ekibimizle
-              yürütür; tüm ilerlemeyi size özel alandan takip etmenizi sağlarız.
+              Tüm süreci profesyonel ekibimiz yönetir. Siz sadece sonucu takip
+              edersiniz.
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a href="/teklif-al" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-medium text-stoneDark">
@@ -149,8 +142,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow="Hizmetler"
-            title="Yapı, tadilat ve gayrimenkul kararlarını tek profesyonel akışta toplarız."
-            text="BLAAG; sahadaki işi, kararları ve teslim sürecini yöneten premium bir inşaat ve mimarlık hizmet şirketidir."
+            title="Belirsizliği azaltan, değeri artıran profesyonel yapı hizmetleri."
+            text="BLAAG; yapı, tadilat ve gayrimenkul kararlarınızı netleştirir, sahadaki uygulamayı yönetir ve süreci fotoğraflı takip ayrıcalığıyla görünür kılar."
           />
           <div className="mt-12 grid gap-10">
             {services.map((service, index) => (
@@ -164,15 +157,16 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <div>
             <SectionHeading
-              eyebrow="Dijital Takip Avantajı"
-              title="Süreci sadece yaptırmazsınız, takip edersiniz."
-              text="Size özel takip alanı, hizmetimizin şeffaflık katmanıdır."
+              eyebrow="Takip Ayrıcalığı"
+              title="Süreci sadece yaptırmazsınız, şeffaf şekilde takip edersiniz."
+              text="BLAAG ile yürütülen projelerde önemli aşamalar, fotoğraflar ve gelişmeler size özel takip bağlantısı üzerinden düzenli olarak sunulur."
             />
             <div className="mt-8 grid gap-4">
               {[
-                "Günlük gelişmeleri görürsünüz",
-                "Fotoğraflarla ilerlemeyi takip edersiniz",
-                "Sürecin hangi aşamada olduğunu bilirsiniz"
+                "Aşama bazlı fotoğraflı güncellemeler",
+                "Size özel takip bağlantısı",
+                "Onaylı ve düzenlenmiş müşteri bilgilendirmeleri",
+                "Belgeler, ödemeler ve teslim süreci için tek noktadan görünürlük"
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <CheckCircle2 className="text-gold" size={20} />
@@ -180,6 +174,10 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+            <p className="mt-8 max-w-2xl border-l border-gold pl-5 leading-8 text-muted">
+              Sahadan gelen fotoğraflar ekibimiz tarafından kontrol edilir,
+              açıklamaları düzenlenir ve müşteriye anlaşılır şekilde sunulur.
+            </p>
           </div>
           <div className="rounded-[2rem] border border-border bg-surface p-5 shadow-premium">
             <MiniProjectCard compact />
@@ -224,14 +222,12 @@ export default function HomePage() {
           />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[
-              ["Öncesi", "Mevcut durum, ihtiyaçlar ve riskler fotoğraflarla kayıt altına alınır."],
-              ["Süreç", "Uygulama adımları saha notları ve görsellerle takip edilir."],
-              ["Sonrası", "Teslim kalitesi, garanti başlangıcı ve kapanış bilgileri netleştirilir."]
-            ].map(([title, text]) => (
+              ["Öncesi", "Mevcut durum analiz edilir ve sürecin başlangıcı kayıt altına alınır.", "Mevcut doku"],
+              ["Süreç", "Uygulama aşamaları düzenli şekilde takip edilir.", "Uygulama süreci"],
+              ["Sonrası", "Teslim süreci, belgeler ve garanti bilgileri netleşir.", "Teslim sonrası"]
+            ].map(([title, text, label]) => (
               <article key={title} className="bg-surface p-5">
-                <div className="aspect-[4/3] bg-cream p-4 text-sm font-medium text-muted">
-                  {title} görsel alanı
-                </div>
+                <ImageFrame label={label} />
                 <h3 className="mt-6 text-2xl font-semibold">{title}</h3>
                 <p className="mt-3 leading-7 text-muted">{text}</p>
               </article>
@@ -263,13 +259,13 @@ function MiniProjectCard({ compact = false }) {
   );
 
   return (
-    <div className={compact ? "rounded-[1.5rem] bg-stoneDark p-6 text-white" : "rounded-[2rem] border border-white/10 bg-white p-5 text-stoneDark shadow-2xl shadow-black/20"}>
-      <div className={compact ? "" : "rounded-[1.5rem] bg-cream p-6"}>
+    <div className={compact ? "rounded-[1.5rem] bg-stoneDark p-7 text-white" : "rounded-[2rem] border border-white/10 bg-white p-6 text-stoneDark shadow-[0_28px_80px_rgba(0,0,0,0.28)] lg:p-7"}>
+      <div className={compact ? "" : "rounded-[1.5rem] bg-cream p-7 lg:p-8"}>
         <p className={compact ? "text-sm text-white/45" : "text-sm text-black/40"}>{scenario.name}</p>
-        <h2 className="mt-2 text-2xl font-semibold">{scenario.type}</h2>
-        <div className="mt-8">
+        <h2 className="mt-3 text-3xl font-semibold">{scenario.type}</h2>
+        <div className="mt-10">
           <p className={compact ? "text-sm font-medium text-white/55" : "text-sm font-medium text-muted"}>Bugün:</p>
-          <div className="mt-3 grid gap-2">
+          <div className="mt-4 grid gap-3">
             {scenario.today.map((item) => (
               <div key={item} className="flex items-start gap-2 text-sm">
                 <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold" />
@@ -278,7 +274,7 @@ function MiniProjectCard({ compact = false }) {
             ))}
           </div>
         </div>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <SmallInfo label="Durum" value={scenario.status} compact={compact} />
           <SmallInfo label="Sonraki adım" value={scenario.next} compact={compact} />
         </div>
@@ -305,17 +301,29 @@ function ServiceSplit({ service, reversed }) {
         <h3 className="mt-6 text-3xl font-semibold tracking-tight md:text-5xl">{service.title}</h3>
         <p className="mt-5 max-w-xl leading-8 text-muted">{service.text}</p>
         <a href="/hizmetler" className="mt-7 inline-flex items-center gap-2 text-sm font-medium">
-          Detayları İncele
+          Detayları incele
           <ArrowRight size={16} />
         </a>
       </div>
       <div className="min-h-72 bg-soft p-6">
-        <div className="flex h-full min-h-60 flex-col justify-between border border-border bg-cream p-5">
-          <Route className="text-gold" size={28} />
-          <p className="max-w-sm text-lg font-medium text-muted">{service.image}</p>
-        </div>
+        <ImageFrame label={service.image} tall />
       </div>
     </article>
+  );
+}
+
+function ImageFrame({ label, tall = false }) {
+  return (
+    <div className={`relative overflow-hidden border border-border bg-cream shadow-sm shadow-black/5 ${tall ? "min-h-60" : "aspect-[4/3]"}`}>
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(198,168,91,0.16),rgba(255,255,255,0)_42%),linear-gradient(90deg,rgba(17,17,17,0.06)_1px,transparent_1px),linear-gradient(0deg,rgba(17,17,17,0.05)_1px,transparent_1px)] bg-[length:auto,44px_44px,44px_44px]" />
+      <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-4">
+        <div>
+          <span className="block h-px w-16 bg-gold" />
+          <p className="mt-3 max-w-xs text-sm font-medium text-muted">{label}</p>
+        </div>
+        <Route className="shrink-0 text-gold/70" size={26} />
+      </div>
+    </div>
   );
 }
 

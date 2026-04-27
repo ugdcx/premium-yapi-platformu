@@ -1,0 +1,62 @@
+UPGRADE PUBLIC INTAKE LANGUAGE AND LEAD QUALITY.
+
+IMPORTANT:
+- UI language must be Turkish.
+- This is a service inquiry, not software signup.
+- Customer does not create an account.
+- Do not add backend.
+- Build must pass.
+
+PAGE:
+- /teklif-al
+
+GOAL:
+Make the intake feel premium and concierge-like, not bureaucratic.
+
+TERMINOLOGY:
+Reduce overly bureaucratic feel of “Ön Başvuru” in headings.
+Use softer phrases:
+- Projenizi Netleştirelim
+- Projemi Başlat
+- Uzmanla Görüş
+- İlk Değerlendirme Talebi
+
+Header/nav CTA can remain “Ön Başvuru Oluştur” if already consistent, but page title should feel more premium.
+
+SUCCESS MESSAGE:
+Use:
+Başvurunuz alındı.
+Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.
+Onaylanan işler için size özel takip bağlantısı oluşturulur.
+
+REMOVE:
+- account creation messaging
+- login messaging
+- instant panel creation messaging
+- SaaS/platform language
+
+LEAD QUALITY:
+Add or improve fields if not already present:
+- Konum
+- Hizmet tipi
+- Proje kapsamı
+- Zamanlama
+- Yaklaşık proje ölçeği / bütçe aralığı
+- Fotoğraf/evrak ekleme
+
+Budget should be phrased softly:
+“Proje ölçeği”
+or
+“Planlanan yatırım aralığı”
+
+Do not make it feel cheap or aggressive.
+
+DESIGN:
+- Premium
+- Calm
+- Step-based
+- Not too many fields at once
+
+AFTER FINISHING:
+Run npm run build.
+Summarize intake improvements and build result.

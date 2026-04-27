@@ -41,11 +41,11 @@ export default function LoginForm() {
                 İç operasyon erişimi
               </div>
               <h1 className="mt-6 max-w-2xl text-4xl font-semibold leading-tight tracking-tight md:text-7xl">
-                Yetkili Girişi
+                Yetkili Erişim
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
                 BLAAG yönetim ekibi için başvuru, teklif, proje ve saha
-                operasyonlarını yöneten gizli giriş alanı.
+                operasyonlarını yöneten özel erişim alanı.
               </p>
             </div>
 
@@ -62,8 +62,8 @@ export default function LoginForm() {
                 <Building2 size={22} />
               </div>
               <div>
-                <p className="text-sm text-muted">Gizli erişim</p>
-                <h2 className="text-2xl font-semibold">BLAAG yönetim girişi</h2>
+                <p className="text-sm text-muted">Özel erişim</p>
+                <h2 className="text-2xl font-semibold">BLAAG yetkili erişimi</h2>
               </div>
             </div>
 
@@ -79,7 +79,7 @@ export default function LoginForm() {
                     setError("");
                   }}
                   className="rounded-2xl border border-border bg-cream px-5 py-4 outline-none placeholder:text-black/35"
-                  placeholder="0500 000 00 01"
+                  placeholder="Yetkili telefon numarası"
                   autoComplete="tel"
                 />
               </label>
@@ -108,7 +108,7 @@ export default function LoginForm() {
               )}
 
               <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-stoneDark px-5 py-4 font-medium text-white">
-                Yönetim Paneline Gir
+                Yönetim Alanına Geç
                 <ArrowRight size={18} />
               </button>
             </form>

@@ -2,6 +2,7 @@ import {
   ArrowRight,
   Camera,
   ClipboardCheck,
+  DraftingCompass,
   FileText,
   Handshake,
   MessageCircle,
@@ -38,7 +39,7 @@ const steps = [
   {
     icon: ShieldCheck,
     title: "Takip ve Sonuç",
-    text: "Gelişmeler, fotoğraflar, kararlar ve teslim kapanışı şeffaf biçimde takip edilir."
+    text: "İşi biz yönetiriz; siz önemli aşamaları, fotoğrafları ve teslim sürecini şeffaf şekilde takip edersiniz."
   }
 ];
 
@@ -59,8 +60,8 @@ export default function ProcessPage() {
               BLAAG ile çalışırken her adım net ve görünürdür.
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-              Müşteri BLAAG’i işe alır. Dijital takip ise bu hizmetin premium
-              şeffaflık avantajıdır; süreç boyunca ne olduğunu bilmenizi sağlar.
+              İşi biz yönetiriz, siz süreci şeffaf şekilde takip edersiniz.
+              Takip ayrıcalığı, BLAAG hizmetinin güven veren parçasıdır.
             </p>
           </div>
         </header>
@@ -83,23 +84,26 @@ export default function ProcessPage() {
           <div>
             <Camera className="text-gold" size={30} />
             <h2 className="mt-6 text-3xl font-semibold tracking-tight md:text-5xl">
-              Takip sistemi hizmetin yerine geçmez; hizmeti görünür kılar.
+              Fotoğraflı takip, hizmetinize güven ve görünürlük katar.
             </h2>
             <p className="mt-5 max-w-2xl leading-8 text-muted">
-              Müşteri tarafında özel proje bağlantısı, saha tarafında yalnızca
-              fotoğraf yükleme bağlantısı hedeflenir. Açıklamaları ve müşteri
-              iletişimini BLAAG yönetim ekibi hazırlar.
+              BLAAG ile yürütülen projelerde önemli aşamalar, fotoğraflar ve
+              gelişmeler size özel takip bağlantısı üzerinden düzenli olarak
+              sunulur. Sahadan gelen fotoğraflar ekibimiz tarafından kontrol
+              edilir, açıklamaları düzenlenir ve müşteriye anlaşılır şekilde
+              aktarılır.
             </p>
           </div>
           <div className="grid gap-4">
             {[
-              "Günlük ilerleme notları",
-              "Fotoğraflı saha kanıtı",
-              "Karar ve onay kayıtları",
-              "Teslim ve garanti kapanışı"
+              "Aşama bazlı fotoğraflı güncellemeler",
+              "Size özel takip bağlantısı",
+              "Onaylı ve düzenlenmiş müşteri bilgilendirmeleri",
+              "Belgeler, ödemeler ve teslim süreci için tek noktadan görünürlük"
             ].map((item) => (
-              <div key={item} className="bg-surface p-5 text-muted">
-                {item}
+              <div key={item} className="flex items-center justify-between gap-4 border border-border bg-surface p-5 text-muted">
+                <span>{item}</span>
+                <DraftingCompass className="shrink-0 text-gold/70" size={22} />
               </div>
             ))}
           </div>

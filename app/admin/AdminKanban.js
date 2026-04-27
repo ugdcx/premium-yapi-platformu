@@ -202,6 +202,61 @@ const quickActions = [
   "Güncelleme kontrol et"
 ];
 
+const photoDescriptionTemplates = [
+  "Söküm işlemi tamamlandı.",
+  "Altyapı kontrolü yapıldı.",
+  "Malzeme sahaya alındı.",
+  "Uygulama aşaması tamamlandı.",
+  "Teslim öncesi son kontrol yapıldı."
+];
+
+const initialPhotoApprovals = [
+  {
+    id: "photo-approval-1",
+    project: demoProject.title,
+    area: "Mutfak",
+    worker: "Mehmet Usta",
+    uploadedAt: "Bugün 14:30",
+    photoCount: 6,
+    internalNote: "Usta notu: söküm bitti, elektrikçi bekleniyor.",
+    customerDescription: "Mutfak söküm işlemi tamamlandı. Elektrik altyapı kontrolü için alan hazırlandı.",
+    status: "Onay Bekliyor"
+  },
+  {
+    id: "photo-approval-2",
+    project: demoProject.title,
+    area: "Banyo",
+    worker: "Ayhan Usta",
+    uploadedAt: "Bugün 11:10",
+    photoCount: 4,
+    internalNote: "Usta notu: tesisat çıkışları kontrol edildi.",
+    customerDescription: "Banyo altyapı kontrolü yapıldı. Uygulama öncesi hazırlıklar devam ediyor.",
+    status: "Yayına Hazır"
+  },
+  {
+    id: "photo-approval-3",
+    project: "Villa Satış Hazırlığı",
+    area: "Dış Cephe",
+    worker: "Saha Fotoğraf Ekibi",
+    uploadedAt: "Dün 16:45",
+    photoCount: 8,
+    internalNote: "Ham fotoğraflarda ışık iyi, açıklama sadeleştirilmeli.",
+    customerDescription: "Dış cephe mevcut durumu kayıt altına alındı. Değer artırma önerileri için görseller inceleniyor.",
+    status: "Yayınlandı"
+  },
+  {
+    id: "photo-approval-4",
+    project: "Müstakil Konut Projesi",
+    area: "Elektrik",
+    worker: "Mehmet Usta",
+    uploadedAt: "Dün 09:20",
+    photoCount: 3,
+    internalNote: "Bazı fotoğraflar net değil, yeniden istenecek.",
+    customerDescription: "",
+    status: "Revize Gerekli"
+  }
+];
+
 export default function AdminKanban() {
   const canView = useDemoRoleGuard("admin");
   const [selectedSection, setSelectedSection] = useState("home");
@@ -606,86 +661,229 @@ function ProjectLinksSection() {
   const links = [
     {
       title: demoProject.title,
-      customerLink: "Müşteriye özel proje bağlantısı hazırlanacak",
-      workerLink: "Usta fotoğraf yükleme bağlantısı hazırlanacak",
-      status: "Taslak"
+      customerLink: "/ahmet-sezer/proje-takip/1234567",
+      workerLink: "/ahmet-sezer/usta-takip/1234567",
+      status: "Aktif"
     },
     {
       title: "Villa Satış Hazırlığı",
-      customerLink: "Müşteri takip bağlantısı aktif",
-      workerLink: "Fotoğraf yükleme bağlantısı aktif",
-      status: "Aktif"
+      customerLink: "/murat-aydin/proje-takip/demo",
+      workerLink: "/murat-aydin/usta-takip/demo",
+      status: "Taslak"
     }
   ];
 
   return (
-    <SimpleGrid
-      title="Proje linkleri"
-      eyebrow="Özel erişim yönetimi"
-      items={links}
-      fields={[
-        ["Proje", "title"],
-        ["Müşteri linki", "customerLink"],
-        ["Usta linki", "workerLink"],
-        ["Durum", "status"]
-      ]}
-    />
+    <Panel title="Proje linkleri" eyebrow="Özel erişim yönetimi">
+      <p className="mb-5 max-w-3xl text-sm leading-6 text-muted">
+        Müşteri ve usta hesap açmaz. Her proje için müşteriye özel takip
+        bağlantısı ve ustaya özel fotoğraf yükleme bağlantısı hazırlanır.
+      </p>
+      <div className="grid gap-4">
+        {links.map((link) => (
+          <article key={link.title} className="rounded-2xl bg-cream p-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h3 className="text-xl font-semibold">{link.title}</h3>
+                <span className={`mt-3 ${statusChipClass(link.status)}`}>{link.status}</span>
+              </div>
+            </div>
+            <div className="mt-5 grid gap-3 lg:grid-cols-2">
+              <LinkBox label="Müşteri takip bağlantısı" href={link.customerLink} />
+              <LinkBox label="Usta fotoğraf yükleme bağlantısı" href={link.workerLink} />
+            </div>
+          </article>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function LinkBox({ label, href }) {
+  return (
+    <div className="rounded-2xl border border-border bg-white p-4">
+      <p className="text-xs uppercase tracking-[0.16em] text-black/35">{label}</p>
+      <a href={href} className="mt-2 block break-all text-sm font-medium text-stoneDark">
+        {href}
+      </a>
+      <button
+        type="button"
+        onClick={() => navigator.clipboard?.writeText(href)}
+        className="mt-4 rounded-full bg-stoneDark px-4 py-2 text-sm font-medium text-white"
+      >
+        Kopyala
+      </button>
+    </div>
   );
 }
 
 function DescriptionsSection() {
-  const descriptions = [
-    {
-      photo: "Mutfak güncellemesi",
-      source: "Usta fotoğraf yükledi",
-      draft: "Dolap sökümü tamamlandı, elektrik hatları kontrol için hazırlandı.",
-      status: "Admin onayı bekliyor"
-    },
-    {
-      photo: "Dış cephe kontrolü",
-      source: "Saha ekibi fotoğraf yükledi",
-      draft: "Cephe astar hazırlığı tamamlandı, uygulama alanı temizlendi.",
-      status: "Yayına hazır"
-    }
-  ];
+  return <UpdatesSection focusDescriptions />;
+}
+
+function UpdatesSection({ focusDescriptions = false }) {
+  const [projectFilter, setProjectFilter] = useState("Tümü");
+  const [areaFilter, setAreaFilter] = useState("Tümü");
+  const [rows, setRows] = useState(initialPhotoApprovals);
+
+  const projectsForFilter = ["Tümü", ...new Set(initialPhotoApprovals.map((item) => item.project))];
+  const areasForFilter = ["Tümü", ...new Set(initialPhotoApprovals.map((item) => item.area))];
+  const visibleRows = rows.filter((item) => {
+    const projectMatches = projectFilter === "Tümü" || item.project === projectFilter;
+    const areaMatches = areaFilter === "Tümü" || item.area === areaFilter;
+    return projectMatches && areaMatches;
+  });
+
+  function updatePhotoRow(id, field, value) {
+    setRows((current) =>
+      current.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  }
+
+  function appendTemplate(id, template) {
+    setRows((current) =>
+      current.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              customerDescription: item.customerDescription
+                ? `${item.customerDescription} ${template}`
+                : template
+            }
+          : item
+      )
+    );
+  }
 
   return (
-    <SimpleGrid
-      title="Açıklama yazımı"
-      eyebrow="Fotoğraf açıklamaları"
-      items={descriptions}
-      fields={[
-        ["Fotoğraf", "photo"],
-        ["Kaynak", "source"],
-        ["Admin açıklaması", "draft"],
-        ["Durum", "status"]
-      ]}
-    />
+    <Panel
+      title={focusDescriptions ? "Açıklama yazımı" : "Onay Bekleyen Fotoğraflar"}
+      eyebrow="Fotoğraf onay akışı"
+    >
+      <p className="mb-5 max-w-4xl text-sm leading-6 text-muted">
+        Usta fotoğrafları yalnızca sahadan yükler. Müşteri ham usta notunu görmez;
+        admin fotoğrafları inceler, iç notu değerlendirir, profesyonel müşteri
+        açıklamasını yazar ve yayına alır.
+      </p>
+
+      <div className="mb-5 grid gap-3 md:grid-cols-2">
+        <FilterSelect label="Proje filtresi" value={projectFilter} options={projectsForFilter} onChange={setProjectFilter} />
+        <FilterSelect label="Alan filtresi" value={areaFilter} options={areasForFilter} onChange={setAreaFilter} />
+      </div>
+
+      <div className="grid gap-5">
+        {visibleRows.map((item) => (
+          <article key={item.id} className="rounded-[2rem] border border-border bg-cream p-4">
+            <div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
+              <div>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.16em] text-black/35">
+                      {item.project}
+                    </p>
+                    <h3 className="mt-2 text-2xl font-semibold">{item.area}</h3>
+                    <p className="mt-2 text-sm text-muted">
+                      {item.worker} · {item.uploadedAt}
+                    </p>
+                  </div>
+                  <span className={statusChipClass(item.status)}>{item.status}</span>
+                </div>
+
+                <div className="mt-5 grid grid-cols-3 gap-2">
+                  {Array.from({ length: Math.min(item.photoCount, 6) }).map((_, index) => (
+                    <div key={`${item.id}-preview-${index}`} className="aspect-square rounded-2xl border border-border bg-surface p-2">
+                      <div className="h-full rounded-xl bg-soft" />
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-sm text-muted">{item.photoCount} fotoğraf yüklendi.</p>
+              </div>
+
+              <div className="grid gap-4">
+                <label className="grid gap-2">
+                  <span className="text-sm font-medium text-muted">İç not</span>
+                  <textarea
+                    value={item.internalNote}
+                    onChange={(event) => updatePhotoRow(item.id, "internalNote", event.target.value)}
+                    className="min-h-20 rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
+                    placeholder="Sadece admin ekibinin göreceği not"
+                  />
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-sm font-medium text-muted">
+                    Müşteriye gösterilecek açıklama
+                  </span>
+                  <textarea
+                    value={item.customerDescription}
+                    onChange={(event) => updatePhotoRow(item.id, "customerDescription", event.target.value)}
+                    className="min-h-28 rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
+                    placeholder="Müşteriye anlaşılır ve profesyonel açıklama yazın"
+                  />
+                </label>
+
+                <div>
+                  <p className="mb-2 text-sm font-medium text-muted">Açıklama Şablonu Kullan</p>
+                  <div className="flex flex-wrap gap-2">
+                    {photoDescriptionTemplates.map((template) => (
+                      <button
+                        key={template}
+                        type="button"
+                        onClick={() => appendTemplate(item.id, template)}
+                        className="rounded-full bg-white px-4 py-2 text-xs font-medium text-muted hover:bg-stoneDark hover:text-white"
+                      >
+                        {template}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 border-t border-border pt-4">
+                  <button
+                    type="button"
+                    onClick={() => updatePhotoRow(item.id, "status", "Yayına Hazır")}
+                    className="rounded-full bg-white px-4 py-2 text-sm font-medium text-muted hover:bg-stoneDark hover:text-white"
+                  >
+                    Yayına Hazır İşaretle
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updatePhotoRow(item.id, "status", "Yayınlandı")}
+                    className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-stoneDark"
+                  >
+                    Müşteriye Yayınla
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updatePhotoRow(item.id, "status", "Revize Gerekli")}
+                    className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-muted hover:border-gold"
+                  >
+                    Revize İste
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Panel>
   );
 }
 
-function UpdatesSection() {
-  const updates = demoTimeline.map((item) => ({
-    worker: "Mehmet Usta",
-    area: item.area,
-    photos: `${item.photos} fotoğraf`,
-    status: "Admin incelemesi bekliyor",
-    note: item.description
-  }));
-
+function FilterSelect({ label, value, options, onChange }) {
   return (
-    <SimpleGrid
-      title="Güncellemeler"
-      eyebrow="Saha kayıtları"
-      items={updates}
-      fields={[
-        ["Usta", "worker"],
-        ["Alan", "area"],
-        ["Fotoğraf", "photos"],
-        ["Durum", "status"],
-        ["Not", "note"]
-      ]}
-    />
+    <label className="grid gap-2">
+      <span className="text-sm font-medium text-muted">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="rounded-2xl border border-border bg-cream px-4 py-3 text-sm outline-none"
+      >
+        {options.map((option) => (
+          <option key={option}>{option}</option>
+        ))}
+      </select>
+    </label>
   );
 }
 

@@ -1,0 +1,71 @@
+REMOVE AMATEUR PLACEHOLDER TEXT AND CREATE PROFESSIONAL IMAGE PLACEHOLDERS.
+
+IMPORTANT:
+- UI language must be Turkish.
+- Brand: BLAAG Construction and Architecture.
+- We are a construction / renovation / real estate service company.
+- Do not add backend.
+- Build must pass.
+
+GOAL:
+Remove all visible placeholder text that makes the website feel unfinished.
+Create premium image containers where real project images will later be added.
+
+PAGES:
+- /
+- /hizmetler
+- /surec
+- /teklif-al if needed
+
+REMOVE VISIBLE TEXT SUCH AS:
+- Görsel alan
+- Öncesi görsel alanı
+- Süreç görsel alanı
+- Sonrası görsel alanı
+- placeholder
+- image placeholder
+- demo görsel
+- any obvious unfinished visual label
+
+REPLACE WITH:
+Professional image frames:
+- Warm neutral background
+- Subtle border
+- Optional small visual label such as:
+  - Villa dış cephe
+  - İç mekan
+  - Uygulama süreci
+  - Teslim sonrası
+- But do NOT make it look unfinished.
+
+HOMEPAGE PROJECT PROOF:
+The section “Öncesi / Süreç / Sonrası” should remain.
+Each block should have:
+- premium image frame
+- short headline
+- short explanatory copy
+- no “görsel alanı” wording
+
+Example:
+Öncesi
+Mevcut durum analiz edilir ve sürecin başlangıcı kayıt altına alınır.
+
+Süreç
+Uygulama aşamaları düzenli şekilde takip edilir.
+
+Sonrası
+Teslim süreci, belgeler ve garanti bilgileri netleştirilir.
+
+SERVICES:
+Each service image area should look like a planned premium image slot, not an empty box.
+
+DESIGN:
+- Premium
+- Architectural
+- Not SaaS
+- No fake UI look
+- No technical dashboard feeling
+
+AFTER FINISHING:
+Run npm run build.
+Summarize changed pages and build result.

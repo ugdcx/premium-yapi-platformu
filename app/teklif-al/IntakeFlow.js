@@ -18,21 +18,21 @@ const services = [
     icon: Building2,
     title: "Anahtar Teslim Yapı Geliştirme",
     value:
-      "Arsa, konsept, bütçe, kalite standardı ve uygulama planını tek çatı altında netleştirin."
+      "Arsa, fikir, planlanan yatırım aralığı ve teslim beklentinizi tek profesyonel değerlendirmede netleştirelim."
   },
   {
     id: "renovation",
     icon: Hammer,
     title: "Tadilat & Değer Artırma Çalışmaları",
     value:
-      "Konutunuzu daha konforlu, modern, kiraya veya satışa hazır hale getirecek kapsamı belirleyin."
+      "Konutunuzu daha konforlu, modern, kiraya veya satışa hazır hale getirecek doğru kapsamı birlikte belirleyelim."
   },
   {
     id: "realEstate",
     icon: Home,
     title: "Gayrimenkul Satış Danışmanlığı",
     value:
-      "Satış, kiralama, satın alma veya yatırım kararınızı veri ve sunum gücüyle planlayın."
+      "Satış, kiralama, satın alma veya yatırım kararınızı doğru sunum ve stratejiyle netleştirelim."
   }
 ];
 
@@ -56,7 +56,7 @@ const questionSets = {
       options: ["Select", "Signature", "Ultra"]
     },
     { key: "start", label: "Başlama zamanı", type: "input", placeholder: "Örn. 3 ay içinde" },
-    { key: "budget", label: "Bütçe aralığı", type: "input", placeholder: "Örn. ₺8M - ₺12M" }
+    { key: "budget", label: "Planlanan yatırım aralığı", type: "input", placeholder: "Örn. 8M - 12M arası" }
   ],
   renovation: [
     {
@@ -86,7 +86,7 @@ const questionSets = {
       options: ["Elektrik", "Tesisat", "Zemin", "Nem", "Mobilya", "Boya"]
     },
     { key: "start", label: "Başlama zamanı", type: "input", placeholder: "Örn. Hemen / 1 ay içinde" },
-    { key: "budget", label: "Bütçe aralığı", type: "input", placeholder: "Örn. ₺750K - ₺1.2M" }
+    { key: "budget", label: "Proje ölçeği / planlanan yatırım aralığı", type: "input", placeholder: "Örn. orta ölçekli yenileme" }
   ],
   realEstate: [
     {
@@ -112,16 +112,16 @@ const questionSets = {
     { key: "listing", label: "Mevcut ilan linki", type: "input", placeholder: "Varsa ilan bağlantısı" },
     {
       key: "price",
-      label: "Beklenen fiyat veya bütçe aralığı",
+      label: "Beklenen değer veya planlanan yatırım aralığı",
       type: "input",
-      placeholder: "Örn. ₺6M - ₺7M"
+      placeholder: "Örn. 6M - 7M hedef değer"
     }
   ]
 };
 
 const demoFiles = ["Cephe fotoğrafı.jpg", "Tapu bilgisi.pdf", "Salon mevcut durum.png"];
 
-const steps = ["Hizmet", "Detay", "Dosya", "İletişim", "Özet"];
+const steps = ["Hizmet", "Kapsam", "Dosya", "İletişim", "Özet"];
 
 const initialState = {
   serviceId: "",
@@ -213,14 +213,14 @@ export default function IntakeFlow() {
               <CheckCircle2 size={32} />
             </div>
             <h1 className="mt-8 text-5xl font-semibold tracking-tight">
-              Başvurunuz Alındı
+              Başvurunuz alındı.
             </h1>
             <p className="mx-auto mt-5 max-w-xl leading-8 text-muted">
-              Başvurunuz alındı. Ekibimiz bilgilerinizi inceleyerek sizinle
-              iletişime geçecek.
+              Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.
+              Onaylanan işler için size özel takip bağlantısı oluşturulur.
             </p>
             <div className="mx-auto mt-6 w-fit rounded-full bg-cream px-5 py-2 text-sm font-medium text-stoneDark">
-              Başvuru No: AG-2026-001
+              Talep No: BLAAG-2026-001
             </div>
             <div className="mx-auto mt-8 grid max-w-2xl gap-4 text-left md:grid-cols-2">
               <SummaryCard title="Hizmet tipi">
@@ -234,11 +234,11 @@ export default function IntakeFlow() {
             </div>
             <div className="mx-auto mt-6 grid max-w-lg gap-3 text-left">
               {[
-                "Başvurunuz incelenir",
+                "İlk değerlendirme talebiniz incelenir",
                 "Ekibimiz sizinle iletişime geçer",
-                "Teklif ve yol haritası hazırlanır",
-                "Onay sonrası süreç başlatılır",
-                "Onay sonrası size özel takip bağlantısı paylaşılır"
+                "Hizmet kapsamı ve yol haritası netleşir",
+                "Onaylanan işler için süreç başlatılır",
+                "Size özel takip bağlantısı oluşturulur"
               ].map((item, index) => (
                 <div key={item} className="rounded-2xl bg-cream p-4 text-sm text-muted">
                   {index + 1}. {item}
@@ -250,7 +250,7 @@ export default function IntakeFlow() {
                 onClick={resetFlow}
                 className="inline-flex justify-center rounded-full border border-border px-7 py-4"
               >
-                Ön Başvuru Oluştur
+                Yeni değerlendirme talebi oluştur
               </button>
             </div>
           </section>
@@ -270,22 +270,22 @@ export default function IntakeFlow() {
               </a>
             </div>
             <p className="mt-12 text-sm uppercase tracking-[0.3em] text-white/35">
-              Akıllı Ön Başvuru
+              İlk Değerlendirme Talebi
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
-              Proje Yolculuğunuzu Başlatın
+              Projenizi Netleştirelim
             </h1>
             <p className="mt-6 max-w-2xl leading-8 text-white/60">
-              Birkaç net seçimle ihtiyacınızı, kapsamı ve öncelikleri
-              belirleyin. Ekibimiz başvurunuzu BLAAG hizmet modeli içinde
-              değerlendirsin.
+              Birkaç sakin adımda konumunuzu, hizmet ihtiyacınızı, proje
+              kapsamınızı, zamanlamanızı ve ölçeğinizi paylaşın. Ekibimiz
+              talebinizi BLAAG hizmet modeli içinde değerlendirsin.
             </p>
           </div>
 
           <div className="rounded-2xl bg-white/10 p-5 text-sm text-white/60 lg:w-72">
-            <strong className="block text-base text-white">BLAAG ön değerlendirme</strong>
+            <strong className="block text-base text-white">Uzmanla görüşmeye ilk adım</strong>
             <span className="mt-2 block">
-              Gereksiz form kalabalığı yerine doğru kapsamı netleştiren kısa akış.
+              Gereksiz form kalabalığı yerine doğru kapsamı netleştiren kısa ve sakin akış.
             </span>
           </div>
         </header>
@@ -298,7 +298,7 @@ export default function IntakeFlow() {
               <StepShell
                 eyebrow="1. Adım"
                 title="Size en yakın hizmet yolunu seçin."
-                description="Seçiminize göre sonraki sorular otomatik olarak sadeleşir."
+                description="Hizmet tipini seçtiğinizde yalnızca gerekli kapsam sorularını gösteririz."
               >
                 <div className="grid gap-4 lg:grid-cols-3">
                   {services.map((service) => {
@@ -339,8 +339,8 @@ export default function IntakeFlow() {
             {step === 1 && (
               <StepShell
                 eyebrow="2. Adım"
-                title={selectedService?.title || "Proje detayları"}
-                description="Kapsamı hızlıca okuyabilmemiz için kritik bilgileri seçin."
+                title={selectedService?.title || "Proje kapsamı"}
+                description="Konum, proje kapsamı, zamanlama ve ölçeği okuyabilmemiz için temel bilgileri paylaşın."
               >
                 <div className="grid gap-5 lg:grid-cols-2">
                   {questions.map((question) => (
@@ -359,8 +359,8 @@ export default function IntakeFlow() {
             {step === 2 && (
               <StepShell
                 eyebrow="3. Adım"
-                title="Fotoğraf ve belge ekleyin."
-                description="Fotoğraf ve belgeler başvuru kapsamının doğru değerlendirilmesi için kullanılır."
+                title="Fotoğraf ve evrak ekleyin."
+                description="Fotoğraf ve evraklar ilk değerlendirmenin daha doğru yapılmasına yardımcı olur."
               >
                 <button
                   onClick={addDemoFiles}
@@ -399,8 +399,8 @@ export default function IntakeFlow() {
             {step === 3 && (
               <StepShell
                 eyebrow="4. Adım"
-                title="Size ulaşabileceğimiz bilgileri bırakın."
-                description="Başvuruyu inceleyen ekip doğru kişiyle hızlıca iletişime geçsin."
+                title="Sizinle nasıl iletişime geçelim?"
+                description="İlk değerlendirme sonrası ekibimizin size doğru kanaldan ulaşabilmesi için iletişim bilgilerinizi paylaşın."
               >
                 <div className="grid gap-5 md:grid-cols-2">
                   <Field
@@ -413,13 +413,13 @@ export default function IntakeFlow() {
                     label="Telefon"
                     value={data.contact.phone}
                     onChange={(value) => setContact("phone", value)}
-                    placeholder="+90 5xx xxx xx xx"
+                    placeholder="Telefon numaranız"
                   />
                   <Field
                     label="E-posta"
                     value={data.contact.email}
                     onChange={(value) => setContact("email", value)}
-                    placeholder="ornek@firma.com"
+                    placeholder="E-posta adresiniz"
                   />
                   <label className="grid gap-2 md:col-span-2">
                     <span className="text-sm font-medium text-muted">
@@ -439,8 +439,8 @@ export default function IntakeFlow() {
             {step === 4 && (
               <StepShell
                 eyebrow="5. Adım"
-                title="Ön başvurunuzu kontrol edin."
-                description="Seçimleriniz ve iletişim bilgileriniz aşağıdaki özetle iletilecek."
+                title="Talebinizi son kez kontrol edin."
+                description="Seçimleriniz ve iletişim bilgileriniz ilk değerlendirme özeti olarak ekibimize iletilecek."
               >
                 <div className="grid gap-5 lg:grid-cols-2">
                   <SummaryCard title="Seçilen hizmet">
@@ -498,7 +498,7 @@ export default function IntakeFlow() {
                 onClick={() => setSubmitted(true)}
                 className="inline-flex items-center justify-center rounded-full bg-gold px-7 py-4 text-sm font-medium text-stoneDark"
               >
-                Ön Başvuru Oluştur
+                Projemi Başlat
               </button>
             )}
           </div>

@@ -1,0 +1,58 @@
+FINAL PUBLIC AUDIT CLEANUP.
+
+IMPORTANT:
+- UI language must be Turkish.
+- Do not add new features.
+- Fix only public-facing trust, clarity and production-readiness issues.
+- Build must pass.
+
+CHECK PAGES:
+- /
+- /hizmetler
+- /surec
+- /teklif-al
+- /ahmet-sezer/proje-takip/1234567
+- /ahmet-sezer/usta-takip/1234567
+- /blaag-admin
+
+PUBLIC SITE MUST NOT SHOW:
+- demo
+- placeholder
+- image placeholder
+- görsel alanı
+- login
+- admin
+- paneli gör
+- fiyat on homepage
+- percentage on homepage
+- SaaS dashboard language
+- software product language
+- fake phone/email if not real
+
+BRAND:
+Must consistently be:
+BLAAG Construction and Architecture
+
+MESSAGE:
+Must consistently say:
+We are a construction, renovation and real estate service company.
+Digital tracking is a customer privilege.
+
+CONTACT:
+If real contact exists, show it.
+If not, hide fake placeholders.
+
+NAV:
+Public nav only:
+- Hizmetler
+- Süreç
+- Ön Başvuru Oluştur
+
+FINAL BUILD:
+Run npm run build.
+
+SUMMARIZE:
+1. Issues found
+2. Issues fixed
+3. Remaining recommendations
+4. Build result

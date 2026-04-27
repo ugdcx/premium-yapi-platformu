@@ -1,4 +1,4 @@
-const platformLinks = [
+const serviceLinks = [
   ["Hizmetler", "/hizmetler"],
   ["Süreç", "/surec"],
   ["Ön Başvuru Oluştur", "/teklif-al"]
@@ -17,17 +17,15 @@ export default function Footer() {
           </p>
         </div>
 
-        <FooterGroup title="Bağlantılar" links={platformLinks} />
+        <FooterGroup title="Bağlantılar" links={serviceLinks} />
 
         <div className="min-w-0">
           <h3 className="text-sm uppercase tracking-[0.25em] text-white/35">
             İletişim
           </h3>
-          <div className="mt-5 grid gap-3 break-words text-sm text-white/65">
-            <span>Telefon: +90 532 000 00 00</span>
-            <span>WhatsApp: +90 532 000 00 00</span>
-            <span>E-posta: info@blaag.com.tr</span>
-          </div>
+          <p className="mt-5 max-w-sm text-sm leading-7 text-white/65">
+            İletişim bilgileri yakında güncellenecektir.
+          </p>
           <p className="mt-6 rounded-2xl bg-white/10 p-4 text-sm text-white/55">
             Başvurunuz sonrası ekibimiz kapsamı inceler, sizinle iletişime geçer
             ve hizmet planını netleştirir.

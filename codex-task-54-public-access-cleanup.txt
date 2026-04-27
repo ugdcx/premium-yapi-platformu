@@ -1,0 +1,65 @@
+REMOVE PUBLIC LOGIN AND PANEL TRACES.
+
+IMPORTANT:
+- UI language must be Turkish.
+- Public visitors should not see login, admin, client, worker, or panel language.
+- Customers and workers do not create accounts.
+- Admin uses hidden route: /blaag-admin
+- Build must pass.
+
+GOAL:
+Public site must feel like a premium service company website, not a software app with user panels.
+
+CHECK AND CLEAN:
+- Header
+- Footer
+- Homepage
+- Hizmetler
+- Süreç
+- Ön Başvuru
+- Login page behavior
+
+REMOVE PUBLIC WORDING/LINKS:
+- Giriş Yap
+- Paneli Gör
+- Müşteri Paneli
+- Saha Paneli
+- Admin Paneli
+- Login
+- Worker login
+- Client login
+- Demo credentials visible to public
+- Public links to /client, /field, /admin, /login
+
+KEEP:
+- /blaag-admin hidden admin login route
+- /admin protected route
+- /client and /field can remain for internal/demo if needed, but must not be linked publicly
+
+IF /login EXISTS:
+- Redirect or route it to /blaag-admin
+- It must not look like public customer login
+
+HEADER SHOULD ONLY SHOW:
+- BLAAG Construction and Architecture
+- Hizmetler
+- Süreç
+- Ön Başvuru Oluştur
+
+FOOTER SHOULD NOT SHOW:
+- Giriş Yap
+- Admin
+- Panel
+- Demo user access
+
+FOOTER MAY SHOW:
+- Brand
+- Service links
+- Process link
+- Ön Başvuru Oluştur
+- Contact info if real
+- If contact is fake, hide it or present as “İletişim bilgileri yakında güncellenecektir” only if needed
+
+AFTER FINISHING:
+Run npm run build.
+Summarize removed public access traces and build result.

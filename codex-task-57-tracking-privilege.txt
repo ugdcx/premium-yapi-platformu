@@ -1,0 +1,51 @@
+UPGRADE DIGITAL TRACKING PRIVILEGE SECTION.
+
+IMPORTANT:
+- UI language must be Turkish.
+- Do not present tracking as software.
+- Tracking is a premium service privilege.
+- Build must pass.
+
+PAGES:
+- /
+- /surec
+- /hizmetler if relevant
+
+GOAL:
+Make digital tracking feel like a customer trust benefit, not a SaaS dashboard.
+
+MAIN MESSAGE:
+İşi biz yönetiriz, siz süreci şeffaf şekilde takip edersiniz.
+
+REWRITE SECTION:
+Title:
+Süreci sadece yaptırmazsınız, şeffaf şekilde takip edersiniz.
+
+Copy:
+BLAAG ile yürütülen projelerde önemli aşamalar, fotoğraflar ve gelişmeler size özel takip bağlantısı üzerinden düzenli olarak sunulur.
+
+USE THESE POINTS:
+- Aşama bazlı fotoğraflı güncellemeler
+- Size özel takip bağlantısı
+- Onaylı ve düzenlenmiş müşteri bilgilendirmeleri
+- Belgeler, ödemeler ve teslim süreci için tek noktadan görünürlük
+
+REMOVE:
+- günlük gelişmeleri görürsünüz if it overpromises
+- SaaS/dashboard language
+- technical platform language
+- metrics-heavy UI
+
+EXPLAIN ADMIN QUALITY CONTROL:
+Sahadan gelen fotoğraflar ekibimiz tarafından kontrol edilir, açıklamaları düzenlenir ve müşteriye anlaşılır şekilde sunulur.
+
+VISUAL:
+- One mini project card
+- Small photo strip
+- No dashboard
+- No price
+- No progress percentage
+
+AFTER FINISHING:
+Run npm run build.
+Summarize tracking copy and visual changes plus build result.

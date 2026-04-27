@@ -1,0 +1,103 @@
+FIX HOMEPAGE HERO AND REMOVE ALL SAAS SIGNALS.
+
+IMPORTANT:
+- UI must be Turkish
+- Brand: BLAAG Construction and Architecture
+- We are NOT a software platform
+- We are a construction / renovation service company
+
+------------------------------------
+HERO FIX
+------------------------------------
+
+REPLACE current headline:
+
+OLD:
+Projenizi baştan sona kontrol altında tutun.
+
+NEW:
+Kusursuz yapı, şeffaf süreç.
+
+SUBTITLE:
+
+Tüm süreci profesyonel ekibimiz yönetir.
+Siz sadece sonucu takip edersiniz.
+
+------------------------------------
+
+REMOVE THESE FROM HERO COMPLETELY:
+
+- ₺ values
+- % progress
+- "Paneli Gör"
+- "Teklif hazır"
+- "kalan ödeme"
+- ANY financial or dashboard metrics
+
+------------------------------------
+
+PROJECT CARD FIX
+
+Keep mini project card but make it feel REAL:
+
+- Remove fake numbers
+- Remove technical feel
+- Use simple structure:
+
+Example:
+
+A. Y******
+
+Villa Anahtar Teslim
+
+Bugün:
+• Mutfak söküm tamamlandı
+• 6 fotoğraf eklendi
+
+Durum:
+Uygulama aşaması
+
+Sonraki adım:
+Elektrik altyapı
+
+------------------------------------
+
+CREATE 7 DIFFERENT PROJECT SCENARIOS
+
+Randomly show ONE on refresh
+
+------------------------------------
+
+VISUAL IMPROVEMENT
+
+- Increase size of project card slightly
+- Add subtle shadow
+- Add spacing
+- NO dashboard look
+
+------------------------------------
+
+CTA FIX
+
+Primary:
+Ön Başvuru Oluştur
+
+Secondary:
+Süreci İncele
+
+Remove ANY other CTA
+
+------------------------------------
+
+FINAL CHECK
+
+- Hero must feel like construction company
+- NOT software product
+- Clean, premium, simple
+
+------------------------------------
+
+After finish:
+
+Run build
+Explain what changed

@@ -1,0 +1,54 @@
+IMPROVE ADMIN PHOTO APPROVAL AND DESCRIPTION WORKFLOW.
+
+IMPORTANT:
+- UI language must be Turkish.
+- Focus on /admin.
+- No backend.
+- Demo data only.
+- Build must pass.
+
+GOAL:
+Admin must control what the customer sees.
+Worker uploads photos, admin reviews them, writes/edits descriptions, then publishes.
+
+ADMIN MUST HAVE:
+- Onay Bekleyen Fotoğraflar section
+- Project filter
+- Area filter
+- Worker name
+- Uploaded photos preview
+- Internal note
+- Customer-facing description textarea
+- Status:
+  - Onay Bekliyor
+  - Yayına Hazır
+  - Yayınlandı
+  - Revize Gerekli
+
+ACTIONS:
+- Açıklama Şablonu Kullan
+- Yayına Hazır İşaretle
+- Müşteriye Yayınla
+- Revize İste
+
+DESCRIPTION TEMPLATES:
+Add demo template buttons:
+- Söküm işlemi tamamlandı.
+- Altyapı kontrolü yapıldı.
+- Malzeme sahaya alındı.
+- Uygulama aşaması tamamlandı.
+- Teslim öncesi son kontrol yapıldı.
+
+IMPORTANT:
+Customer should never see raw worker text.
+Admin writes professional customer-facing update.
+
+DESIGN:
+- Professional operations center
+- Clear table/cards
+- Not cluttered
+- Premium internal admin feel
+
+AFTER FINISHING:
+Run npm run build.
+Summarize admin workflow changes and build result.

@@ -2,6 +2,7 @@ import {
   ArrowRight,
   Building2,
   CheckCircle2,
+  DraftingCompass,
   Hammer,
   Home,
   ShieldCheck
@@ -18,43 +19,43 @@ const serviceAreas = [
     icon: Building2,
     title: "Anahtar Teslim Yapı Geliştirme",
     intro:
-      "Arsa veya mülkünüz için fikirden teslime uzanan yapı sürecini tek profesyonel ekip ve net sorumluluk modeliyle yönetiriz.",
+      "Arsa sahibi veya yatırımcıysanız, villa, müstakil konut ya da ticari yapı fikrinizin dağınık kararlar arasında ilerlemesini önleriz. Fikir aşamasından teslim sürecine kadar planlama, uygulama ve saha koordinasyonunu tek profesyonel ekip altında toplarız.",
     bullets: [
-      "Kapsam ve hedef kalite analizi",
-      "Mimari planlama ve uygulama koordinasyonu",
-      "Kaba ve ince yapı ekip organizasyonu",
-      "Malzeme, takvim ve saha düzeni takibi",
-      "Teslim öncesi kalite kontrol ve kapanış"
+      "Arsa ve fikir aşamasından teslim planına uzanan net yol haritası",
+      "Tek ekip sorumluluğunda planlama, uygulama ve saha koordinasyonu",
+      "Sürprizleri azaltan kapsam, takvim ve karar yönetimi",
+      "Aşama bazlı fotoğraflı güncellemelerle şeffaf ilerleme",
+      "Teslim öncesi kalite kontrol ve kapanış hazırlığı"
     ],
-    visual: "Mimari plan, cephe dokusu, saha programı ve teslim kontrol listesi"
+    visual: "Villa dış cephe, saha düzeni ve teslim hazırlığı"
   },
   {
     icon: Hammer,
     title: "Tadilat & Değer Artırma",
     intro:
-      "Konut, villa veya ticari alanlarınızı daha yaşanabilir, pazarlanabilir ve değerli hale getiren dönüşüm çalışmalarını planlarız.",
+      "Ev sahibi, satıcı, kiraya veren veya yatırımcıysanız mevcut yapınızı daha konforlu, daha estetik ve daha değerli hale getiririz. Mutfak, banyo, komple ev veya dış cephe işlerinde sürprizleri azaltan kontrollü bir yenileme planı kurarız.",
     bullets: [
-      "Mevcut durum ve ihtiyaç tespiti",
-      "Mutfak, banyo, cephe ve komple yenileme planı",
-      "Satış veya kiralama öncesi değer artırma önerileri",
-      "Saha uygulaması ve günlük görsel takip",
-      "Öncesi ve sonrası teslim raporu"
+      "Mevcut yapının konfor, estetik ve değer potansiyelinin okunması",
+      "Satış veya kiralama öncesi hazırlık için doğru müdahale planı",
+      "Mutfak, banyo, komple ev ve dış cephe yenilemelerinde kontrollü uygulama",
+      "Kararları sadeleştiren malzeme, kapsam ve takvim yönetimi",
+      "Öncesi, süreç ve sonrası için düzenlenmiş müşteri bilgilendirmeleri"
     ],
-    visual: "Numune malzemeler, ölçü notları ve yenilenen iç mekan görünümü"
+    visual: "İç mekan yenileme, malzeme seçimi ve uygulama süreci"
   },
   {
     icon: Home,
     title: "Gayrimenkul Danışmanlığı",
     intro:
-      "Satış, kiralama, satın alma veya yatırım kararlarında mülkünüzü doğru fiyat, doğru sunum ve doğru stratejiyle konumlandırırız.",
+      "Satmak, kiraya vermek, satın almak veya yatırım yapmak istediğiniz mülk için doğru konumlandırmayı kurarız. Değerleme, sunum ve hazırlık stratejisini kullanım amacınıza göre netleştiririz.",
     bullets: [
-      "Pazar ve konum değerlendirmesi",
-      "Portföy hazırlığı ve sunum stratejisi",
-      "Satış ya da kiralama öncesi iyileştirme planı",
-      "Görüşme ve teklif süreci koordinasyonu",
-      "Yatırım kararları için risk ve fırsat analizi"
+      "Doğru değerleme, doğru sunum ve doğru stratejiyle mülk konumlandırma",
+      "Satış veya kiralama öncesi değer artırma önerileri",
+      "Portföy hazırlığı, ilan dili ve görsel sunum yönlendirmesi",
+      "Yatırım ve kullanım amacı odaklı danışmanlık",
+      "Karar sürecini sadeleştiren risk ve fırsat değerlendirmesi"
     ],
-    visual: "Portföy dosyası, anahtar, bölge notları ve sunum panosu"
+    visual: "Portföy hazırlığı, sunum stratejisi ve bölge değerlendirmesi"
   }
 ];
 
@@ -72,15 +73,15 @@ export default function ServicesPage() {
               BLAAG Hizmetleri
             </p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
-              Projenizin ihtiyacına göre çalışan premium hizmet modeli.
+              Değerini artırmak istediğiniz mülk için net bir yol haritası.
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-              BLAAG Construction and Architecture; inşaat, yenileme ve
-              gayrimenkul kararlarınızı sahaya, takvime ve teslim kalitesine
-              bağlayan profesyonel bir hizmet şirketidir.
+              BLAAG Construction and Architecture; yapı, tadilat ve gayrimenkul
+              kararlarınızı belirsizlikten çıkarır, profesyonel uygulama ve
+              şeffaf süreç yönetimiyle sonuca taşır.
             </p>
             <a href="/teklif-al" className="mt-9 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-4 font-medium text-stoneDark">
-              Ön Başvuru Oluştur
+              Projemi netleştirmek istiyorum
               <ArrowRight size={18} />
             </a>
           </div>
@@ -97,20 +98,20 @@ export default function ServicesPage() {
             <div>
               <ShieldCheck className="text-gold" size={30} />
               <h2 className="mt-6 max-w-3xl text-3xl font-semibold tracking-tight md:text-5xl">
-                Her hizmette aynı standart: net kapsam, görünür süreç, kontrollü teslim.
+                Her hizmette aynı hedef: daha net karar, daha kontrollü süreç, daha güçlü sonuç.
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-muted">
-                Müşteri hesap açmaz. Çalışan hesap açmaz. İleride her proje,
-                müşteriye özel bağlantı ve sahaya özel fotoğraf yükleme
-                bağlantısı ile ilerler.
+                Sürecin başında belirsizlikleri azaltır, uygulama boyunca
+                gelişmeleri görünür kılar, teslim aşamasında kararları ve
+                belgeleri düzenli biçimde kapatırız.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 "Kapsamın erken netleşmesi",
-                "Sahadan fotoğraflı ilerleme",
-                "Tek sorumlu ekip düzeni",
-                "Teslim ve garanti kaydının kapanması"
+                "Değer artışı için doğru öncelikler",
+                "Size özel takip bağlantısı",
+                "Kontrollü teslim ve kapanış"
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 bg-surface p-5">
                   <CheckCircle2 className="mt-1 shrink-0 text-gold" size={19} />
@@ -143,16 +144,26 @@ function ServiceBlock({ service, reversed, index }) {
           ))}
         </div>
         <a href="/teklif-al" className="mt-8 inline-flex items-center gap-2 text-sm font-medium">
-          Detayları İncele
+          Bu hizmet için başvuru oluştur
           <ArrowRight size={16} />
         </a>
       </div>
       <div className="min-h-80 bg-soft p-6">
-        <div className="flex h-full min-h-72 flex-col justify-between border border-border bg-cream p-6">
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Görsel alan</p>
-          <p className="max-w-sm text-xl font-medium leading-8 text-muted">{service.visual}</p>
-        </div>
+        <PremiumImageFrame label={service.visual} />
       </div>
     </article>
+  );
+}
+
+function PremiumImageFrame({ label }) {
+  return (
+    <div className="relative h-full min-h-72 overflow-hidden border border-border bg-cream shadow-sm shadow-black/5">
+      <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(198,168,91,0.18),rgba(255,255,255,0)_40%),linear-gradient(90deg,rgba(17,17,17,0.055)_1px,transparent_1px),linear-gradient(0deg,rgba(17,17,17,0.045)_1px,transparent_1px)] bg-[length:auto,42px_42px,42px_42px]" />
+      <div className="absolute left-6 top-6 h-24 w-24 border-l border-t border-gold/60" />
+      <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-5">
+        <p className="max-w-sm text-xl font-medium leading-8 text-muted">{label}</p>
+        <DraftingCompass className="shrink-0 text-gold/75" size={30} />
+      </div>
+    </div>
   );
 }

@@ -1,0 +1,86 @@
+CREATE DEMO PRIVATE PROJECT TRACKING AND WORKER UPLOAD ROUTES.
+
+IMPORTANT:
+- UI language must be Turkish.
+- No backend.
+- Use demo/static data only.
+- These pages demonstrate the intended future access model.
+- Build must pass.
+
+GOAL:
+Show that customers and workers do not need accounts.
+They access project-specific private links.
+
+CREATE ROUTES:
+1. /ahmet-sezer/proje-takip/1234567
+2. /ahmet-sezer/usta-takip/1234567
+
+CUSTOMER PROJECT TRACKING PAGE:
+Route:
+/ahmet-sezer/proje-takip/1234567
+
+Purpose:
+Customer sees only their approved project progress.
+
+Content:
+- Project title
+- Customer name masked or clean
+- Project type
+- Current stage
+- Recent approved updates
+- Photo proof section
+- Documents
+- Payment summary
+- Requests
+- Delivery/warranty status
+
+Important:
+- No login
+- No admin controls
+- No worker controls
+- Clean, premium, reassuring
+- Explain that updates are reviewed by BLAAG before publication
+
+WORKER UPLOAD PAGE:
+Route:
+/ahmet-sezer/usta-takip/1234567
+
+Purpose:
+Worker uploads photos only.
+
+Content:
+- Project title
+- Assigned area
+- Big button: Fotoğraf Ekle
+- Area selection:
+  - Mutfak
+  - Banyo
+  - Salon
+  - Dış Cephe
+  - Elektrik
+  - Tesisat
+  - Diğer
+- Optional short note
+- Submit button: Fotoğrafları Gönder
+- Success message:
+  Fotoğraflar BLAAG ekibinin onayına gönderildi.
+
+Important:
+- No login
+- No customer info beyond necessary project context
+- Very simple
+- Mobile-first
+- Worker should not write customer-facing descriptions
+
+ADMIN CONNECTION:
+Update admin demo if feasible:
+Add section:
+- Proje Linkleri
+Show:
+- Müşteri takip bağlantısı
+- Usta fotoğraf yükleme bağlantısı
+- Copy buttons as demo
+
+AFTER FINISHING:
+Run npm run build.
+Summarize created routes and build result.

@@ -1,0 +1,70 @@
+UPGRADE SERVICE COPY TO PREMIUM PROBLEM-SOLUTION LANGUAGE.
+
+IMPORTANT:
+- UI language must be Turkish.
+- Brand: BLAAG Construction and Architecture.
+- We are a service company, not a software company.
+- Do not add backend.
+- Build must pass.
+
+PAGES:
+- /
+- /hizmetler
+
+GOAL:
+Services must not read like mechanical descriptions.
+They must make the customer feel:
+- this solves my problem
+- this increases value
+- this reduces uncertainty
+- this is handled professionally
+
+SERVICES:
+
+1. Anahtar Teslim Yapı Geliştirme
+Positioning:
+For landowners or investors who want a villa, detached house, or commercial structure delivered under one professional coordination.
+
+Copy direction:
+- arsa ve fikir aşamasından teslim sürecine kadar
+- planlama, uygulama, saha koordinasyonu
+- tek ekip, net süreç, kontrollü ilerleme
+
+2. Tadilat & Değer Artırma
+Positioning:
+For homeowners, sellers, landlords, and investors who want to improve comfort, aesthetics, and property value.
+
+Copy direction:
+- mevcut yapıyı daha yaşanabilir ve daha değerli hale getirme
+- satış/kiralama öncesi hazırlık
+- mutfak, banyo, komple ev, dış cephe
+- sürprizleri azaltan kontrollü planlama
+
+3. Gayrimenkul Danışmanlığı
+Positioning:
+For people who want to sell, rent, buy, or evaluate property with better positioning.
+
+Copy direction:
+- doğru fiyat, doğru sunum, doğru strateji
+- satış öncesi değer artırma önerileri
+- portföy hazırlığı
+- yatırım ve kullanım amacı odaklı danışmanlık
+
+STYLE:
+- Premium
+- Clear
+- Not too long
+- Avoid technical jargon
+- Avoid cheap language
+- Avoid “her bütçeye uygun”
+- Avoid “ucuz”
+
+CTA:
+Use:
+- Bu hizmet için başvuru oluştur
+- Detayları incele
+- Projemi netleştirmek istiyorum
+
+AFTER FINISHING:
+Run npm run build.
+Summarize copy improvements and build result.
