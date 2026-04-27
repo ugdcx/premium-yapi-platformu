@@ -860,6 +860,13 @@ function UpdatesSection({ focusDescriptions = false }) {
                   >
                     Revize İste
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => updatePhotoRow(item.id, "status", "Reddedildi")}
+                    className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-muted hover:border-gold"
+                  >
+                    Reddet
+                  </button>
                 </div>
               </div>
             </div>

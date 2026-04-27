@@ -12,13 +12,13 @@ import {
 export const metadata = {
   title: "Süreç | BLAAG Construction and Architecture",
   description:
-    "BLAAG hizmet akışı: ön başvuru, değerlendirme, teklif ve plan, uygulama, takip ve sonuç."
+    "BLAAG hizmet akışı: ilk görüşme, değerlendirme, teklif ve plan, uygulama, takip ve sonuç."
 };
 
 const steps = [
   {
     icon: MessageCircle,
-    title: "Ön Başvuru",
+    title: "İlk Görüşme ve Talep",
     text: "İhtiyacınızı, konumu, hedefinizi ve varsa fotoğrafları paylaşırsınız."
   },
   {
@@ -113,14 +113,14 @@ export default function ProcessPage() {
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
               <h2 className="max-w-3xl text-3xl font-semibold tracking-tight md:text-5xl">
-                Süreci başlatmak için ön başvurunuzu oluşturun.
+                Projenizi birlikte netleştirelim.
               </h2>
               <p className="mt-5 max-w-2xl leading-8 text-white/60">
                 Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.
               </p>
             </div>
             <a href="/teklif-al" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-8 py-4 font-medium text-stoneDark">
-              Ön Başvuru Oluştur
+              Projemi Başlat
               <ArrowRight size={18} />
             </a>
           </div>

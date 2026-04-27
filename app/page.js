@@ -88,13 +88,19 @@ const services = [
 ];
 
 const trustItems = [
-  [ShieldCheck, "Şeffaf Süreç"],
-  [Camera, "Fotoğraflı Takip"],
-  [Layers3, "Tek Merkezden Yönetim"],
-  [DraftingCompass, "Profesyonel Uygulama"]
+  [ShieldCheck, "Şeffaf Süreç", "Kapsam ve ilerleme net kalır."],
+  [Camera, "Fotoğraflı Takip", "Önemli aşamalar görsellerle sunulur."],
+  [Layers3, "Tek Merkezden Yönetim", "Kararlar ve ekipler tek elden koordine edilir."],
+  [DraftingCompass, "Profesyonel Uygulama", "Saha süreci kontrollü yürütülür."]
 ];
 
-const steps = ["Ön Başvuru", "Değerlendirme", "Teklif ve Plan", "Uygulama", "Takip ve Sonuç"];
+const steps = [
+  ["İlk Görüşme ve Talep", "İhtiyacınızı ve hedefinizi paylaşırsınız."],
+  ["Değerlendirme", "Ekibimiz kapsamı ve öncelikleri netleştirir."],
+  ["Teklif ve Plan", "Uygulama yolu anlaşılır şekilde hazırlanır."],
+  ["Uygulama", "BLAAG işi sahada profesyonelce yönetir."],
+  ["Takip ve Sonuç", "Onaylı gelişmeleri özel bağlantınızdan izlersiniz."]
+];
 
 export default function HomePage() {
   return (
@@ -109,12 +115,13 @@ export default function HomePage() {
               Kusursuz yapı, şeffaf süreç.
             </h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-white/65">
-              Tüm süreci profesyonel ekibimiz yönetir. Siz sadece sonucu takip
-              edersiniz.
+              Tadilat, yapı ve gayrimenkul süreçlerini profesyonel ekibimizle
+              yürütür; önemli aşamaları size özel takip alanında görünür hale
+              getiririz.
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a href="/teklif-al" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-medium text-stoneDark">
-                Ön Başvuru Oluştur
+                Projemi Başlat
                 <ArrowRight size={18} />
               </a>
               <a href="/surec" className="inline-flex items-center justify-center rounded-full border border-white/18 px-7 py-4 font-medium text-white">
@@ -129,10 +136,13 @@ export default function HomePage() {
 
       <section className="border-b border-border bg-cream px-4 py-6 sm:px-6">
         <div className="mx-auto grid max-w-7xl gap-3 md:grid-cols-4">
-          {trustItems.map(([Icon, label]) => (
-            <div key={label} className="flex items-center gap-3 border-border py-3 md:border-r md:last:border-r-0">
+          {trustItems.map(([Icon, label, text]) => (
+            <div key={label} className="flex items-start gap-3 border-border py-3 md:border-r md:pr-5 md:last:border-r-0">
               <Icon className="text-gold" size={21} />
-              <span className="text-sm font-medium">{label}</span>
+              <div>
+                <p className="text-sm font-medium">{label}</p>
+                <p className="mt-1 text-xs leading-5 text-muted">{text}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -199,10 +209,11 @@ export default function HomePage() {
             title="Beş sade adımda kapsam netleşir, uygulama kontrollü ilerler."
           />
           <div className="mt-10 grid gap-4 md:grid-cols-5">
-            {steps.map((step, index) => (
+            {steps.map(([step, text], index) => (
               <div key={step} className="border-t border-border pt-5">
                 <p className="text-sm text-black/35">{String(index + 1).padStart(2, "0")}</p>
                 <h3 className="mt-5 text-xl font-semibold">{step}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted">{text}</p>
               </div>
             ))}
           </div>
@@ -243,7 +254,7 @@ export default function HomePage() {
               Projenizi birlikte netleştirelim.
             </h2>
             <a href="/teklif-al" className="inline-flex justify-center rounded-full bg-gold px-8 py-4 font-medium text-stoneDark">
-              Ön Başvuru Oluştur
+              Projemi Başlat
             </a>
           </div>
         </div>

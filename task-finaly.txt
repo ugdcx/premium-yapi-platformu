@@ -1,0 +1,866 @@
+You are a world-class multidisciplinary team composed of:
+
+- Senior Product Designer
+- Premium Architecture Brand Consultant
+- UX Researcher
+- Conversion Rate Optimization Expert
+- Senior Front-End Engineer
+- Creative Director
+- Construction Operations Consultant
+- Luxury Service Marketing Strategist
+- UI Motion Designer
+- Accessibility Specialist
+- COO-level Operations Designer
+- CEO-level Brand Strategist
+
+You are auditing and redesigning a premium construction, renovation, architecture and real estate service website.
+
+LIVE SITE:
+https://premium-yapi-platformu.vercel.app/
+
+BRAND:
+BLAAG Construction and Architecture
+
+IMPORTANT CONTEXT:
+This company is NOT selling software.
+This is NOT a SaaS product.
+This is NOT a project management app for sale.
+
+BLAAG is a real service company that provides:
+- Turnkey construction
+- Renovation and value-increase work
+- Real estate sales/rental/investment consultancy
+
+The digital tracking system is NOT the product.
+It is a premium customer privilege offered by BLAAG after a project is approved.
+
+CORE BUSINESS MESSAGE:
+“We do the work. The customer follows the process transparently.”
+
+The website must make visitors feel:
+- This company is real
+- This company is premium
+- This company can manage my construction/renovation project
+- This company is transparent
+- This company is more professional than local contractors
+- I can trust them with a high-budget project
+
+The customer should NOT feel:
+- I am buying software
+- I need to manage the project myself
+- I need to create an account
+- This is a generic template website
+- This is a cheap contractor site
+- This is unfinished or demo-like
+
+---
+
+EXPECTED SYSTEM LOGIC
+
+1. PUBLIC VISITOR FLOW
+
+A visitor enters the website.
+They quickly understand:
+- Who BLAAG is
+- What services BLAAG provides
+- Why BLAAG is different
+- How the process works
+- That BLAAG provides transparent project tracking as a service privilege
+
+Then the visitor clicks the main CTA:
+“Projemi Başlat”
+or
+“Projenizi Anlatın”
+or
+“Uzmanla Görüş”
+
+The visitor submits a service inquiry / project request.
+
+The BLAAG team manually reviews the request and contacts the customer.
+
+If the project is approved, BLAAG creates two special private links:
+
+A) Customer tracking link:
+Example:
+/ahmet-sezer/proje-takip/1234567
+
+Customer can:
+- See project progress
+- See approved photos
+- See status updates
+- See payment summary
+- See documents
+- See requests
+- See delivery/warranty information
+- No login required
+- No account creation required
+
+B) Worker / field upload link:
+Example:
+/ahmet-sezer/usta-takip/1234567
+
+Worker can:
+- Upload photos
+- Select area
+- Add optional short note
+- Send updates
+- No login required
+- No account creation required
+
+Critical operational flow:
+Worker uploads photos → Admin reviews photos → Admin writes/edits customer-facing description → Admin publishes → Customer sees clean/professional update.
+
+---
+
+2. ADMIN SYSTEM EXPECTATION
+
+Admin must manage everything internally.
+
+Admin should control:
+- Incoming project requests
+- Offers
+- Projects
+- Customers
+- Workers
+- Customer tracking links
+- Worker upload links
+- Photo approval queue
+- Customer-facing descriptions
+- Payments
+- Documents
+- Requests
+- Delivery and warranty
+- Project status
+- Internal notes
+
+Admin must prevent raw worker content from appearing directly to the customer.
+
+Admin must be able to:
+- Approve photos
+- Reject photos
+- Ask worker for revision
+- Use description templates
+- Publish clean updates
+- Copy customer tracking link
+- Copy worker upload link
+
+---
+
+3. PUBLIC ACCESS MODEL
+
+Public visitors must NOT see:
+- Login
+- Admin
+- Dashboard
+- Client panel
+- Worker panel
+- “Paneli Gör”
+- “Giriş Yap”
+- “Müşteri Paneli”
+- “Saha Paneli”
+- “Admin Paneli”
+- Software platform language
+
+Admin login can exist only as hidden route:
+Example:
+/blaag-admin
+
+The public header should only show:
+- Brand
+- Hizmetler
+- Süreç
+- Projemi Başlat
+
+No login button should be visible publicly.
+
+---
+
+GLOBAL DESIGN DIRECTION
+
+The website must feel:
+
+60% prestigious / architectural / high-trust
+40% modern / digital / clean
+
+It must not feel:
+- too corporate
+- too playful
+- too SaaS
+- too cheap
+- too empty
+- too generic
+
+Visual identity:
+- Premium construction company
+- Warm architectural tones
+- Strong contrast
+- Real-world material feeling
+- Clean whitespace
+- Editorial layout
+- Large professional image areas
+- Minimal but confident motion
+
+Color system:
+- Dark hero: #111111
+- Main background: #F4F1EC
+- Soft section: #E9E3D8
+- Card surface: #FFFFFF
+- Accent gold: #C6A85B
+- Primary text: #1C1B19
+- Secondary text: #6B665E
+- Border: rgba(0,0,0,0.08)
+
+Gold must be used only as subtle detail:
+- small line
+- hover accent
+- small icon accent
+- thin divider
+
+Do NOT use gold as a large background.
+Do NOT use bright gradients.
+Do NOT use blue SaaS colors.
+Do NOT use heavy dashboard colors.
+
+Typography:
+- Large, confident hero headline
+- Short paragraphs
+- Strong section titles
+- Minimal jargon
+- Premium service language
+- No cheap contractor language
+- No bureaucratic language
+
+Avoid:
+- “Ön Başvuru” as main CTA
+- “dashboard”
+- “platform”
+- “paneli gör”
+- “günlük takip” if it overpromises
+- “her bütçeye uygun”
+- “ucuz”
+- “demo”
+- “placeholder”
+- “görsel alanı”
+
+Prefer:
+- “Projemi Başlat”
+- “Projenizi Anlatın”
+- “Uzmanla Görüş”
+- “Şeffaf süreç”
+- “Aşama bazlı takip”
+- “Fotoğraflı ilerleme”
+- “Müşteriye özel takip bağlantısı”
+- “Profesyonel uygulama”
+- “Tek merkezden yönetim”
+- “Değer artırma”
+- “Kontrollü ilerleme”
+
+---
+
+TASK:
+Perform a complete audit and redesign specification.
+
+I want you to examine every page, every section, every button, every hover behavior, every scroll behavior, every visual hierarchy issue, every CTA, every placeholder, every piece of copy, every interaction, and every possible customer hesitation.
+
+Do not give generic advice.
+Do not be polite.
+Be brutally precise.
+Treat this as a real high-ticket business.
+
+---
+
+PAGE 1: HOMEPAGE AUDIT AND REDESIGN
+
+The homepage must achieve these goals in the first 10 seconds:
+1. Visitor understands BLAAG is a premium construction / renovation / real estate service company.
+2. Visitor understands BLAAG does the work.
+3. Visitor understands digital tracking is a service privilege, not a product.
+4. Visitor feels trust.
+5. Visitor knows what to click next.
+
+Audit the homepage in detail:
+
+A. Header
+Check:
+- Is the brand shown as “BLAAG Construction and Architecture”?
+- Is the header too crowded?
+- Are there any login/panel/admin links visible?
+- Is the CTA correct?
+- Does the nav feel premium?
+- Does the nav behave correctly on scroll?
+- Is the mobile header clear?
+- Is the active/hover state refined?
+
+Expected header:
+Left:
+BLAAG Construction and Architecture
+
+Right:
+Hizmetler
+Süreç
+Projemi Başlat
+
+No login.
+
+Mouse behavior:
+- Header should have subtle hover states.
+- CTA should slightly lift or darken on hover.
+- Header may become slightly blurred/sticky on scroll, but not flashy.
+- Mobile menu must not expose admin/client/worker routes.
+
+B. Hero Section
+Expected:
+- Dark hero
+- Strong architectural feeling
+- No dashboard
+- No price
+- No percentage
+- No financial metric
+- No “Paneli Gör”
+- No SaaS language
+
+Recommended headline direction:
+“Kusursuz yapı, şeffaf süreç.”
+
+Alternative:
+“Projenizi bize bırakın, süreci şeffaf şekilde takip edin.”
+
+Hero subtitle:
+“Tadilat, yapı ve gayrimenkul süreçlerini profesyonel ekibimizle yürütür; önemli aşamaları size özel takip alanında görünür hale getiririz.”
+
+CTA:
+Primary:
+“Projemi Başlat”
+
+Secondary:
+“Süreci İncele”
+
+Right side:
+Mini project preview card, not dashboard.
+
+Mini project card should show one anonymized scenario per refresh:
+Example:
+A. T****
+Villa Anahtar Teslim
+
+Bugün:
+* Dış cephe uygulaması başladı
+* 7 fotoğraf eklendi
+
+Durum:
+Uygulama aşaması
+
+Sonraki adım:
+İç mekan planlama
+
+Rules:
+- No price
+- No percentage
+- No progress bar
+- No “offer ready”
+- No dashboard grid
+- No SaaS metrics
+
+The mini card should feel like a real project snapshot.
+
+Hover/motion:
+- Card may have subtle lift on hover.
+- No aggressive animation.
+- No carousel auto-slide.
+- Random scenario on refresh only.
+
+C. Trust Strip
+Expected 4 trust items:
+- Şeffaf Süreç
+- Fotoğraflı Takip
+- Tek Merkezden Yönetim
+- Profesyonel Uygulama
+
+Audit:
+- Is this section visible enough?
+- Does it feel like real trust or generic marketing?
+- Are icons line-based and minimal?
+- Are dividers subtle?
+- Is copy short enough?
+
+Each item should have:
+Title + one short explanatory sentence.
+
+D. Services Section
+Expected:
+Not 3 generic cards.
+Use large split sections.
+
+Services:
+1. Anahtar Teslim Yapı Geliştirme
+2. Tadilat & Değer Artırma
+3. Gayrimenkul Danışmanlığı
+
+Each service block should include:
+- Large visual area
+- Premium title
+- Customer problem
+- BLAAG solution
+- Outcome
+- Subtle CTA: “Detayları İncele” or “Bu hizmet için görüşelim”
+
+Service copy should not be mechanical.
+It should focus on:
+- value increase
+- lifestyle improvement
+- controlled execution
+- reduced uncertainty
+- professional coordination
+
+E. Digital Tracking Privilege
+This is the differentiator.
+But it must not feel like software.
+
+Expected section:
+Title:
+“Süreci sadece yaptırmazsınız, şeffaf şekilde takip edersiniz.”
+
+Copy:
+“BLAAG ile yürütülen projelerde önemli aşamalar, fotoğraflar ve gelişmeler size özel takip bağlantısı üzerinden düzenli olarak sunulur.”
+
+Important phrase:
+“İşi biz yönetiriz, siz süreci şeffaf şekilde takip edersiniz.”
+
+Explain:
+- Customer gets private tracking link
+- Worker uploads through private upload link
+- Admin reviews and writes customer-facing update
+- Customer sees clean approved progress
+
+Do not overpromise “daily updates.”
+Use:
+- “aşama bazlı”
+- “düzenli”
+- “önemli gelişmeler”
+
+F. Process Section
+Expected 5 steps:
+1. İlk Görüşme ve Talep
+2. Değerlendirme
+3. Teklif ve Plan
+4. Uygulama
+5. Takip ve Sonuç
+
+Avoid:
+“Ön Başvuru” if too bureaucratic.
+
+Each step should be one sentence max.
+Customer must feel:
+“I tell them what I need. They handle the rest.”
+
+G. Proof Section
+Expected:
+Before / Process / Result
+
+But no visible placeholder text like:
+- “görsel alanı”
+- “placeholder”
+- “öncesi görsel alanı”
+
+If real images are absent, use elegant image frames without exposing unfinished labels.
+
+Proof section should communicate:
+- initial condition
+- controlled execution
+- delivery result
+
+H. Final CTA
+Expected:
+Title:
+“Projenizi birlikte netleştirelim.”
+
+Button:
+“Projemi Başlat”
+
+No aggressive selling.
+No multiple competing buttons.
+
+---
+
+PAGE 2: SERVICES PAGE AUDIT
+
+Expected:
+Services page must deepen understanding without overwhelming.
+
+Audit:
+- Does it feel like BLAAG sells real construction services?
+- Are service descriptions aspirational enough?
+- Are they too technical?
+- Are they too dry?
+- Are there visual sections?
+- Is each service clearly differentiated?
+
+Service 1:
+Anahtar Teslim Yapı Geliştirme
+Must communicate:
+- land/project idea to delivery
+- coordination
+- construction management
+- quality control
+- peace of mind
+
+Service 2:
+Tadilat & Değer Artırma
+Must communicate:
+- comfort
+- aesthetics
+- property value
+- sales/rental preparation
+- controlled transformation
+
+Service 3:
+Gayrimenkul Danışmanlığı
+Must communicate:
+- correct price
+- correct presentation
+- correct positioning
+- value increase strategy
+- investment/security
+
+Buttons:
+Should not all say “Ön Başvuru.”
+Use:
+- “Projemi Başlat”
+- “Bu hizmet için görüşelim”
+- “Projenizi Anlatın”
+
+Visuals:
+Must have planned image containers.
+No visible “görsel alanı” text.
+
+---
+
+PAGE 3: PROCESS PAGE AUDIT
+
+Expected:
+Process page explains how BLAAG works, not how software works.
+
+It should answer:
+- What happens after I contact them?
+- Who manages the process?
+- How do I follow the work?
+- Do I need an account?
+- What does the worker do?
+- What does admin control?
+
+Must explain:
+- customer does not create account
+- worker does not create account
+- customer receives private link after project approval
+- worker receives private photo upload link
+- admin reviews and publishes updates
+
+Tone:
+Concierge-level service.
+Not technical documentation.
+
+Avoid:
+- backend language
+- platform mechanics
+- too much operational complexity
+
+Use simple flow:
+1. You tell us your need
+2. We evaluate
+3. We prepare plan and offer
+4. We execute
+5. You follow approved progress through private link
+
+---
+
+PAGE 4: INTAKE / PROJECT REQUEST PAGE AUDIT
+
+Expected:
+This is not a signup.
+This is not a bureaucratic application.
+This is a premium project request.
+
+Audit:
+- Is the heading “Ön Başvuru” too bureaucratic?
+- Would a premium client feel like they are applying for service?
+- Is the form too long?
+- Is it too short to qualify leads?
+- Does it filter low-quality leads?
+- Does it ask project scale?
+- Does it ask location?
+- Does it ask service type?
+- Does it ask timing?
+- Does it allow image/file upload?
+
+Recommended title:
+“Projenizi Netleştirelim”
+
+Alternative:
+“Projemi Başlat”
+
+Success message:
+“Talebiniz alındı. Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek. Onaylanan işler için size özel takip bağlantısı oluşturulur.”
+
+Avoid:
+- account created
+- panel created
+- login required
+- dashboard language
+
+Lead qualification:
+Use gentle fields:
+- service type
+- location
+- project scope
+- planned timing
+- project scale / investment range
+- optional photo/file upload
+
+Budget wording:
+Prefer “Proje ölçeği” or “Planlanan yatırım aralığı”
+Do not feel cheap/aggressive.
+
+---
+
+PAGE 5: CUSTOMER TRACKING LINK AUDIT
+
+Expected route:
+Example:
+/ahmet-sezer/proje-takip/1234567
+
+Customer must see:
+- Project name
+- Current stage
+- Approved updates
+- Approved photos
+- Documents
+- Payments
+- Requests
+- Delivery/warranty
+- No login
+- No admin tools
+- No worker tools
+- No raw worker text
+
+Audit:
+- Does it feel private?
+- Does it feel safe?
+- Does it show only customer-relevant information?
+- Is it too technical?
+- Is payment shown clearly?
+- Are updates timestamped?
+- Are photos grouped by stage/area?
+- Are documents clear?
+- Is there a clear contact/request mechanism?
+
+Must include explanation:
+“Bu alanda yalnızca BLAAG ekibi tarafından kontrol edilen ve yayınlanan bilgiler görünür.”
+
+---
+
+PAGE 6: WORKER UPLOAD LINK AUDIT
+
+Expected route:
+Example:
+/ahmet-sezer/usta-takip/1234567
+
+Worker must be able to submit update quickly.
+
+Audit:
+- Can worker upload in under 10 seconds?
+- Is there too much text?
+- Are buttons large?
+- Does it work on mobile?
+- Does it require typing?
+- Can worker select area quickly?
+- Is note optional?
+- Does worker understand that admin will review?
+
+Expected fields:
+- Fotoğraf ekle
+- Alan seç
+- Optional short note
+- Submit
+
+Avoid:
+- long form
+- customer-facing description writing
+- complex status logic
+- login/account
+
+Success:
+“Fotoğraflar BLAAG ekibinin onayına gönderildi.”
+
+---
+
+PAGE 7: ADMIN AUDIT
+
+Expected:
+Admin is internal command center.
+
+Audit:
+- Can admin see all leads?
+- Can admin manage offers?
+- Can admin create project?
+- Can admin create customer tracking link?
+- Can admin create worker upload link?
+- Can admin review worker photos?
+- Can admin write customer-facing descriptions?
+- Can admin publish approved updates?
+- Can admin manage payments?
+- Can admin manage documents?
+- Can admin manage requests?
+- Can admin manage delivery/warranty?
+- Can admin avoid bottleneck?
+
+Admin critical queue:
+“Onay Bekleyen Fotoğraflar”
+
+Each photo/update should have:
+- project
+- worker
+- area
+- upload time
+- photo preview
+- internal note
+- customer-facing description
+- template buttons
+- status
+
+Template buttons:
+- Söküm işlemi tamamlandı.
+- Altyapı kontrolü yapıldı.
+- Malzeme sahaya alındı.
+- Uygulama aşaması tamamlandı.
+- Teslim öncesi son kontrol yapıldı.
+
+Actions:
+- Yayına Hazır İşaretle
+- Müşteriye Yayınla
+- Revize İste
+- Reddet
+
+---
+
+INTERACTION / MICRO UX AUDIT
+
+Check every button:
+- What happens on hover?
+- Is hover too flashy?
+- Does the cursor indicate action?
+- Is there focus state?
+- Are disabled states clear?
+- Does every button have purpose?
+- Are there too many CTAs?
+
+Check scroll behavior:
+- Are sections revealed subtly?
+- Does the header remain usable?
+- Does motion feel premium?
+- Are there any distracting animations?
+
+Check mobile:
+- Header
+- CTA
+- Form
+- Worker upload
+- Admin tables
+- Customer tracking
+- Buttons
+- Image frames
+- Text length
+
+Check accessibility:
+- contrast
+- readable font size
+- keyboard focus
+- button labels
+- link purpose
+- mobile tap targets
+
+---
+
+COPY AUDIT
+
+Find and replace weak language:
+- Ön Başvuru → Projemi Başlat / İlk Görüşme ve Talep / Projenizi Netleştirelim
+- Günlük → Aşama bazlı / düzenli / önemli gelişmeler
+- Platform → takip ayrıcalığı / takip alanı / şeffaf süreç
+- Panel → özel takip bağlantısı
+- Dashboard → remove
+- Demo → remove
+- Placeholder → remove
+
+Check for:
+- Old brand names
+- Fake contact info
+- Unfinished labels
+- English UI text
+- SaaS wording
+- technical jargon
+
+---
+
+FINAL OUTPUT FORMAT
+
+Return:
+
+1. Executive Summary
+- What is working
+- What is still wrong
+- What must be fixed first
+
+2. Page-by-page audit
+For each page:
+- Strengths
+- Weaknesses
+- Critical fixes
+- UX improvements
+- Copy improvements
+- Visual improvements
+
+3. Role-based audit
+- Customer
+- Worker
+- Admin
+- Marketing
+- CEO
+- COO
+
+4. Exact replacement copy
+Give better text for:
+- Hero headline
+- Hero subtitle
+- CTA labels
+- Services
+- Process steps
+- Tracking section
+- Intake success message
+- Footer
+
+5. Interaction recommendations
+- Hover
+- Scroll
+- Mobile
+- Forms
+- Private links
+
+6. Priority action plan
+Split into:
+- Fix today
+- Fix this week
+- Structural improvements
+
+7. Scores
+- Product Score
+- Trust Score
+- Conversion Score
+- UX Clarity Score
+- Premium Brand Score
+- Operational Readiness Score
+
+Be brutally honest.
+No generic advice.
+Every point must be actionable.
+Do not praise unless deserved.
+Assume this site will be used to sell high-value construction and renovation projects.

@@ -1,7 +1,7 @@
 const serviceLinks = [
   ["Hizmetler", "/hizmetler"],
   ["Süreç", "/surec"],
-  ["Ön Başvuru Oluştur", "/teklif-al"]
+  ["Projemi Başlat", "/teklif-al"]
 ];
 
 export default function Footer() {
@@ -27,7 +27,7 @@ export default function Footer() {
             İletişim bilgileri yakında güncellenecektir.
           </p>
           <p className="mt-6 rounded-2xl bg-white/10 p-4 text-sm text-white/55">
-            Başvurunuz sonrası ekibimiz kapsamı inceler, sizinle iletişime geçer
+            Talebiniz sonrası ekibimiz kapsamı inceler, sizinle iletişime geçer
             ve hizmet planını netleştirir.
           </p>
         </div>

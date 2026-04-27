@@ -144,7 +144,7 @@ function ServiceBlock({ service, reversed, index }) {
           ))}
         </div>
         <a href="/teklif-al" className="mt-8 inline-flex items-center gap-2 text-sm font-medium">
-          Bu hizmet için başvuru oluştur
+          Bu hizmet için görüşelim
           <ArrowRight size={16} />
         </a>
       </div>

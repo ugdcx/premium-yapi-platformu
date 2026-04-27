@@ -40,6 +40,10 @@ export default function PrivateProjectTrackingPage() {
                 güncellemeler BLAAG ekibi tarafından kontrol edilir ve anlaşılır
                 şekilde düzenlendikten sonra paylaşılır.
               </p>
+              <p className="mt-4 max-w-2xl border-l border-gold pl-4 text-sm leading-7 text-white/60">
+                Bu alanda yalnızca BLAAG ekibi tarafından kontrol edilen ve
+                yayınlanan bilgiler görünür.
+              </p>
             </div>
             <div className="grid gap-3 bg-white/10 p-5 text-sm text-white/70 sm:min-w-72">
               <InfoLine label="Müşteri" value="Ahmet S." dark />

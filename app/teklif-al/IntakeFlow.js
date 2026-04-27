@@ -213,7 +213,7 @@ export default function IntakeFlow() {
               <CheckCircle2 size={32} />
             </div>
             <h1 className="mt-8 text-5xl font-semibold tracking-tight">
-              Başvurunuz alındı.
+              Talebiniz alındı.
             </h1>
             <p className="mx-auto mt-5 max-w-xl leading-8 text-muted">
               Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.

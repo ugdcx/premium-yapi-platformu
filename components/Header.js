@@ -15,7 +15,7 @@ export default function Header() {
             href="/teklif-al"
             className="inline-flex shrink-0 items-center rounded-full bg-stoneDark px-4 py-2 text-sm font-medium text-white md:hidden"
           >
-            Ön Başvuru Oluştur
+            Projemi Başlat
           </a>
         </div>
 
@@ -32,7 +32,7 @@ export default function Header() {
             href="/teklif-al"
             className="inline-flex min-h-11 items-center rounded-full bg-stoneDark px-5 py-2.5 text-sm font-medium text-white"
           >
-            Ön Başvuru Oluştur
+            Projemi Başlat
           </a>
         </div>
       </div>
