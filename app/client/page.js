@@ -1,9 +1,9 @@
 import ClientDashboard from "./ClientDashboard";
 
 export const metadata = {
-  title: "Müşteri Paneli | Premium Yapı Platformu",
+  title: "Özel Proje Takibi | BLAAG Construction and Architecture",
   description:
-    "Müşteriler için proje durumu, teklif, saha güncellemeleri, ödeme, belge ve onay takip paneli."
+    "BLAAG müşterileri için özel bağlantıyla proje durumu, teklif, fotoğraf, ödeme, belge ve teslim takibi."
 };
 
 export default function ClientPage() {

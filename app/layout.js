@@ -3,9 +3,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export const metadata = {
-  title: "Premium Yapı Platformu",
+  title: "BLAAG Construction and Architecture",
   description:
-    "Anahtar teslim yapı, değer artırma ve gayrimenkul danışmanlığı platformu."
+    "Anahtar teslim yapı, tadilat ve gayrimenkul danışmanlığı hizmetlerinde premium süreç yönetimi."
 };
 
 export default function RootLayout({ children }) {

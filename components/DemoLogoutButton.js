@@ -9,7 +9,7 @@ export default function DemoLogoutButton({ dark = false }) {
 
   function handleLogout() {
     clearDemoSession();
-    router.push("/login");
+    router.push("/blaag-admin");
   }
 
   return (

@@ -216,8 +216,8 @@ export default function IntakeFlow() {
               Başvurunuz Alındı
             </h1>
             <p className="mx-auto mt-5 max-w-xl leading-8 text-muted">
-              Bilgileriniz şirket paneline iletildi. Ekibimiz inceleme sonrası
-              sizinle iletişime geçecek.
+              Başvurunuz alındı. Ekibimiz bilgilerinizi inceleyerek sizinle
+              iletişime geçecek.
             </p>
             <div className="mx-auto mt-6 w-fit rounded-full bg-cream px-5 py-2 text-sm font-medium text-stoneDark">
               Başvuru No: AG-2026-001
@@ -238,7 +238,7 @@ export default function IntakeFlow() {
                 "Ekibimiz sizinle iletişime geçer",
                 "Teklif ve yol haritası hazırlanır",
                 "Onay sonrası süreç başlatılır",
-                "Süreç panelden takip edilir"
+                "Onay sonrası size özel takip bağlantısı paylaşılır"
               ].map((item, index) => (
                 <div key={item} className="rounded-2xl bg-cream p-4 text-sm text-muted">
                   {index + 1}. {item}
@@ -246,12 +246,6 @@ export default function IntakeFlow() {
               ))}
             </div>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <a
-                href="/client"
-                className="inline-flex justify-center rounded-full bg-stoneDark px-7 py-4 text-white"
-              >
-                Paneli Gör
-              </a>
               <button
                 onClick={resetFlow}
                 className="inline-flex justify-center rounded-full border border-border px-7 py-4"
@@ -274,9 +268,6 @@ export default function IntakeFlow() {
               <a href="/" className="text-sm text-white/55">
                 Ana sayfa
               </a>
-              <a href="/login" className="text-sm text-white/55">
-                Giriş Yap
-              </a>
             </div>
             <p className="mt-12 text-sm uppercase tracking-[0.3em] text-white/35">
               Akıllı Ön Başvuru
@@ -286,15 +277,15 @@ export default function IntakeFlow() {
             </h1>
             <p className="mt-6 max-w-2xl leading-8 text-white/60">
               Birkaç net seçimle ihtiyacınızı, kapsamı ve öncelikleri
-              belirleyin. Ekibimiz başvurunuzu proje danışmanlığı formatında
+              belirleyin. Ekibimiz başvurunuzu BLAAG hizmet modeli içinde
               değerlendirsin.
             </p>
           </div>
 
           <div className="rounded-2xl bg-white/10 p-5 text-sm text-white/60 lg:w-72">
-            <strong className="block text-base text-white">Premium intake</strong>
+            <strong className="block text-base text-white">BLAAG ön değerlendirme</strong>
             <span className="mt-2 block">
-              Gereksiz form kalabalığı yerine karar ağacı ile doğru kapsam.
+              Gereksiz form kalabalığı yerine doğru kapsamı netleştiren kısa akış.
             </span>
           </div>
         </header>

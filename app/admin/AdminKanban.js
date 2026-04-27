@@ -40,12 +40,14 @@ import DemoLogoutButton from "../../components/DemoLogoutButton";
 
 const sections = [
   { id: "home", label: "Ana Ekran", icon: LayoutDashboard },
-  { id: "applications", label: "Gelen Başvurular", icon: ClipboardList },
-  { id: "offers", label: "Giden Teklifler", icon: ReceiptText },
+  { id: "applications", label: "Başvurular", icon: ClipboardList },
+  { id: "offers", label: "Teklifler", icon: ReceiptText },
   { id: "projects", label: "Projeler", icon: FolderKanban },
   { id: "customers", label: "Müşteriler", icon: UsersRound },
-  { id: "workers", label: "Ustalar / Saha Ekibi", icon: Hammer },
-  { id: "updates", label: "Güncellemeler", icon: Upload },
+  { id: "workers", label: "Ustalar", icon: Hammer },
+  { id: "links", label: "Proje linkleri", icon: ShieldCheck },
+  { id: "updates", label: "Fotoğraf onayları", icon: Upload },
+  { id: "descriptions", label: "Açıklama yazımı", icon: FileText },
   { id: "payments", label: "Ödemeler", icon: Wallet },
   { id: "documents", label: "Belgeler", icon: FileText },
   { id: "requests", label: "Talepler", icon: MessageCircle },
@@ -339,8 +341,9 @@ export default function AdminKanban() {
                 Yönetim Paneli
               </h1>
               <p className="mt-4 max-w-3xl leading-8 text-white/60">
-                Başvurular, teklifler, projeler, saha ekipleri ve müşteri talepleri
-                tek operasyon düzeninde yönetilir.
+                Başvurular, teklifler, projeler, müşteriler, ustalar, proje linkleri,
+                fotoğraf onayları, açıklama yazımı, ödemeler, belgeler, talepler
+                ve teslim süreçleri tek iç operasyon düzeninde yönetilir.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -393,7 +396,9 @@ export default function AdminKanban() {
             {selectedSection === "projects" && <ProjectsSection />}
             {selectedSection === "customers" && <CustomersSection />}
             {selectedSection === "workers" && <WorkersSection />}
+            {selectedSection === "links" && <ProjectLinksSection />}
             {selectedSection === "updates" && <UpdatesSection />}
+            {selectedSection === "descriptions" && <DescriptionsSection />}
             {selectedSection === "payments" && (
               <PaymentsSection payments={paymentRows} onStatusChange={updatePaymentStatus} />
             )}
@@ -591,6 +596,68 @@ function WorkersSection() {
         ["Erişim kodu", "accessCode"],
         ["Uzmanlık", "specialty"],
         ["Atanan proje", "project"],
+        ["Durum", "status"]
+      ]}
+    />
+  );
+}
+
+function ProjectLinksSection() {
+  const links = [
+    {
+      title: demoProject.title,
+      customerLink: "Müşteriye özel proje bağlantısı hazırlanacak",
+      workerLink: "Usta fotoğraf yükleme bağlantısı hazırlanacak",
+      status: "Taslak"
+    },
+    {
+      title: "Villa Satış Hazırlığı",
+      customerLink: "Müşteri takip bağlantısı aktif",
+      workerLink: "Fotoğraf yükleme bağlantısı aktif",
+      status: "Aktif"
+    }
+  ];
+
+  return (
+    <SimpleGrid
+      title="Proje linkleri"
+      eyebrow="Özel erişim yönetimi"
+      items={links}
+      fields={[
+        ["Proje", "title"],
+        ["Müşteri linki", "customerLink"],
+        ["Usta linki", "workerLink"],
+        ["Durum", "status"]
+      ]}
+    />
+  );
+}
+
+function DescriptionsSection() {
+  const descriptions = [
+    {
+      photo: "Mutfak güncellemesi",
+      source: "Usta fotoğraf yükledi",
+      draft: "Dolap sökümü tamamlandı, elektrik hatları kontrol için hazırlandı.",
+      status: "Admin onayı bekliyor"
+    },
+    {
+      photo: "Dış cephe kontrolü",
+      source: "Saha ekibi fotoğraf yükledi",
+      draft: "Cephe astar hazırlığı tamamlandı, uygulama alanı temizlendi.",
+      status: "Yayına hazır"
+    }
+  ];
+
+  return (
+    <SimpleGrid
+      title="Açıklama yazımı"
+      eyebrow="Fotoğraf açıklamaları"
+      items={descriptions}
+      fields={[
+        ["Fotoğraf", "photo"],
+        ["Kaynak", "source"],
+        ["Admin açıklaması", "draft"],
         ["Durum", "status"]
       ]}
     />
@@ -884,8 +951,8 @@ function HandoverSection({
 
 function SettingsSection() {
   const settings = [
-    { label: "Şirket bilgileri", value: "AG Yapı Platformu demo şirket profili" },
-    { label: "Demo kullanıcıları", value: "Admin, müşteri ve saha ekibi erişimleri aktif" },
+    { label: "Şirket bilgileri", value: "BLAAG Construction and Architecture iç operasyon profili" },
+    { label: "Demo erişim modeli", value: "Admin girişi gizli; müşteri ve usta erişimi özel bağlantı modeliyle temsil edilir" },
     { label: "Bildirim tercihleri", value: "WhatsApp, telefon ve panel içi uyarılar" },
     { label: "Hizmet kategorileri", value: "Yapı geliştirme, tadilat, gayrimenkul danışmanlığı" }
   ];
@@ -893,7 +960,7 @@ function SettingsSection() {
   return (
     <SimpleGrid
       title="Ayarlar"
-      eyebrow="Platform yapılandırması"
+      eyebrow="İç operasyon yapılandırması"
       items={settings}
       fields={[
         ["Alan", "label"],

@@ -1,11 +1,9 @@
-import LoginForm from "./LoginForm";
+import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Giriş Yap | Premium Yapı Platformu",
-  description:
-    "Müşteri, admin ve saha ekibi için giriş ve hızlı erişim sayfası."
+  title: "Yönlendiriliyor | BLAAG Construction and Architecture"
 };
 
 export default function LoginPage() {
-  return <LoginForm />;
+  redirect("/blaag-admin");
 }

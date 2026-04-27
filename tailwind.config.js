@@ -6,12 +6,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cream: "#F5EFE6",
+        cream: "#F4F1EC",
         surface: "#FFFFFF",
-        stoneDark: "#1C1B19",
-        dark: "#1C1B19",
+        stoneDark: "#111111",
+        dark: "#111111",
         muted: "#6B665E",
         gold: "#C6A85B",
+        soft: "#E9E3D8",
         border: "rgb(0 0 0 / 0.08)"
       },
       boxShadow: {

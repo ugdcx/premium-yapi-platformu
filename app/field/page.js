@@ -1,9 +1,9 @@
 import FieldPanel from "./FieldPanel";
 
 export const metadata = {
-  title: "Saha Güncellemesi | Premium Yapı Platformu",
+  title: "Saha Fotoğraf Yükleme | BLAAG Construction and Architecture",
   description:
-    "Usta ve saha ekipleri için hızlı fotoğraf, durum ve iş ilerleme güncelleme paneli."
+    "Usta ve saha ekipleri için özel bağlantıyla yalnızca fotoğraf yükleme akışı."
 };
 
 export default function FieldPage() {

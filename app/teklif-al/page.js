@@ -1,9 +1,9 @@
 import IntakeFlow from "./IntakeFlow";
 
 export const metadata = {
-  title: "Ön Başvuru Oluştur | Premium Yapı Platformu",
+  title: "Ön Başvuru Oluştur | BLAAG Construction and Architecture",
   description:
-    "Yapı, tadilat, renovasyon ve gayrimenkul projeleri için akıllı ön başvuru akışı."
+    "Yapı, tadilat ve gayrimenkul danışmanlığı için BLAAG ön başvuru akışı."
 };
 
 export default function QuotePage() {

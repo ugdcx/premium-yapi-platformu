@@ -6,7 +6,7 @@ import {
   ArrowRight,
   Building2
 } from "lucide-react";
-import { authenticateDemoUser, demoUsers, saveDemoSession } from "../../lib/demoAuth";
+import { authenticateDemoUser, saveDemoSession } from "../../lib/demoAuth";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -19,8 +19,8 @@ export default function LoginForm() {
 
     const user = authenticateDemoUser(phone, password);
 
-    if (!user) {
-      setError("Telefon numarası veya erişim kodu hatalı.");
+    if (!user || user.role !== "admin") {
+      setError("Yetkili telefon numarası veya erişim kodu hatalı.");
       return;
     }
 
@@ -35,24 +35,24 @@ export default function LoginForm() {
           <section className="flex flex-col justify-between rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-10">
             <div>
               <a href="/" className="text-sm text-white/55">
-                AG Yapı Platformu
+                BLAAG Construction and Architecture
               </a>
               <div className="mt-10 inline-flex rounded-full border border-white/10 px-4 py-2 text-sm text-white/55 md:mt-16">
-                Güvenli dijital proje erişimi
+                İç operasyon erişimi
               </div>
               <h1 className="mt-6 max-w-2xl text-4xl font-semibold leading-tight tracking-tight md:text-7xl">
-                Giriş Yap
+                Yetkili Girişi
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
-                Telefon numaranız ve erişim kodunuz ile proje alanınıza güvenli
-                şekilde erişin.
+                BLAAG yönetim ekibi için başvuru, teklif, proje ve saha
+                operasyonlarını yöneten gizli giriş alanı.
               </p>
             </div>
 
             <div className="mt-12 grid gap-3 text-sm text-white/55 sm:grid-cols-3">
-              <div className="rounded-2xl bg-white/10 p-4">Müşteri paneli</div>
-              <div className="rounded-2xl bg-white/10 p-4">Yönetim ekranı</div>
-              <div className="rounded-2xl bg-white/10 p-4">Saha akışı</div>
+              <div className="rounded-2xl bg-white/10 p-4">Başvurular</div>
+              <div className="rounded-2xl bg-white/10 p-4">Projeler</div>
+              <div className="rounded-2xl bg-white/10 p-4">Fotoğraf onayları</div>
             </div>
           </section>
 
@@ -62,15 +62,15 @@ export default function LoginForm() {
                 <Building2 size={22} />
               </div>
               <div>
-                <p className="text-sm text-muted">Giriş merkezi</p>
-                <h2 className="text-2xl font-semibold">Platform erişimi</h2>
+                <p className="text-sm text-muted">Gizli erişim</p>
+                <h2 className="text-2xl font-semibold">BLAAG yönetim girişi</h2>
               </div>
             </div>
 
             <form onSubmit={handleSubmit} className="grid gap-4">
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-muted">
-                  Telefon numarası
+                  Yetkili telefon numarası
                 </span>
                 <input
                   value={phone}
@@ -79,14 +79,14 @@ export default function LoginForm() {
                     setError("");
                   }}
                   className="rounded-2xl border border-border bg-cream px-5 py-4 outline-none placeholder:text-black/35"
-                  placeholder="0500 000 00 02"
+                  placeholder="0500 000 00 01"
                   autoComplete="tel"
                 />
               </label>
 
               <label className="grid gap-2">
                 <span className="text-sm font-medium text-muted">
-                  Şifre / erişim kodu
+                  Erişim kodu
                 </span>
                 <input
                   value={password}
@@ -108,25 +108,10 @@ export default function LoginForm() {
               )}
 
               <button className="inline-flex items-center justify-center gap-2 rounded-2xl bg-stoneDark px-5 py-4 font-medium text-white">
-                Giriş Yap
+                Yönetim Paneline Gir
                 <ArrowRight size={18} />
               </button>
             </form>
-
-            <details className="mt-8 rounded-2xl border border-border bg-cream px-4 py-3 text-sm text-muted">
-              <summary className="cursor-pointer font-medium text-stoneDark">
-                Yetkili erişim bilgileri
-              </summary>
-              <div className="mt-4 grid gap-3">
-                {demoUsers.map((user) => (
-                  <div key={user.role} className="rounded-xl bg-white px-4 py-3">
-                    <p className="font-medium text-stoneDark">{user.label}</p>
-                    <p className="mt-1">Telefon: {user.phone}</p>
-                    <p>Şifre / erişim kodu: {user.password}</p>
-                  </div>
-                ))}
-              </div>
-            </details>
           </section>
         </div>
       </div>

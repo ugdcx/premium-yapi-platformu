@@ -1,0 +1,299 @@
+RESTRUCTURE THE ENTIRE PLATFORM TO MATCH A PREMIUM CONSTRUCTION SERVICE COMPANY MODEL.
+
+IMPORTANT:
+- UI language must be Turkish
+- Brand name: BLAAG Construction and Architecture
+- We are NOT selling a software platform
+- We are a construction, renovation and real estate service company
+- Digital tracking is a PREMIUM BENEFIT for our customers
+- Do NOT break existing routes
+- Do NOT add backend
+- Use demo/static data only
+- Build must pass
+
+------------------------------------
+ACCESS MODEL (CRITICAL)
+------------------------------------
+
+- REMOVE all visible login elements from public UI:
+  - Giriş Yap
+  - Paneli Gör
+  - Müşteri Paneli
+  - Saha Paneli
+  - Admin
+
+- CREATE hidden admin login route:
+  /blaag-admin
+
+- /admin remains protected (only reachable after login)
+
+- Customers DO NOT create accounts
+- Workers DO NOT create accounts
+
+- Future access model:
+  - Customer: private project link
+  - Worker: private upload link
+
+------------------------------------
+HEADER
+------------------------------------
+
+Navigation must be:
+
+- BLAAG Construction and Architecture
+- Hizmetler
+- Süreç
+- Ön Başvuru Oluştur
+
+NO login button
+
+------------------------------------
+GLOBAL DESIGN SYSTEM
+------------------------------------
+
+Colors:
+- Background: #F4F1EC
+- Dark: #111111
+- Card: #FFFFFF
+- Soft section: #E9E3D8
+- Accent: #C6A85B (only small details)
+- Text primary: #1C1B19
+- Text secondary: #6B665E
+- Border: rgba(0,0,0,0.08)
+
+Rules:
+- No SaaS dashboard feeling
+- No gradients
+- Minimal animation
+- Premium spacing
+- Architectural feel
+
+------------------------------------
+HOMEPAGE
+------------------------------------
+
+1. HERO (dark)
+
+Left:
+
+Title:
+Projenizi baştan sona kontrol altında tutun.
+
+Subtitle:
+Tadilat, yapı ve gayrimenkul süreçlerinizi profesyonel ekibimizle yürütür; tüm ilerlemeyi size özel alandan takip etmenizi sağlarız.
+
+CTA:
+- Ön Başvuru Oluştur
+- Süreci İncele
+
+Right:
+
+Create MINI PROJECT CARD (NOT dashboard)
+
+RULES:
+- NO price
+- NO percentage
+- NO technical metrics
+
+Create 7–8 different project scenarios
+Show ONE randomly per refresh
+
+Example:
+
+A. T******
+
+Villa Anahtar Teslim
+
+Bugün:
+• Dış cephe uygulaması başladı
+• 7 fotoğraf eklendi
+
+Durum:
+Uygulama aşaması
+
+Sonraki adım:
+İç mekan planlama
+
+------------------------------------
+
+2. TRUST STRIP
+
+4 items:
+
+- Şeffaf Süreç
+- Fotoğraflı Takip
+- Tek Merkezden Yönetim
+- Profesyonel Uygulama
+
+Use line icons
+Minimal layout
+Light divider
+
+------------------------------------
+
+3. SERVICES
+
+REMOVE card grid
+
+Create 3 large split sections:
+
+- Anahtar Teslim Yapı Geliştirme
+- Tadilat & Değer Artırma
+- Gayrimenkul Danışmanlığı
+
+Layout:
+Left text / Right image
+Next reversed
+
+Images:
+- Create placeholder containers
+- Do NOT leave empty
+
+Add subtle link:
+Detayları İncele
+
+------------------------------------
+
+4. DIGITAL TRACKING ADVANTAGE
+
+Left:
+
+Title:
+Süreci sadece yaptırmazsınız, takip edersiniz.
+
+Bullets:
+- Günlük gelişmeleri görürsünüz
+- Fotoğraflarla ilerlemeyi takip edersiniz
+- Sürecin hangi aşamada olduğunu bilirsiniz
+
+Right:
+
+ONE mini project card
++ small photo strip placeholder
+
+NO slider
+NO multiple cards
+
+------------------------------------
+
+5. PROCESS
+
+5 steps only:
+
+- Ön Başvuru
+- Değerlendirme
+- Teklif ve Plan
+- Uygulama
+- Takip ve Sonuç
+
+Keep minimal
+No technical explanation
+
+Add CTA:
+Süreci detaylı incele
+
+------------------------------------
+
+6. PROJECT PROOF
+
+3 blocks:
+
+- Öncesi
+- Süreç
+- Sonrası
+
+Each:
+- Image placeholder
+- Short text
+
+------------------------------------
+
+7. FINAL CTA
+
+Title:
+Projenizi birlikte netleştirelim.
+
+Button:
+Ön Başvuru Oluştur
+
+------------------------------------
+HIZMETLER PAGE
+------------------------------------
+
+- Rewrite as service company
+- NOT software product
+- Use BLAAG brand
+- Add image placeholders
+- Keep premium tone
+
+------------------------------------
+SÜREÇ PAGE
+------------------------------------
+
+- Explain service flow
+- Customer hires BLAAG
+- Tracking is transparency benefit
+- Keep visual and simple
+
+------------------------------------
+ÖN BAŞVURU
+------------------------------------
+
+After submit:
+
+Başvurunuz alındı. Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.
+
+NO account creation messaging
+
+------------------------------------
+ADMIN
+------------------------------------
+
+Admin is internal system
+
+Must manage:
+
+- Başvurular
+- Teklifler
+- Projeler
+- Müşteriler
+- Ustalar
+- Proje linkleri
+- Fotoğraf onayları
+- Açıklama yazımı
+- Ödemeler
+- Belgeler
+- Talepler
+- Teslim & garanti
+
+------------------------------------
+FIELD / WORKER
+------------------------------------
+
+- Worker uses private link
+- Uploads photos only
+- Admin writes descriptions
+
+------------------------------------
+CRITICAL RULES
+------------------------------------
+
+- Do NOT present system as software
+- Do NOT show price on homepage
+- Do NOT use dashboard UI
+- Everything must feel like real construction company
+- Keep simple, clean, premium
+
+------------------------------------
+FINAL
+------------------------------------
+
+Run:
+npm run build
+
+Then summarize:
+
+1. What changed
+2. Visual improvements
+3. UX improvements
+4. Build result

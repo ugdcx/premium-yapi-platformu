@@ -1,9 +1,9 @@
 import AdminKanban from "./AdminKanban";
 
 export const metadata = {
-  title: "Admin Kanban | Premium Yapı Platformu",
+  title: "BLAAG İç Operasyon Merkezi",
   description:
-    "Müşteri başvurularını Kanban akışıyla inceleme, teklif hazırlama ve onaylama paneli."
+    "BLAAG başvurular, teklifler, projeler, müşteriler, ustalar, proje linkleri, fotoğraf onayları, ödemeler, belgeler ve teslim süreçleri."
 };
 
 export default function AdminPage() {
