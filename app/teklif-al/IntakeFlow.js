@@ -42,51 +42,40 @@ const questionSets = {
     { key: "location", label: "Konum", type: "input", placeholder: "İl / ilçe / bölge" },
     {
       key: "structureType",
-      label: "Hedef yapı tipi",
+      label: "Yapı tipi",
       type: "chips",
-      options: ["Villa", "Müstakil Konut", "Ticari Yapı"]
+      options: ["Villa", "Müstakil", "Ticari"]
     },
-    { key: "size", label: "Yaklaşık m²", type: "input", placeholder: "Örn. 280 m²" },
     { key: "floors", label: "Kat sayısı", type: "input", placeholder: "Örn. 2 kat" },
     { key: "rooms", label: "Oda sayısı", type: "input", placeholder: "Örn. 5+1" },
     {
       key: "quality",
       label: "Hedef kalite",
       type: "chips",
-      options: ["Select", "Signature", "Ultra"]
+      options: ["Standart", "Özel", "Üst Segment"],
+      helper: "Malzeme, detay seviyesi ve bitiş beklentisini hızlıca anlamamıza yardımcı olur."
     },
-    { key: "start", label: "Başlama zamanı", type: "input", placeholder: "Örn. 3 ay içinde" },
-    { key: "budget", label: "Planlanan yatırım aralığı", type: "input", placeholder: "Örn. 8M - 12M arası" }
+    { key: "start", label: "Başlama zamanı", type: "input", placeholder: "Örn. hemen / 3 ay içinde" }
   ],
   renovation: [
     {
       key: "scope",
       label: "Kapsam",
-      type: "chips",
-      options: ["Komple Ev", "Mutfak", "Banyo", "Salon", "Dış Cephe", "Satışa Hazırlık"]
+      type: "visual",
+      options: ["Komple ev", "Mutfak", "Banyo", "Oda", "Dış cephe", "Satışa hazırlık"]
     },
-    {
-      key: "occupancy",
-      label: "Ev şu an boş mu?",
-      type: "chips",
-      options: ["Boş", "İçinde yaşanıyor"]
-    },
-    { key: "location", label: "Konum", type: "input", placeholder: "İl / ilçe / mahalle" },
-    { key: "size", label: "Yaklaşık m²", type: "input", placeholder: "Örn. 145 m²" },
     {
       key: "goal",
       label: "Hedef",
       type: "chips",
-      options: ["Konfor", "Değer Artışı", "Satışa Hazırlık", "Kiraya Hazırlık", "Modern Görünüm"]
+      options: ["Konfor", "Yenileme", "Kiraya hazırlık", "Satışa hazırlık"]
     },
     {
       key: "issues",
-      label: "Kritik sorunlar",
+      label: "Öncelikli odak nedir?",
       type: "multi",
-      options: ["Elektrik", "Tesisat", "Zemin", "Nem", "Mobilya", "Boya"]
-    },
-    { key: "start", label: "Başlama zamanı", type: "input", placeholder: "Örn. Hemen / 1 ay içinde" },
-    { key: "budget", label: "Proje ölçeği / planlanan yatırım aralığı", type: "input", placeholder: "Örn. orta ölçekli yenileme" }
+      options: ["Elektrik", "Tesisat", "Zemin", "Duvar"]
+    }
   ],
   realEstate: [
     {
@@ -208,7 +197,7 @@ export default function IntakeFlow() {
     return (
       <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6 sm:py-10">
         <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl items-center justify-center">
-          <section className="w-full rounded-[2rem] border border-border bg-surface p-6 text-center shadow-2xl shadow-black/5 sm:p-8 md:p-12">
+          <section className="w-full rounded-[2rem] border border-border bg-surface p-6 text-center shadow-card sm:p-8 md:p-12">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stoneDark text-gold">
               <CheckCircle2 size={32} />
             </div>
@@ -240,7 +229,7 @@ export default function IntakeFlow() {
                 "Onaylanan işler için süreç başlatılır",
                 "Size özel takip bağlantısı oluşturulur"
               ].map((item, index) => (
-                <div key={item} className="rounded-2xl bg-cream p-4 text-sm text-muted">
+                <div key={item} className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted shadow-card">
                   {index + 1}. {item}
                 </div>
               ))}
@@ -290,7 +279,7 @@ export default function IntakeFlow() {
           </div>
         </header>
 
-        <section className="mt-6 rounded-[2rem] border border-border bg-surface p-4 sm:p-5 md:p-7">
+        <section className="mt-6 rounded-[2rem] border border-border bg-surface p-4 shadow-card sm:p-5 md:p-7">
           <Stepper current={step} />
 
           <div className="mt-8">
@@ -311,7 +300,7 @@ export default function IntakeFlow() {
                         className={`rounded-[2rem] border p-6 text-left ${
                           isSelected
                             ? "border-gold bg-stoneDark text-white"
-                            : "border-border bg-cream hover:border-gold hover:bg-white"
+                            : "border-border bg-surface shadow-card hover:border-gold hover:bg-white"
                         }`}
                       >
                         <div
@@ -340,7 +329,7 @@ export default function IntakeFlow() {
               <StepShell
                 eyebrow="2. Adım"
                 title={selectedService?.title || "Proje kapsamı"}
-                description="Konum, proje kapsamı, zamanlama ve ölçeği okuyabilmemiz için temel bilgileri paylaşın."
+                description="Seçtiğiniz hizmete göre yalnızca karar vermemizi sağlayan temel bilgileri paylaşırsınız."
               >
                 <div className="grid gap-5 lg:grid-cols-2">
                   {questions.map((question) => (
@@ -364,7 +353,7 @@ export default function IntakeFlow() {
               >
                 <button
                   onClick={addDemoFiles}
-                  className="flex min-h-64 w-full flex-col items-center justify-center rounded-[2rem] border border-dashed border-black/20 bg-cream p-8 text-center hover:border-gold hover:bg-white"
+                  className="flex min-h-64 w-full flex-col items-center justify-center rounded-[2rem] border border-dashed border-black/20 bg-soft p-8 text-center shadow-card hover:border-gold hover:bg-white"
                 >
                   <Upload className="text-gold" size={34} />
                   <strong className="mt-5 text-2xl">
@@ -549,12 +538,18 @@ function StepShell({ eyebrow, title, description, children }) {
 }
 
 function Question({ question, value, onChange, onToggle }) {
-  if (question.type === "chips" || question.type === "multi") {
+  if (question.type === "chips" || question.type === "multi" || question.type === "visual") {
     const selectedValues = question.type === "multi" ? value || [] : [value];
+    const isVisual = question.type === "visual";
     return (
-      <div className="rounded-[1.5rem] bg-cream p-5">
-        <p className="mb-4 text-sm font-medium text-muted">{question.label}</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="rounded-[1.5rem] border border-border bg-soft p-5 shadow-card">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
+          <p className="text-sm font-medium text-muted">{question.label}</p>
+          {question.helper && (
+            <p className="max-w-sm text-xs leading-5 text-black/40">{question.helper}</p>
+          )}
+        </div>
+        <div className={isVisual ? "grid gap-3 sm:grid-cols-2" : "flex flex-wrap gap-2"}>
           {question.options.map((option) => {
             const isSelected = selectedValues.includes(option);
             return (
@@ -565,11 +560,19 @@ function Question({ question, value, onChange, onToggle }) {
                     ? onToggle(question.key, option)
                     : onChange(question.key, option)
                 }
-                className={`rounded-full px-4 py-2 text-sm ${
-                  isSelected
-                    ? "bg-stoneDark text-white"
-                    : "bg-white text-muted hover:bg-stoneDark hover:text-white"
-                }`}
+                className={
+                  isVisual
+                    ? `min-h-20 rounded-2xl border px-5 py-4 text-left text-base font-medium ${
+                        isSelected
+                          ? "border-stoneDark bg-stoneDark text-white"
+                          : "border-border bg-white text-stoneDark hover:border-gold hover:bg-white"
+                      }`
+                    : `rounded-full px-5 py-3 text-sm font-medium ${
+                        isSelected
+                          ? "bg-stoneDark text-white"
+                          : "bg-white text-muted hover:bg-stoneDark hover:text-white"
+                      }`
+                }
               >
                 {option}
               </button>
@@ -592,7 +595,7 @@ function Question({ question, value, onChange, onToggle }) {
 
 function Field({ label, value, onChange, placeholder }) {
   return (
-    <label className="grid gap-2 rounded-[1.5rem] bg-cream p-5">
+    <label className="grid gap-2 rounded-[1.5rem] border border-border bg-soft p-5 shadow-card">
       <span className="text-sm font-medium text-muted">{label}</span>
       <input
         value={value}
@@ -607,7 +610,7 @@ function Field({ label, value, onChange, placeholder }) {
 function SummaryCard({ title, children, wide }) {
   return (
     <div
-      className={`rounded-[1.5rem] bg-cream p-5 ${
+      className={`rounded-[1.5rem] border border-border bg-soft p-5 shadow-card ${
         wide ? "lg:col-span-2" : ""
       }`}
     >

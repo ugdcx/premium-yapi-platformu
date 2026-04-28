@@ -1,0 +1,15 @@
+ADD BASIC SETTINGS PAGE.
+
+GOAL:
+Admin self-control.
+
+FEATURES:
+
+- Şifre değiştir
+- Kullanıcı bilgisi değiştir
+
+NO:
+complex auth
+
+AFTER:
+Run build.

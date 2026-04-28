@@ -1,0 +1,20 @@
+ADD SUPPLIER TRACKING.
+
+GOAL:
+Track purchases per supplier.
+
+FEATURES:
+
+- Tedarikçi listesi
+- Her tedarikçiye tıklayınca:
+  geçmiş alımlar
+
+FIELDS:
+- ürün
+- tutar
+- tarih
+
+LINK TO PROJECT
+
+AFTER:
+Run build.

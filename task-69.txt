@@ -1,0 +1,43 @@
+IMPROVE HEADER STRUCTURE, BRAND HIERARCHY AND NAV CLARITY.
+
+GOAL:
+Make header feel premium, minimal and service-oriented.
+
+CHANGES:
+
+1) BRAND:
+- Show:
+  BLAAG
+  Construction and Architecture (smaller, secondary line)
+- Align vertically
+- Increase spacing and letter-spacing slightly
+
+2) NAV ITEMS (RIGHT SIDE):
+- Hizmetler
+- Süreç
+- Hakkımızda (NEW)
+- CTA: Projemi Başlat
+
+3) CTA STYLE:
+- Solid dark button (#111111)
+- White text
+- Subtle hover: lighten or slight lift
+
+4) NAV HIERARCHY:
+- “Hizmetler” should be slightly more prominent (font-weight or subtle underline on hover)
+
+5) REMOVE:
+- Any login / panel / admin references
+- Any secondary unnecessary links
+
+6) MOBILE:
+- Hamburger menu
+- Same items
+- CTA visible and accessible
+
+7) SCROLL BEHAVIOR:
+- Sticky header
+- Slight background blur or white background after scroll
+
+AFTER:
+Run build and confirm header consistency across pages.

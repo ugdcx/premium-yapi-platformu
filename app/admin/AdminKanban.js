@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   Bell,
+  Boxes,
   BriefcaseBusiness,
   Building2,
   CalendarDays,
@@ -49,6 +50,7 @@ const sections = [
   { id: "updates", label: "Fotoğraf onayları", icon: Upload },
   { id: "descriptions", label: "Açıklama yazımı", icon: FileText },
   { id: "payments", label: "Ödemeler", icon: Wallet },
+  { id: "suppliers", label: "Tedarikçiler", icon: Boxes },
   { id: "documents", label: "Belgeler", icon: FileText },
   { id: "requests", label: "Talepler", icon: MessageCircle },
   { id: "handover", label: "Teslim & Garanti", icon: ShieldCheck },
@@ -114,7 +116,7 @@ const offers = [
   }
 ];
 
-const projects = [
+const initialProjects = [
   {
     title: demoProject.title,
     status: "Uygulamada",
@@ -143,7 +145,7 @@ const customers = adminApplications.map((application) => ({
   status: applicationStatusLabels[application.status] || "Yeni"
 }));
 
-const workers = [
+const initialWorkers = [
   {
     name: "Mehmet Usta",
     phone: "0532 001 00 02",
@@ -196,10 +198,10 @@ const handoverDemo = {
 };
 
 const quickActions = [
-  "Yeni başvuru incele",
-  "Teklif hazırla",
-  "Usta ata",
-  "Güncelleme kontrol et"
+  ["Yeni başvuru incele", "applications"],
+  ["Teklif hazırla", "offers"],
+  ["Usta ata", "workers"],
+  ["Güncelleme kontrol et", "updates"]
 ];
 
 const photoDescriptionTemplates = [
@@ -208,6 +210,49 @@ const photoDescriptionTemplates = [
   "Malzeme sahaya alındı.",
   "Uygulama aşaması tamamlandı.",
   "Teslim öncesi son kontrol yapıldı."
+];
+
+const financeIncomeRows = [
+  { id: "income-1", date: "22 Nisan 2026", description: "Ön ödeme", amount: demoProject.paid },
+  { id: "income-2", date: "03 Mayıs 2026", description: "Malzeme başlangıcı tahsilatı", amount: "₺300.000" }
+];
+
+const financeExpenseRows = [
+  { id: "expense-1", date: "23 Nisan 2026", description: "Söküm ve saha hazırlığı", amount: "₺120.000" },
+  { id: "expense-2", date: "26 Nisan 2026", description: "Elektrik ve tesisat ön hazırlığı", amount: "₺95.000" },
+  { id: "expense-3", date: "30 Nisan 2026", description: "Malzeme kapora ödemesi", amount: "₺180.000" }
+];
+
+const supplierRows = [
+  {
+    id: "supplier-1",
+    name: "Yapı Market Pro",
+    category: "İnşaat malzemesi",
+    project: demoProject.title,
+    purchases: [
+      { id: "purchase-1", product: "Seramik yapıştırıcı", amount: "₺42.000", date: "24 Nisan 2026", project: demoProject.title },
+      { id: "purchase-2", product: "Derz ve izolasyon seti", amount: "₺28.000", date: "26 Nisan 2026", project: demoProject.title }
+    ]
+  },
+  {
+    id: "supplier-2",
+    name: "Marmara Seramik",
+    category: "Seramik",
+    project: demoProject.title,
+    purchases: [
+      { id: "purchase-3", product: "60x120 banyo seramiği", amount: "₺96.000", date: "27 Nisan 2026", project: demoProject.title },
+      { id: "purchase-4", product: "Mutfak zemin seramiği", amount: "₺74.000", date: "30 Nisan 2026", project: demoProject.title }
+    ]
+  },
+  {
+    id: "supplier-3",
+    name: "Elektrik Çözüm",
+    category: "Elektrik altyapı",
+    project: "Müstakil Konut Projesi",
+    purchases: [
+      { id: "purchase-5", product: "Kablo ve pano ekipmanı", amount: "₺58.000", date: "28 Nisan 2026", project: "Müstakil Konut Projesi" }
+    ]
+  }
 ];
 
 const initialPhotoApprovals = [
@@ -265,6 +310,9 @@ export default function AdminKanban() {
   const [pdfPreviewOffer, setPdfPreviewOffer] = useState(null);
   const [applications, setApplications] = useState(adminApplications);
   const [offerRows, setOfferRows] = useState(offers);
+  const [projectRows, setProjectRows] = useState(initialProjects);
+  const [workerRows, setWorkerRows] = useState(initialWorkers);
+  const [photoRows, setPhotoRows] = useState(initialPhotoApprovals);
   const [paymentRows, setPaymentRows] = useState(() =>
     demoPaymentPlan.map((payment, index) => ({ ...payment, id: `payment-${index + 1}` }))
   );
@@ -289,11 +337,51 @@ export default function AdminKanban() {
       ["İncelenen başvurular", applications.filter((item) => item.statusLabel === "İnceleniyor").length],
       ["Gönderilen teklifler", offerRows.filter((item) => item.status.includes("nderildi")).length],
       ["Onaylanan işler", applications.filter((item) => item.statusLabel === "Onaylandı").length],
-      ["Aktif projeler", projects.length],
+      ["Aktif projeler", projectRows.length],
       ["Bekleyen müşteri talepleri", requestRows.filter((item) => item.status !== "Tamamlandı" && item.status !== "TamamlandÄ±").length]
     ],
-    [applications, offerRows, requestRows]
+    [applications, offerRows, projectRows, requestRows]
   );
+
+  function addWorker(worker) {
+    setWorkerRows((current) => [
+      ...current,
+      {
+        ...worker,
+        accessCode: worker.accessCode || String(32000 + current.length + 1),
+        project: worker.project || "Atama bekliyor",
+        status: "Aktif"
+      }
+    ]);
+  }
+
+  function deleteWorker(name) {
+    setWorkerRows((current) => current.filter((worker) => worker.name !== name));
+    setProjectRows((current) =>
+      current.map((project) =>
+        project.worker.includes(name) ? { ...project, worker: "Atama bekliyor" } : project
+      )
+    );
+  }
+
+  function assignWorkerToProject(workerName, projectTitle) {
+    setWorkerRows((current) =>
+      current.map((worker) =>
+        worker.name === workerName ? { ...worker, project: projectTitle } : worker
+      )
+    );
+    setProjectRows((current) =>
+      current.map((project) =>
+        project.title === projectTitle ? { ...project, worker: workerName } : project
+      )
+    );
+  }
+
+  function updatePhotoRow(id, field, value) {
+    setPhotoRows((current) =>
+      current.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  }
 
   function completeHandover() {
     setHandoverStatus("Teslim Tamamlandı");
@@ -376,7 +464,7 @@ export default function AdminKanban() {
   if (!canView) {
     return (
       <main className="min-h-screen bg-cream px-6 py-10 text-stoneDark">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-surface p-8">
+        <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-surface p-8 shadow-card">
           Oturum kontrol ediliyor...
         </div>
       </main>
@@ -414,7 +502,7 @@ export default function AdminKanban() {
         </header>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
-          <aside className="rounded-[2rem] border border-border bg-surface p-3 lg:sticky lg:top-28 lg:self-start">
+          <aside className="rounded-[2rem] border border-border bg-surface p-3 shadow-card lg:sticky lg:top-28 lg:self-start">
             <nav className="mobile-scroll lg:mx-0 lg:grid lg:px-0 lg:pb-0">
               {sections.map((section) => {
                 const Icon = section.icon;
@@ -438,7 +526,7 @@ export default function AdminKanban() {
           </aside>
 
           <section className="min-w-0">
-            {selectedSection === "home" && <HomeSection metrics={metrics} />}
+            {selectedSection === "home" && <HomeSection metrics={metrics} onQuickAction={setSelectedSection} />}
             {selectedSection === "applications" && (
               <ApplicationsSection
                 applications={applications}
@@ -448,15 +536,28 @@ export default function AdminKanban() {
             {selectedSection === "offers" && (
               <OffersSection offers={offerRows} onSelect={setSelectedOffer} />
             )}
-            {selectedSection === "projects" && <ProjectsSection />}
+            {selectedSection === "projects" && <ProjectsSection projects={projectRows} />}
             {selectedSection === "customers" && <CustomersSection />}
-            {selectedSection === "workers" && <WorkersSection />}
+            {selectedSection === "workers" && (
+              <WorkersSection
+                workers={workerRows}
+                projects={projectRows}
+                onAddWorker={addWorker}
+                onDeleteWorker={deleteWorker}
+                onAssignWorker={assignWorkerToProject}
+              />
+            )}
             {selectedSection === "links" && <ProjectLinksSection />}
-            {selectedSection === "updates" && <UpdatesSection />}
-            {selectedSection === "descriptions" && <DescriptionsSection />}
+            {selectedSection === "updates" && (
+              <UpdatesSection rows={photoRows} onUpdateRow={updatePhotoRow} />
+            )}
+            {selectedSection === "descriptions" && (
+              <DescriptionsSection rows={photoRows} onUpdateRow={updatePhotoRow} />
+            )}
             {selectedSection === "payments" && (
               <PaymentsSection payments={paymentRows} onStatusChange={updatePaymentStatus} />
             )}
+            {selectedSection === "suppliers" && <SuppliersSection suppliers={supplierRows} />}
             {selectedSection === "documents" && (
               <DocumentsSection
                 documents={documentRows}
@@ -512,7 +613,7 @@ export default function AdminKanban() {
   );
 }
 
-function HomeSection({ metrics }) {
+function HomeSection({ metrics, onQuickAction }) {
   return (
     <div className="grid gap-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -529,7 +630,7 @@ function HomeSection({ metrics }) {
               "Mehmet Usta mutfak güncellemesi ekledi.",
               "Revize talebi müşteri talepleri alanında bekliyor."
             ].map((item) => (
-              <div key={item} className="rounded-2xl bg-cream p-4 text-sm text-muted">
+              <div key={item} className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted shadow-card">
                 {item}
               </div>
             ))}
@@ -537,10 +638,12 @@ function HomeSection({ metrics }) {
         </Panel>
         <Panel title="Hızlı aksiyonlar" eyebrow="Kısayollar">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-            {quickActions.map((action) => (
+            {quickActions.map(([action, targetSection]) => (
               <button
                 key={action}
-                className="rounded-2xl border border-border bg-cream px-4 py-3 text-left text-sm font-medium hover:border-gold hover:bg-white"
+                type="button"
+                onClick={() => onQuickAction(targetSection)}
+                className="rounded-2xl border border-border bg-surface px-4 py-3 text-left text-sm font-medium shadow-card hover:border-gold hover:bg-white"
               >
                 {action}
               </button>
@@ -561,7 +664,7 @@ function ApplicationsSection({ applications, onSelect }) {
           <button
             key={application.id}
             onClick={() => onSelect(application)}
-            className="grid gap-3 rounded-2xl border border-border bg-cream p-4 text-left hover:border-gold hover:bg-white lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_0.8fr_auto]"
+            className="grid gap-3 rounded-2xl border border-border bg-surface p-4 text-left shadow-card hover:border-gold hover:bg-white lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_0.8fr_auto]"
           >
             <Cell label="Başvuru No" value={application.applicationNo} />
             <Cell label="Müşteri" value={application.customer} />
@@ -589,7 +692,7 @@ function OffersSection({ offers, onSelect }) {
           <button
             key={offer.id}
             onClick={() => onSelect(offer)}
-            className="grid gap-3 rounded-2xl border border-border bg-cream p-4 text-left hover:border-gold hover:bg-white lg:grid-cols-[0.8fr_1fr_1.2fr_0.8fr_auto_0.8fr_0.8fr]"
+            className="grid gap-3 rounded-2xl border border-border bg-surface p-4 text-left shadow-card hover:border-gold hover:bg-white lg:grid-cols-[0.8fr_1fr_1.2fr_0.8fr_auto_0.8fr_0.8fr]"
           >
             <Cell label="Teklif No" value={offer.no} />
             <Cell label="Müşteri" value={offer.customer} />
@@ -606,7 +709,7 @@ function OffersSection({ offers, onSelect }) {
   );
 }
 
-function ProjectsSection() {
+function ProjectsSection({ projects }) {
   return (
     <SimpleGrid
       title="Projeler"
@@ -639,21 +742,93 @@ function CustomersSection() {
   );
 }
 
-function WorkersSection() {
+function WorkersSection({ workers, projects, onAddWorker, onDeleteWorker, onAssignWorker }) {
+  const [draft, setDraft] = useState({
+    name: "",
+    phone: "",
+    accessCode: "",
+    specialty: "",
+    project: projects[0]?.title || ""
+  });
+
+  function updateDraft(field, value) {
+    setDraft((current) => ({ ...current, [field]: value }));
+  }
+
+  function submitWorker(event) {
+    event.preventDefault();
+    if (!draft.name.trim()) return;
+    onAddWorker({
+      name: draft.name.trim(),
+      phone: draft.phone.trim() || "Belirtilmedi",
+      accessCode: draft.accessCode.trim(),
+      specialty: draft.specialty.trim() || "Genel saha",
+      project: draft.project
+    });
+    setDraft({
+      name: "",
+      phone: "",
+      accessCode: "",
+      specialty: "",
+      project: projects[0]?.title || ""
+    });
+  }
+
   return (
-    <SimpleGrid
-      title="Ustalar / Saha Ekibi"
-      eyebrow="Ekip erişimleri"
-      items={workers}
-      fields={[
-        ["Usta", "name"],
-        ["Telefon", "phone"],
-        ["Erişim kodu", "accessCode"],
-        ["Uzmanlık", "specialty"],
-        ["Atanan proje", "project"],
-        ["Durum", "status"]
-      ]}
-    />
+    <Panel title="Ustalar / Saha Ekibi" eyebrow="Ekip erişimleri">
+      <form onSubmit={submitWorker} className="mb-6 grid gap-3 rounded-2xl border border-border bg-soft p-4 shadow-card lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_auto]">
+        <AdminInlineField label="Usta adı" value={draft.name} onChange={(value) => updateDraft("name", value)} placeholder="Ad soyad" />
+        <AdminInlineField label="Telefon" value={draft.phone} onChange={(value) => updateDraft("phone", value)} placeholder="05xx" />
+        <AdminInlineField label="Erişim kodu" value={draft.accessCode} onChange={(value) => updateDraft("accessCode", value)} placeholder="Otomatik" />
+        <AdminInlineField label="Uzmanlık" value={draft.specialty} onChange={(value) => updateDraft("specialty", value)} placeholder="Elektrik" />
+        <label className="grid gap-2">
+          <span className="text-sm font-medium text-muted">Atanan proje</span>
+          <select
+            value={draft.project}
+            onChange={(event) => updateDraft("project", event.target.value)}
+            className="rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
+          >
+            {projects.map((project) => (
+              <option key={project.title} value={project.title}>{project.title}</option>
+            ))}
+          </select>
+        </label>
+        <button type="submit" className="self-end rounded-2xl bg-stoneDark px-5 py-3 text-sm font-medium text-white">
+          Usta Ekle
+        </button>
+      </form>
+
+      <div className="grid gap-3">
+        {workers.map((worker) => (
+          <article key={worker.name} className="grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card xl:grid-cols-[1fr_0.9fr_0.7fr_0.8fr_1.2fr_auto] xl:items-center">
+            <Cell label="Usta" value={worker.name} />
+            <Cell label="Telefon" value={worker.phone} />
+            <Cell label="Erişim kodu" value={worker.accessCode} />
+            <Cell label="Uzmanlık" value={worker.specialty} />
+            <label className="grid gap-2">
+              <span className="text-xs uppercase tracking-[0.16em] text-black/35">Atanan proje</span>
+              <select
+                value={worker.project}
+                onChange={(event) => onAssignWorker(worker.name, event.target.value)}
+                className="rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
+              >
+                <option value="Atama bekliyor">Atama bekliyor</option>
+                {projects.map((project) => (
+                  <option key={project.title} value={project.title}>{project.title}</option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={() => onDeleteWorker(worker.name)}
+              className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-muted hover:border-gold hover:text-stoneDark"
+            >
+              Usta Sil
+            </button>
+          </article>
+        ))}
+      </div>
+    </Panel>
   );
 }
 
@@ -681,7 +856,7 @@ function ProjectLinksSection() {
       </p>
       <div className="grid gap-4">
         {links.map((link) => (
-          <article key={link.title} className="rounded-2xl bg-cream p-4">
+          <article key={link.title} className="rounded-2xl border border-border bg-surface p-4 shadow-card">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="text-xl font-semibold">{link.title}</h3>
@@ -701,7 +876,7 @@ function ProjectLinksSection() {
 
 function LinkBox({ label, href }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-4">
+    <div className="rounded-2xl border border-border bg-surface p-4 shadow-card">
       <p className="text-xs uppercase tracking-[0.16em] text-black/35">{label}</p>
       <a href={href} className="mt-2 block break-all text-sm font-medium text-stoneDark">
         {href}
@@ -717,41 +892,29 @@ function LinkBox({ label, href }) {
   );
 }
 
-function DescriptionsSection() {
-  return <UpdatesSection focusDescriptions />;
+function DescriptionsSection({ rows, onUpdateRow }) {
+  return <UpdatesSection focusDescriptions rows={rows} onUpdateRow={onUpdateRow} />;
 }
 
-function UpdatesSection({ focusDescriptions = false }) {
+function UpdatesSection({ focusDescriptions = false, rows, onUpdateRow }) {
   const [projectFilter, setProjectFilter] = useState("Tümü");
   const [areaFilter, setAreaFilter] = useState("Tümü");
-  const [rows, setRows] = useState(initialPhotoApprovals);
 
-  const projectsForFilter = ["Tümü", ...new Set(initialPhotoApprovals.map((item) => item.project))];
-  const areasForFilter = ["Tümü", ...new Set(initialPhotoApprovals.map((item) => item.area))];
+  const projectsForFilter = ["Tümü", ...new Set(rows.map((item) => item.project))];
+  const areasForFilter = ["Tümü", ...new Set(rows.map((item) => item.area))];
   const visibleRows = rows.filter((item) => {
     const projectMatches = projectFilter === "Tümü" || item.project === projectFilter;
     const areaMatches = areaFilter === "Tümü" || item.area === areaFilter;
     return projectMatches && areaMatches;
   });
 
-  function updatePhotoRow(id, field, value) {
-    setRows((current) =>
-      current.map((item) => (item.id === id ? { ...item, [field]: value } : item))
-    );
-  }
-
   function appendTemplate(id, template) {
-    setRows((current) =>
-      current.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              customerDescription: item.customerDescription
-                ? `${item.customerDescription} ${template}`
-                : template
-            }
-          : item
-      )
+    const row = rows.find((item) => item.id === id);
+    if (!row) return;
+    onUpdateRow(
+      id,
+      "customerDescription",
+      row.customerDescription ? `${row.customerDescription} ${template}` : template
     );
   }
 
@@ -761,10 +924,17 @@ function UpdatesSection({ focusDescriptions = false }) {
       eyebrow="Fotoğraf onay akışı"
     >
       <p className="mb-5 max-w-4xl text-sm leading-6 text-muted">
-        Usta fotoğrafları yalnızca sahadan yükler. Müşteri ham usta notunu görmez;
-        admin fotoğrafları inceler, iç notu değerlendirir, profesyonel müşteri
-        açıklamasını yazar ve yayına alır.
+        Usta yalnızca fotoğraf ve ham saha notu yükler. Müşteri ham usta notunu görmez;
+        admin fotoğrafları inceler, müşteri açıklamasını kendisi yazar, onaylar veya
+        reddeder ve yalnızca uygun içeriği yayına alır.
       </p>
+      <div className="mb-5 grid gap-3 md:grid-cols-3">
+        {["Worker upload", "Admin review", "Admin publish"].map((step, index) => (
+          <div key={step} className="rounded-2xl border border-border bg-soft p-4 text-sm font-medium text-stoneDark shadow-card">
+            {index + 1}. {step}
+          </div>
+        ))}
+      </div>
 
       <div className="mb-5 grid gap-3 md:grid-cols-2">
         <FilterSelect label="Proje filtresi" value={projectFilter} options={projectsForFilter} onChange={setProjectFilter} />
@@ -773,7 +943,7 @@ function UpdatesSection({ focusDescriptions = false }) {
 
       <div className="grid gap-5">
         {visibleRows.map((item) => (
-          <article key={item.id} className="rounded-[2rem] border border-border bg-cream p-4">
+          <article key={item.id} className="rounded-[2rem] border border-border bg-surface p-4 shadow-card">
             <div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
               <div>
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -801,13 +971,14 @@ function UpdatesSection({ focusDescriptions = false }) {
 
               <div className="grid gap-4">
                 <label className="grid gap-2">
-                  <span className="text-sm font-medium text-muted">İç not</span>
+                  <span className="text-sm font-medium text-muted">Usta ham saha notu</span>
                   <textarea
                     value={item.internalNote}
-                    onChange={(event) => updatePhotoRow(item.id, "internalNote", event.target.value)}
-                    className="min-h-20 rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
-                    placeholder="Sadece admin ekibinin göreceği not"
+                    readOnly
+                    className="min-h-20 rounded-2xl border border-border bg-cream px-4 py-3 text-sm outline-none"
+                    placeholder="Ustanın yüklediği ham not"
                   />
+                  <span className="text-xs text-black/40">Bu alan müşteriye gösterilmez.</span>
                 </label>
 
                 <label className="grid gap-2">
@@ -816,7 +987,7 @@ function UpdatesSection({ focusDescriptions = false }) {
                   </span>
                   <textarea
                     value={item.customerDescription}
-                    onChange={(event) => updatePhotoRow(item.id, "customerDescription", event.target.value)}
+                    onChange={(event) => onUpdateRow(item.id, "customerDescription", event.target.value)}
                     className="min-h-28 rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
                     placeholder="Müşteriye anlaşılır ve profesyonel açıklama yazın"
                   />
@@ -841,28 +1012,28 @@ function UpdatesSection({ focusDescriptions = false }) {
                 <div className="flex flex-wrap gap-2 border-t border-border pt-4">
                   <button
                     type="button"
-                    onClick={() => updatePhotoRow(item.id, "status", "Yayına Hazır")}
+                    onClick={() => onUpdateRow(item.id, "status", "Onaylandı")}
                     className="rounded-full bg-white px-4 py-2 text-sm font-medium text-muted hover:bg-stoneDark hover:text-white"
                   >
-                    Yayına Hazır İşaretle
+                    Onayla
                   </button>
                   <button
                     type="button"
-                    onClick={() => updatePhotoRow(item.id, "status", "Yayınlandı")}
+                    onClick={() => onUpdateRow(item.id, "status", "Yayınlandı")}
                     className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-stoneDark"
                   >
                     Müşteriye Yayınla
                   </button>
                   <button
                     type="button"
-                    onClick={() => updatePhotoRow(item.id, "status", "Revize Gerekli")}
+                    onClick={() => onUpdateRow(item.id, "status", "Revize Gerekli")}
                     className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-muted hover:border-gold"
                   >
                     Revize İste
                   </button>
                   <button
                     type="button"
-                    onClick={() => updatePhotoRow(item.id, "status", "Reddedildi")}
+                    onClick={() => onUpdateRow(item.id, "status", "Reddedildi")}
                     className="rounded-full border border-border bg-white px-4 py-2 text-sm font-medium text-muted hover:border-gold"
                   >
                     Reddet
@@ -896,21 +1067,32 @@ function FilterSelect({ label, value, options, onChange }) {
 
 function PaymentsSection({ payments, onStatusChange }) {
   return (
-    <Panel title="Ödemeler" eyebrow="Tahsilat planı yönetimi">
+    <Panel title="Finans Takibi" eyebrow="Proje para akışı">
       <p className="mb-5 max-w-3xl text-sm leading-6 text-muted">
-        Müşteri panelinde görünen ödeme planını buradan demo olarak yönetin. Her kilometre taşı
-        tutar, vade ve durum bilgisiyle şeffaf şekilde takip edilir.
+        Proje bütçesini, yapılan ödemeyi ve kalan bütçeyi sade biçimde izleyin.
+        Gelir ve gider kayıtları yalnızca tarih, açıklama ve tutar seviyesinde tutulur.
       </p>
-      <div className="grid gap-4 lg:grid-cols-4">
-        <MetricCard label="Toplam teklif" value={normalizeCurrency(demoProject.offer)} />
-        <MetricCard label="Ödenen" value={normalizeCurrency(demoProject.paid)} />
-        <MetricCard label="Kalan" value={normalizeCurrency(demoProject.remaining)} />
-        <MetricCard label="Sıradaki ödeme" value="Malzeme başlangıcı" />
+      <div className="grid gap-4 lg:grid-cols-3">
+        <MetricCard label="Toplam bütçe" value={normalizeCurrency(demoProject.offer)} />
+        <MetricCard label="Yapılan ödeme" value={normalizeCurrency(demoProject.paid)} />
+        <MetricCard label="Kalan bütçe" value={normalizeCurrency(demoProject.remaining)} />
+      </div>
+
+      <div className="mt-6 grid gap-5 xl:grid-cols-2">
+        <MoneyFlowList title="Gelirler" rows={financeIncomeRows} />
+        <MoneyFlowList title="Giderler" rows={financeExpenseRows} />
+      </div>
+
+      <div className="mt-8 border-t border-border pt-6">
+        <h3 className="text-2xl font-semibold">Tahsilat planı</h3>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted">
+          Müşteri panelinde görünen ödeme kilometre taşlarını durum bilgisiyle yönetin.
+        </p>
       </div>
       <div className="admin-scroll mt-6">
         <div className="grid min-w-[760px] gap-3 lg:min-w-0">
           {payments.map((payment, index) => (
-            <article key={payment.id} className="relative rounded-2xl bg-cream p-4 pl-6">
+            <article key={payment.id} className="relative rounded-2xl border border-border bg-surface p-4 pl-6 shadow-card">
             <span className="absolute left-3 top-5 h-[calc(100%-2.5rem)] w-px bg-gold/45" />
             <span className="absolute left-[7px] top-5 h-3 w-3 rounded-full bg-gold" />
             <div className="grid gap-4 lg:grid-cols-[0.5fr_1fr_0.9fr_0.9fr_auto] lg:items-center">
@@ -940,6 +1122,86 @@ function PaymentsSection({ payments, onStatusChange }) {
     </Panel>
   );
 }
+
+function MoneyFlowList({ title, rows }) {
+  return (
+    <section className="rounded-2xl border border-border bg-soft p-4 shadow-card">
+      <h3 className="text-xl font-semibold">{title}</h3>
+      <div className="mt-4 grid gap-3">
+        {rows.map((row) => (
+          <article key={row.id} className="grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card sm:grid-cols-[0.8fr_1fr_auto] sm:items-center">
+            <Cell label="Tarih" value={row.date} />
+            <Cell label="Açıklama" value={row.description} />
+            <Cell label="Tutar" value={normalizeCurrency(row.amount)} />
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SuppliersSection({ suppliers }) {
+  const [selectedSupplierId, setSelectedSupplierId] = useState(suppliers[0]?.id || "");
+  const selectedSupplier = suppliers.find((supplier) => supplier.id === selectedSupplierId) || suppliers[0];
+
+  return (
+    <Panel title="Tedarikçiler" eyebrow="Satın alma takibi">
+      <p className="mb-5 max-w-3xl text-sm leading-6 text-muted">
+        Projeye bağlı tedarikçileri ve geçmiş alımları sade biçimde takip edin.
+        Her kayıt ürün, tutar ve tarih seviyesinde tutulur.
+      </p>
+      <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+        <div className="grid gap-3">
+          {suppliers.map((supplier) => {
+            const active = supplier.id === selectedSupplier?.id;
+            return (
+              <button
+                key={supplier.id}
+                type="button"
+                onClick={() => setSelectedSupplierId(supplier.id)}
+                className={`rounded-2xl border p-4 text-left shadow-card ${
+                  active
+                    ? "border-stoneDark bg-stoneDark text-white"
+                    : "border-border bg-surface hover:border-gold hover:bg-white"
+                }`}
+              >
+                <p className={`text-xs uppercase tracking-[0.16em] ${active ? "text-white/45" : "text-black/35"}`}>
+                  {supplier.category}
+                </p>
+                <h3 className="mt-2 text-xl font-semibold">{supplier.name}</h3>
+                <p className={`mt-2 text-sm ${active ? "text-white/60" : "text-muted"}`}>
+                  Bağlı proje: {supplier.project}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+
+        <section className="rounded-2xl border border-border bg-soft p-4 shadow-card">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-black/35">Geçmiş alımlar</p>
+              <h3 className="mt-2 text-2xl font-semibold">{selectedSupplier?.name}</h3>
+            </div>
+            <span className="rounded-full bg-white px-4 py-2 text-sm font-medium text-muted">
+              {selectedSupplier?.purchases.length || 0} kayıt
+            </span>
+          </div>
+          <div className="mt-5 grid gap-3">
+            {selectedSupplier?.purchases.map((purchase) => (
+              <article key={purchase.id} className="grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card md:grid-cols-[1fr_0.7fr_0.7fr_1fr] md:items-center">
+                <Cell label="Ürün" value={purchase.product} />
+                <Cell label="Tutar" value={normalizeCurrency(purchase.amount)} />
+                <Cell label="Tarih" value={purchase.date} />
+                <Cell label="Bağlı proje" value={purchase.project} />
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+    </Panel>
+  );
+}
 function DocumentsSection({ documents, onStatusChange, onAddDocument }) {
   return (
     <Panel title="Belgeler" eyebrow="Dosya yönetimi">
@@ -956,7 +1218,7 @@ function DocumentsSection({ documents, onStatusChange, onAddDocument }) {
       </div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {documents.map((document) => (
-          <article key={document.id} className="rounded-2xl bg-cream p-4">
+          <article key={document.id} className="rounded-2xl border border-border bg-surface p-4 shadow-card">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <FileText className="text-muted" size={22} />
@@ -1004,7 +1266,7 @@ function RequestsSection({ requests, onStatusChange, onFieldChange }) {
       </p>
       <div className="grid gap-3">
         {requests.map((request) => (
-          <article key={request.id} className="rounded-2xl bg-cream p-4">
+          <article key={request.id} className="rounded-2xl border border-border bg-surface p-4 shadow-card">
             <div className="grid gap-4 xl:grid-cols-[1fr_1.2fr_1fr]">
               <div>
                 <p className="text-xs uppercase tracking-[0.16em] text-black/35">Tarih / saat</p>
@@ -1105,7 +1367,7 @@ function HandoverSection({
       <Panel title="Teslim checklist" eyebrow="Son kontrol">
         <div className="grid gap-3">
           {checklist.map((item) => (
-            <div key={item.id} className="grid gap-3 rounded-2xl bg-cream p-4 md:grid-cols-[1fr_auto] md:items-center">
+            <div key={item.id} className="grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card md:grid-cols-[1fr_auto] md:items-center">
               <div>
                 <span className="font-medium">{item.label}</span>
                 <div className="mt-2">
@@ -1131,7 +1393,7 @@ function HandoverSection({
       <Panel title="Servis talepleri" eyebrow="Garanti sonrası destek">
         <div className="grid gap-3">
           {serviceRequests.map((request) => (
-            <article key={request.id} className="rounded-2xl bg-cream p-4">
+            <article key={request.id} className="rounded-2xl border border-border bg-surface p-4 shadow-card">
               <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-start">
                 <div>
                   <p className="text-xs uppercase tracking-[0.16em] text-black/35">{request.area}</p>
@@ -1155,23 +1417,77 @@ function HandoverSection({
 }
 
 function SettingsSection() {
-  const settings = [
-    { label: "Şirket bilgileri", value: "BLAAG Construction and Architecture iç operasyon profili" },
-    { label: "Demo erişim modeli", value: "Admin girişi gizli; müşteri ve usta erişimi özel bağlantı modeliyle temsil edilir" },
-    { label: "Bildirim tercihleri", value: "WhatsApp, telefon ve panel içi uyarılar" },
-    { label: "Hizmet kategorileri", value: "Yapı geliştirme, tadilat, gayrimenkul danışmanlığı" }
-  ];
+  const [profile, setProfile] = useState({
+    name: "BLAAG Admin",
+    email: "admin@blaag.example",
+    phone: "0500 000 00 01"
+  });
+  const [password, setPassword] = useState({
+    current: "",
+    next: "",
+    confirm: ""
+  });
+  const [message, setMessage] = useState("");
+
+  function updateProfile(field, value) {
+    setProfile((current) => ({ ...current, [field]: value }));
+  }
+
+  function updatePassword(field, value) {
+    setPassword((current) => ({ ...current, [field]: value }));
+  }
+
+  function saveProfile(event) {
+    event.preventDefault();
+    setMessage("Kullanıcı bilgisi güncellendi.");
+  }
+
+  function savePassword(event) {
+    event.preventDefault();
+    if (!password.current || !password.next || password.next !== password.confirm) {
+      setMessage("Şifre alanlarını kontrol edin.");
+      return;
+    }
+    setPassword({ current: "", next: "", confirm: "" });
+    setMessage("Şifre değişikliği kaydedildi.");
+  }
 
   return (
-    <SimpleGrid
-      title="Ayarlar"
-      eyebrow="İç operasyon yapılandırması"
-      items={settings}
-      fields={[
-        ["Alan", "label"],
-        ["Değer", "value"]
-      ]}
-    />
+    <Panel title="Ayarlar" eyebrow="Admin self-control">
+      <p className="mb-5 max-w-3xl text-sm leading-6 text-muted">
+        Karmaşık yetkilendirme olmadan temel admin bilgilerinizi ve demo şifrenizi yönetin.
+      </p>
+      {message && (
+        <div className="mb-5 rounded-2xl border border-border bg-soft px-4 py-3 text-sm font-medium text-stoneDark">
+          {message}
+        </div>
+      )}
+      <div className="grid gap-6 xl:grid-cols-2">
+        <form onSubmit={saveProfile} className="rounded-2xl border border-border bg-soft p-4 shadow-card">
+          <h3 className="text-xl font-semibold">Kullanıcı bilgisi değiştir</h3>
+          <div className="mt-5 grid gap-4">
+            <AdminInlineField label="Ad Soyad" value={profile.name} onChange={(value) => updateProfile("name", value)} placeholder="Admin adı" />
+            <AdminInlineField label="E-posta" value={profile.email} onChange={(value) => updateProfile("email", value)} placeholder="E-posta" />
+            <AdminInlineField label="Telefon" value={profile.phone} onChange={(value) => updateProfile("phone", value)} placeholder="Telefon" />
+          </div>
+          <button type="submit" className="mt-5 rounded-2xl bg-stoneDark px-5 py-3 text-sm font-medium text-white">
+            Bilgileri Kaydet
+          </button>
+        </form>
+
+        <form onSubmit={savePassword} className="rounded-2xl border border-border bg-soft p-4 shadow-card">
+          <h3 className="text-xl font-semibold">Şifre değiştir</h3>
+          <div className="mt-5 grid gap-4">
+            <PasswordField label="Mevcut şifre" value={password.current} onChange={(value) => updatePassword("current", value)} />
+            <PasswordField label="Yeni şifre" value={password.next} onChange={(value) => updatePassword("next", value)} />
+            <PasswordField label="Yeni şifre tekrar" value={password.confirm} onChange={(value) => updatePassword("confirm", value)} />
+          </div>
+          <button type="submit" className="mt-5 rounded-2xl bg-gold px-5 py-3 text-sm font-medium text-stoneDark">
+            Şifreyi Kaydet
+          </button>
+        </form>
+      </div>
+    </Panel>
   );
 }
 
@@ -1195,7 +1511,7 @@ function ApplicationDetailPanel({ application, onClose, onStatusChange }) {
       <InfoBlock title="Dosya ve fotoğraf alanı">
         <div className="grid gap-3">
           {application.files.map((file) => (
-            <div key={file} className="rounded-2xl bg-cream p-4 text-sm text-muted">
+            <div key={file} className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted shadow-card">
               {file}
             </div>
           ))}
@@ -1351,6 +1667,35 @@ function AdminField({ label, defaultValue }) {
   );
 }
 
+function AdminInlineField({ label, value, onChange, placeholder }) {
+  return (
+    <label className="grid gap-2">
+      <span className="text-sm font-medium text-muted">{label}</span>
+      <input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold"
+        placeholder={placeholder}
+      />
+    </label>
+  );
+}
+
+function PasswordField({ label, value, onChange }) {
+  return (
+    <label className="grid gap-2">
+      <span className="text-sm font-medium text-muted">{label}</span>
+      <input
+        type="password"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-gold"
+        placeholder="••••••••"
+      />
+    </label>
+  );
+}
+
 function AdminTextarea({ label, defaultValue }) {
   return (
     <label className="grid gap-2">
@@ -1371,7 +1716,7 @@ function SimpleGrid({ title, eyebrow, items, fields }) {
     <Panel title={title} eyebrow={eyebrow}>
       <div className="grid gap-3">
         {items.map((item, index) => (
-          <div key={`${title}-${index}`} className="grid gap-3 rounded-2xl bg-cream p-4 md:grid-cols-2 xl:grid-cols-3">
+          <div key={`${title}-${index}`} className="grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card md:grid-cols-2 xl:grid-cols-3">
             {fields.map(([label, key]) => (
               <Cell key={label} label={label} value={item[key]} />
             ))}
@@ -1384,7 +1729,7 @@ function SimpleGrid({ title, eyebrow, items, fields }) {
 
 function Panel({ title, eyebrow, children }) {
   return (
-    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-premium md:p-6">
+    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-card md:p-6">
       <p className="text-sm uppercase tracking-[0.25em] text-black/35">{eyebrow}</p>
       <h2 className="mt-2 text-3xl font-semibold tracking-tight">{title}</h2>
       <div className="mt-6">{children}</div>
@@ -1394,7 +1739,7 @@ function Panel({ title, eyebrow, children }) {
 
 function MetricCard({ label, value }) {
   return (
-    <div className="rounded-[2rem] border border-border bg-surface p-5 shadow-sm shadow-black/5">
+    <div className="rounded-[2rem] border border-border bg-surface p-5 shadow-card">
       <p className="text-sm text-muted">{label}</p>
       <p className="mt-2 text-4xl font-semibold">{value}</p>
     </div>
@@ -1435,7 +1780,7 @@ function DetailShell({ title, subtitle, onClose, children }) {
 
 function InfoBlock({ title, children }) {
   return (
-    <section className="rounded-[2rem] border border-border bg-surface p-5">
+    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-card">
       <h3 className="text-xl font-semibold">{title}</h3>
       <div className="mt-5">{children}</div>
     </section>

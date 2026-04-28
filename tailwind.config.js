@@ -16,7 +16,8 @@ module.exports = {
         border: "rgb(0 0 0 / 0.08)"
       },
       boxShadow: {
-        premium: "0 18px 48px rgb(28 27 25 / 0.08)"
+        premium: "0 16px 42px rgb(28 27 25 / 0.07)",
+        card: "0 10px 28px rgb(28 27 25 / 0.055)"
       }
     }
   },

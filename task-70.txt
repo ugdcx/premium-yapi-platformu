@@ -1,0 +1,42 @@
+UPGRADE HERO FOR MAXIMUM CONVERSION WITHOUT SaaS FEEL.
+
+GOAL:
+Increase emotional impact and clarity.
+
+CHANGES:
+
+1) HEADLINE:
+Kusursuz yapı, şeffaf süreç.
+
+2) SUBTEXT:
+Projenizi bize bırakın.
+Süreci yönetmek zorunda kalmadan, kontrollü ve şeffaf şekilde takip edin.
+
+3) MICRO TRUST TEXT UNDER CTA:
+Başvuru sonrası ekibimiz sizinle doğrudan iletişime geçer.
+
+4) CTA:
+Primary: Projemi Başlat
+Secondary: Süreci İncele
+
+5) MINI PROJECT CARD:
+- Keep anonymized scenario
+- REMOVE:
+  - any percentage
+  - any price
+  - progress bars
+- KEEP:
+  - “Bugün”
+  - “Durum”
+  - “Sonraki adım”
+
+6) HOVER:
+- Card subtle lift
+- CTA slight elevation
+
+7) DO NOT ADD:
+- dashboard visuals
+- SaaS style metrics
+
+AFTER:
+Run build and summarize hero changes.

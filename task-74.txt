@@ -1,0 +1,34 @@
+FIX BACKGROUND AND CARD VISUAL HIERARCHY.
+
+PROBLEM:
+Background and card blending.
+
+SOLUTION:
+
+MAIN BG:
+#F4F1EC
+
+SECTION BG:
+#E9E3D8
+
+CARD:
+#FFFFFF
+
+BORDER:
+rgba(0,0,0,0.08)
+
+SHADOW:
+very soft
+
+RULES:
+- cards must always be distinguishable
+- no flat blending
+
+APPLY TO:
+- hizmetler
+- süreç
+- intake
+- admin lists
+
+AFTER:
+Run build.

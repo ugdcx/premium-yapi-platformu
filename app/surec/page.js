@@ -70,7 +70,7 @@ export default function ProcessPage() {
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
-              <article key={step.title} className="border-t border-border bg-surface p-5">
+              <article key={step.title} className="border border-border bg-surface p-5 shadow-card">
                 <p className="text-sm text-black/35">{String(index + 1).padStart(2, "0")}</p>
                 <Icon className="mt-7 text-gold" size={26} />
                 <h2 className="mt-6 text-2xl font-semibold">{step.title}</h2>
@@ -80,7 +80,7 @@ export default function ProcessPage() {
           })}
         </section>
 
-        <section className="mt-10 grid gap-8 bg-soft p-7 md:p-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <section className="mt-10 grid gap-8 border border-border bg-soft p-7 shadow-card md:p-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <Camera className="text-gold" size={30} />
             <h2 className="mt-6 text-3xl font-semibold tracking-tight md:text-5xl">
@@ -101,7 +101,7 @@ export default function ProcessPage() {
               "Onaylı ve düzenlenmiş müşteri bilgilendirmeleri",
               "Belgeler, ödemeler ve teslim süreci için tek noktadan görünürlük"
             ].map((item) => (
-              <div key={item} className="flex items-center justify-between gap-4 border border-border bg-surface p-5 text-muted">
+              <div key={item} className="flex items-center justify-between gap-4 border border-border bg-surface p-5 text-muted shadow-card">
                 <span>{item}</span>
                 <DraftingCompass className="shrink-0 text-gold/70" size={22} />
               </div>

@@ -1,0 +1,25 @@
+FIX CORE ADMIN PANEL FUNCTIONALITY.
+
+GOAL:
+Make admin usable.
+
+1) QUICK ACTIONS:
+- Fix non-working buttons
+
+2) WORKER MANAGEMENT:
+- Add “Usta Ekle”
+- Add “Usta Sil”
+- Assign worker to project
+
+3) PHOTO FLOW:
+Worker upload → Admin review → Admin publish
+
+Admin must:
+- edit description
+- approve / reject
+
+4) REMOVE:
+worker writing customer-facing descriptions
+
+AFTER:
+Run build.

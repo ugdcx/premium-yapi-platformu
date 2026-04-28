@@ -1,0 +1,66 @@
+REBUILD INTAKE QUESTIONS BASED ON USER NOTES.
+
+GOAL:
+Make questions logical, visual and non-bureaucratic.
+
+PAGE TITLE:
+Projenizi Netleştirelim
+
+STEP 1:
+Hizmet seçimi (card-based)
+
+STEP 2:
+Dynamic questions per service
+
+FOR “ANAHTAR TESLİM”:
+
+FIELDS:
+- Arsanız var mı? (Evet / Hayır)
+- Konum
+- Yapı tipi (Villa / Müstakil / Ticari)
+- Kat sayısı
+- Oda sayısı
+- Başlama zamanı
+
+QUALITY FIELD FIX:
+
+OLD:
+Select / Signature / Ultra ❌
+
+NEW:
+Standart
+Özel
+Üst Segment
+
+(keep short explanation tooltip optional)
+
+FOR “TADİLAT”:
+
+SCOPE (VISUAL BUTTONS):
+- Komple ev
+- Mutfak
+- Banyo
+- Oda
+- Dış cephe
+- Satışa hazırlık
+
+GOAL:
+- Konfor
+- Yenileme
+- Kiraya hazırlık
+- Satışa hazırlık
+
+CRITICAL ISSUES (NEW SECTION):
+“Öncelikli odak nedir?”
+- Elektrik
+- Tesisat
+- Zemin
+- Duvar
+
+STEP UI:
+- card based
+- large clickable areas
+- minimal typing
+
+AFTER:
+Run build and confirm flow.

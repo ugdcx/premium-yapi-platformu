@@ -1,0 +1,30 @@
+UPGRADE PROOF SECTION TO FEEL REAL, NOT ABSTRACT.
+
+GOAL:
+Create believable transformation flow.
+
+STRUCTURE:
+
+Öncesi:
+Mevcut durum analiz edilir ve kayıt altına alınır.
+
+Süreç:
+Uygulama aşamaları kontrollü şekilde ilerletilir ve önemli adımlar belgelenir.
+
+Sonrası:
+Teslim, belgeler ve garanti süreci net şekilde tamamlanır.
+
+ADD DETAIL BULLETS:
+- Kontrollü uygulama
+- Belgeli ilerleme
+- Net teslim süreci
+
+REMOVE:
+- placeholder language
+- generic blocks
+
+KEEP:
+clean layout
+
+AFTER:
+Run build.

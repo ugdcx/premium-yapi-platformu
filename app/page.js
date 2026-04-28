@@ -9,6 +9,7 @@ import {
   DraftingCompass,
   Hammer,
   Home,
+  Info,
   Layers3,
   Route,
   ShieldCheck
@@ -77,7 +78,8 @@ const services = [
     icon: Hammer,
     title: "Tadilat & Değer Artırma",
     text: "Mevcut yapınızı daha yaşanabilir, daha estetik ve daha değerli hale getirirken sürprizleri azaltan kontrollü bir yenileme planı kurarız.",
-    image: "Mutfak, banyo ve yaşam alanı yenileme numune panosu"
+    image: "Mutfak, banyo ve yaşam alanı yenileme numune panosu",
+    concept: "Değer Dönüşümü"
   },
   {
     icon: Home,
@@ -115,19 +117,23 @@ export default function HomePage() {
               Kusursuz yapı, şeffaf süreç.
             </h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-white/65">
-              Tadilat, yapı ve gayrimenkul süreçlerini profesyonel ekibimizle
-              yürütür; önemli aşamaları size özel takip alanında görünür hale
-              getiririz.
+              <span className="block">Projenizi bize bırakın.</span>
+              <span className="block">
+                Süreci yönetmek zorunda kalmadan, kontrollü ve şeffaf şekilde takip edin.
+              </span>
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <a href="/teklif-al" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-medium text-stoneDark">
+              <a href="/teklif-al" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-medium text-stoneDark shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/25">
                 Projemi Başlat
                 <ArrowRight size={18} />
               </a>
-              <a href="/surec" className="inline-flex items-center justify-center rounded-full border border-white/18 px-7 py-4 font-medium text-white">
+              <a href="/surec" className="inline-flex items-center justify-center rounded-full border border-white/18 px-7 py-4 font-medium text-white shadow-sm shadow-black/10 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/5">
                 Süreci İncele
               </a>
             </div>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/45">
+              Başvuru sonrası ekibimiz sizinle doğrudan iletişime geçer.
+            </p>
           </div>
 
           <MiniProjectCard />
@@ -229,19 +235,35 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Proje Kanıtı"
             title="Her proje görünür aşamalarla ilerler."
-            text="Öncesi, süreç ve sonrası kayıtları; işin yalnızca bittiğini değil, nasıl yönetildiğini de gösterir."
+            text="Dönüşüm yalnızca sonuç fotoğrafı değildir; mevcut durumun okunması, uygulamanın belgelenmesi ve teslimin net kapanmasıdır."
           />
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[
-              ["Öncesi", "Mevcut durum analiz edilir ve sürecin başlangıcı kayıt altına alınır.", "Mevcut doku"],
-              ["Süreç", "Uygulama aşamaları düzenli şekilde takip edilir.", "Uygulama süreci"],
-              ["Sonrası", "Teslim süreci, belgeler ve garanti bilgileri netleşir.", "Teslim sonrası"]
-            ].map(([title, text, label]) => (
-              <article key={title} className="bg-surface p-5">
-                <ImageFrame label={label} />
-                <h3 className="mt-6 text-2xl font-semibold">{title}</h3>
+              ["Öncesi", "Mevcut durum analiz edilir ve kayıt altına alınır."],
+              ["Süreç", "Uygulama aşamaları kontrollü şekilde ilerletilir ve önemli adımlar belgelenir."],
+              ["Sonrası", "Teslim, belgeler ve garanti süreci net şekilde tamamlanır."]
+            ].map(([title, text], index) => (
+              <article key={title} className="border-t border-border bg-surface p-6">
+                <p className="text-sm text-black/35">{String(index + 1).padStart(2, "0")}</p>
+                <h3 className="mt-7 text-2xl font-semibold">{title}</h3>
                 <p className="mt-3 leading-7 text-muted">{text}</p>
+                <div className="mt-8 h-px bg-border" />
+                <div className="mt-5 flex items-start gap-3 text-sm font-medium text-stoneDark">
+                  <CheckCircle2 className="mt-0.5 shrink-0 text-gold" size={18} />
+                  <span>
+                    {index === 0 && "Kontrollü uygulama için başlangıç netliği"}
+                    {index === 1 && "Belgeli ilerleme ve düzenli kontrol"}
+                    {index === 2 && "Net teslim süreci ve kapanış disiplini"}
+                  </span>
+                </div>
               </article>
+            ))}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {["Kontrollü uygulama", "Belgeli ilerleme", "Net teslim süreci"].map((item) => (
+              <span key={item} className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-muted">
+                {item}
+              </span>
             ))}
           </div>
         </div>
@@ -270,7 +292,7 @@ function MiniProjectCard({ compact = false }) {
   );
 
   return (
-    <div className={compact ? "rounded-[1.5rem] bg-stoneDark p-7 text-white" : "rounded-[2rem] border border-white/10 bg-white p-6 text-stoneDark shadow-[0_28px_80px_rgba(0,0,0,0.28)] lg:p-7"}>
+    <div className={compact ? "rounded-[1.5rem] bg-stoneDark p-7 text-white transition-transform duration-200 hover:-translate-y-1" : "rounded-[2rem] border border-white/10 bg-white p-6 text-stoneDark shadow-[0_28px_80px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:-translate-y-1 lg:p-7"}>
       <div className={compact ? "" : "rounded-[1.5rem] bg-cream p-7 lg:p-8"}>
         <p className={compact ? "text-sm text-white/45" : "text-sm text-black/40"}>{scenario.name}</p>
         <h2 className="mt-3 text-3xl font-semibold">{scenario.type}</h2>
@@ -311,6 +333,7 @@ function ServiceSplit({ service, reversed }) {
         <Icon className="text-gold" size={30} />
         <h3 className="mt-6 text-3xl font-semibold tracking-tight md:text-5xl">{service.title}</h3>
         <p className="mt-5 max-w-xl leading-8 text-muted">{service.text}</p>
+        {service.concept && <ValueTransformationHint label={service.concept} />}
         <a href="/hizmetler" className="mt-7 inline-flex items-center gap-2 text-sm font-medium">
           Detayları incele
           <ArrowRight size={16} />
@@ -320,6 +343,31 @@ function ServiceSplit({ service, reversed }) {
         <ImageFrame label={service.image} tall />
       </div>
     </article>
+  );
+}
+
+function ValueTransformationHint({ label }) {
+  return (
+    <div className="group relative mt-6 w-fit">
+      <button
+        type="button"
+        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-stoneDark hover:border-gold hover:bg-white"
+        aria-describedby="value-transformation-note"
+      >
+        <Info size={16} className="text-gold" />
+        {label}
+      </button>
+      <div
+        id="value-transformation-note"
+        className="pointer-events-none absolute bottom-full left-0 z-20 mb-3 hidden w-[min(20rem,calc(100vw-3rem))] rounded-2xl border border-border bg-white p-4 text-sm leading-6 text-muted shadow-premium group-hover:block group-focus-within:block"
+      >
+        Mevcut gayrimenkulünüzü isterseniz doğrudan satışa çıkarabilir, isterseniz
+        değer artırıcı tadilat ile daha yüksek bir satış potansiyeli oluşturabilirsiniz.
+        <span className="mt-3 block font-medium text-stoneDark">
+          BLAAG, bu iki süreci birlikte planlar ve yönetir.
+        </span>
+      </div>
+    </div>
   );
 }
 

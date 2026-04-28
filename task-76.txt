@@ -1,0 +1,28 @@
+ADD BASIC FINANCIAL TRACKING PANEL.
+
+GOAL:
+Track project money flow.
+
+FIELDS:
+
+- Toplam bütçe
+- Yapılan ödeme
+- Kalan bütçe
+
+LIST:
+- Gelirler
+- Giderler
+
+Each entry:
+- tarih
+- açıklama
+- tutar
+
+NO:
+complex accounting
+
+YES:
+clean tracking
+
+AFTER:
+Run build.

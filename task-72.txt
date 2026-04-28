@@ -1,0 +1,26 @@
+ADD INTERACTIVE EXPLANATION FOR “DEĞER DÖNÜŞÜMÜ”.
+
+GOAL:
+Explain concept and increase conversion.
+
+WHEN USER HOVERS OR CLICKS:
+
+SHOW SMALL CARD:
+
+“Mevcut gayrimenkulünüzü isterseniz doğrudan satışa çıkarabilir,
+isterseniz değer artırıcı tadilat ile daha yüksek bir satış potansiyeli oluşturabilirsiniz.
+
+BLAAG, bu iki süreci birlikte planlar ve yönetir.”
+
+STYLE:
+- small popup
+- clean
+- subtle shadow
+- not intrusive
+
+DO NOT:
+- create new page
+- break flow
+
+AFTER:
+Run build.

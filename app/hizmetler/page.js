@@ -93,7 +93,7 @@ export default function ServicesPage() {
           ))}
         </section>
 
-        <section className="mt-10 bg-soft p-7 md:p-12">
+        <section className="mt-10 border border-border bg-soft p-7 shadow-card md:p-12">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
               <ShieldCheck className="text-gold" size={30} />
@@ -113,7 +113,7 @@ export default function ServicesPage() {
                 "Size özel takip bağlantısı",
                 "Kontrollü teslim ve kapanış"
               ].map((item) => (
-                <div key={item} className="flex items-start gap-3 bg-surface p-5">
+                <div key={item} className="flex items-start gap-3 border border-border bg-surface p-5 shadow-card">
                   <CheckCircle2 className="mt-1 shrink-0 text-gold" size={19} />
                   <span className="leading-7 text-muted">{item}</span>
                 </div>
@@ -130,7 +130,7 @@ function ServiceBlock({ service, reversed, index }) {
   const Icon = service.icon;
   return (
     <article className={`grid gap-7 lg:grid-cols-2 lg:items-stretch ${reversed ? "lg:[&>*:first-child]:order-2" : ""}`}>
-      <div className="bg-surface p-6 md:p-9">
+      <div className="border border-border bg-surface p-6 shadow-card md:p-9">
         <p className="text-sm text-black/35">{String(index + 1).padStart(2, "0")}</p>
         <Icon className="mt-8 text-gold" size={30} />
         <h2 className="mt-6 text-3xl font-semibold tracking-tight md:text-5xl">{service.title}</h2>
@@ -148,7 +148,7 @@ function ServiceBlock({ service, reversed, index }) {
           <ArrowRight size={16} />
         </a>
       </div>
-      <div className="min-h-80 bg-soft p-6">
+      <div className="min-h-80 border border-border bg-soft p-6 shadow-card">
         <PremiumImageFrame label={service.visual} />
       </div>
     </article>
