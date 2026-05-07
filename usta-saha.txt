@@ -1,0 +1,86 @@
+Usta / saha ekibi için fotoğraf yükleme sayfası oluştur.
+
+Route:
+/field/[slug]/usta-takip/[token]
+
+Amaç:
+Usta veya saha çalışanı login olmadan özel linkle girip sadece kendi işiyle ilgili fotoğraf ve not yükleyebilsin.
+
+Çok sade olmalı. Usta karmaşık ekran görmemeli.
+
+Sayfa içeriği:
+- Proje adı
+- Lokasyon
+- Bugünkü tarih
+- Kısa açıklama:
+“Bu ekrandan yaptığınız işe ait fotoğraf ve notları BLAAG ekibine iletebilirsiniz.”
+
+Form alanları:
+1. İş Kalemi Seç
+2. Durum Seç
+3. Fotoğraf Yükle
+4. Açıklama / Not Yaz
+5. Gönder
+
+İş kalemi örnekleri:
+- Zemin
+- Seramik
+- Boya
+- Elektrik
+- Tesisat
+- Mutfak
+- Banyo
+- Dış Cephe
+- Temizlik
+- Diğer
+
+Durum seçenekleri:
+- Devam Ediyor
+- Tamamlandı
+- Sorun Var
+- Malzeme Bekliyor
+
+Fotoğraf yükleme:
+- Mobil kamera ile çekim desteklensin.
+- JPG, PNG, WEBP desteklensin.
+- Önizleme gösterilsin.
+- Çoklu fotoğraf yüklenebilsin.
+- Fotoğraf silme olsun.
+- Gerçek storage yoksa mock upload çalışsın.
+
+Gönderim sonrası:
+Başarı mesajı:
+“Fotoğraflar ve notunuz BLAAG ekibine iletildi.”
+
+Ustanın görmemesi gerekenler:
+- Müşteri ödeme bilgisi
+- Toplam teklif
+- Kalan bakiye
+- Müşteri özel notları
+- Diğer projeler
+- Admin paneli
+
+Güvenlik:
+- Token mock olabilir.
+- Yanlış token varsa “Geçersiz veya süresi dolmuş bağlantı” göster.
+- Sadece ilgili proje ve sınırlı iş bilgisi görünsün.
+
+UX:
+- Büyük butonlar.
+- Çok az yazı.
+- Mobil-first.
+- Tek kolon.
+- Net ikonlar.
+- Hata mesajları sade olsun.
+
+Componentler:
+- FieldProjectHeader
+- WorkerUploadForm
+- PhotoUploadBox
+- WorkStatusSelector
+- SubmitSuccessState
+- InvalidWorkerLinkState
+
+Sonunda:
+- Demo URL ver.
+- Hangi alanların mock olduğunu belirt.

@@ -1,399 +1,381 @@
-"use client";
-
-import { useMemo } from "react";
 import {
   ArrowRight,
+  BadgeCheck,
   Building2,
   Camera,
   CheckCircle2,
-  DraftingCompass,
+  ClipboardCheck,
+  FileText,
   Hammer,
   Home,
-  Info,
   Layers3,
-  Route,
-  ShieldCheck
+  MessageCircle,
+  PackageCheck,
+  ReceiptText,
+  ShieldCheck,
+  Smartphone,
+  WalletCards
 } from "lucide-react";
+import {
+  expatTrackingItems,
+  heroTrustItems,
+  homePortfolioPreview,
+  homeServices,
+  materialCategories,
+  qualityItems,
+  trackingFeatures,
+  valueRenovationItems,
+  workSteps
+} from "../lib/data/homePage";
+import { createWhatsAppLink } from "../lib/helpers/whatsapp";
+import { createSeoMetadata } from "../lib/seo";
 
-const projectScenarios = [
-  {
-    name: "A. Y******",
-    type: "Villa Anahtar Teslim",
-    today: ["Mutfak söküm tamamlandı", "6 fotoğraf eklendi"],
-    status: "Uygulama aşaması",
-    next: "Elektrik altyapı"
-  },
-  {
-    name: "M. K******",
-    type: "Komple Daire Tadilatı",
-    today: ["Banyo seramikleri söküldü", "Tesisat noktaları kontrol edildi"],
-    status: "Hazırlık aşaması",
-    next: "Su yalıtımı"
-  },
-  {
-    name: "E. Y******",
-    type: "Satışa Hazırlık",
-    today: ["Salon boya hazırlığı başladı", "Öncesi fotoğraflar eklendi"],
-    status: "Değer artırma",
-    next: "Son kat boya"
-  },
-  {
-    name: "D. A******",
-    type: "Müstakil Konut",
-    today: ["Şantiye alanı düzenlendi", "Cephe kontrolü yapıldı"],
-    status: "Şantiye koordinasyonu",
-    next: "İnce iş programı"
-  },
-  {
-    name: "S. B******",
-    type: "Banyo Yenileme",
-    today: ["Tesisat noktaları işaretlendi", "3 uygulama fotoğrafı eklendi"],
-    status: "Hazırlık aşaması",
-    next: "Su yalıtımı"
-  },
-  {
-    name: "R. G******",
-    type: "Gayrimenkul Danışmanlığı",
-    today: ["Portföy sunumu hazırlandı", "İlan görselleri seçildi"],
-    status: "Strateji aşaması",
-    next: "Alıcı görüşmeleri"
-  },
-  {
-    name: "N. Ö******",
-    type: "Dış Cephe Yenileme",
-    today: ["İskele kurulumu kontrol edildi", "Cephe renk alternatifi paylaşıldı"],
-    status: "Saha hazırlığı",
-    next: "Astar uygulaması"
-  }
-];
+export const metadata = createSeoMetadata({
+  title:
+    "BLAAG Construction and Architecture | Fotoğraflı İnşaat ve Tadilat Takibi",
+  description:
+    "Tadilat ve inşaat sürecinizi fotoğraflı proje takip sistemiyle şeffaf hale getirin.",
+  path: "/"
+});
 
-const services = [
-  {
-    icon: Building2,
-    title: "Anahtar Teslim Yapı Geliştirme",
-    text: "Arsa ya da yatırım fikrinizin dağınık kararlar içinde kaybolmasını önler; planlama, saha koordinasyonu ve teslimi tek profesyonel akışta yönetiriz.",
-    image: "Taş cepheli villa kütlesi, doğal ışık, temiz şantiye düzeni"
-  },
-  {
-    icon: Hammer,
-    title: "Tadilat & Değer Artırma",
-    text: "Mevcut yapınızı daha yaşanabilir, daha estetik ve daha değerli hale getirirken sürprizleri azaltan kontrollü bir yenileme planı kurarız.",
-    image: "Mutfak, banyo ve yaşam alanı yenileme numune panosu",
-    concept: "Değer Dönüşümü"
-  },
-  {
-    icon: Home,
-    title: "Gayrimenkul Danışmanlığı",
-    text: "Satış, kiralama, satın alma veya yatırım kararınızı doğru değerleme, doğru sunum ve kullanım amacına uygun stratejiyle güçlendiririz.",
-    image: "Portföy dosyası, anahtar, mimari plan ve saha notları"
-  }
-];
-
-const trustItems = [
-  [ShieldCheck, "Şeffaf Süreç", "Kapsam ve ilerleme net kalır."],
-  [Camera, "Fotoğraflı Takip", "Önemli aşamalar görsellerle sunulur."],
-  [Layers3, "Tek Merkezden Yönetim", "Kararlar ve ekipler tek elden koordine edilir."],
-  [DraftingCompass, "Profesyonel Uygulama", "Saha süreci kontrollü yürütülür."]
-];
-
-const steps = [
-  ["İlk Görüşme ve Talep", "İhtiyacınızı ve hedefinizi paylaşırsınız."],
-  ["Değerlendirme", "Ekibimiz kapsamı ve öncelikleri netleştirir."],
-  ["Teklif ve Plan", "Uygulama yolu anlaşılır şekilde hazırlanır."],
-  ["Uygulama", "BLAAG işi sahada profesyonelce yönetir."],
-  ["Takip ve Sonuç", "Onaylı gelişmeleri özel bağlantınızdan izlersiniz."]
-];
+const serviceIcons = [Building2, Home, Hammer, Layers3, ShieldCheck, BadgeCheck, Smartphone, PackageCheck];
+const trackingIcons = [Camera, ClipboardCheck, WalletCards, PackageCheck, FileText, ShieldCheck, Smartphone];
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-cream text-stoneDark">
-      <section className="bg-stoneDark px-4 py-14 text-white sm:px-6 md:py-20">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-white/35">
-              BLAAG Construction and Architecture
-            </p>
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-              Kusursuz yapı, şeffaf süreç.
-            </h1>
-            <p className="mt-7 max-w-3xl text-lg leading-8 text-white/65">
-              <span className="block">Projenizi bize bırakın.</span>
-              <span className="block">
-                Süreci yönetmek zorunda kalmadan, kontrollü ve şeffaf şekilde takip edin.
-              </span>
-            </p>
-            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <a href="/teklif-al" className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-medium text-stoneDark shadow-lg shadow-black/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/25">
-                Projemi Başlat
-                <ArrowRight size={18} />
-              </a>
-              <a href="/surec" className="inline-flex items-center justify-center rounded-full border border-white/18 px-7 py-4 font-medium text-white shadow-sm shadow-black/10 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/5">
-                Süreci İncele
-              </a>
-            </div>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-white/45">
-              Başvuru sonrası ekibimiz sizinle doğrudan iletişime geçer.
-            </p>
-          </div>
-
-          <MiniProjectCard />
-        </div>
-      </section>
-
-      <section className="border-b border-border bg-cream px-4 py-6 sm:px-6">
-        <div className="mx-auto grid max-w-7xl gap-3 md:grid-cols-4">
-          {trustItems.map(([Icon, label, text]) => (
-            <div key={label} className="flex items-start gap-3 border-border py-3 md:border-r md:pr-5 md:last:border-r-0">
-              <Icon className="text-gold" size={21} />
-              <div>
-                <p className="text-sm font-medium">{label}</p>
-                <p className="mt-1 text-xs leading-5 text-muted">{text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="Hizmetler"
-            title="Belirsizliği azaltan, değeri artıran profesyonel yapı hizmetleri."
-            text="BLAAG; yapı, tadilat ve gayrimenkul kararlarınızı netleştirir, sahadaki uygulamayı yönetir ve süreci fotoğraflı takip ayrıcalığıyla görünür kılar."
-          />
-          <div className="mt-12 grid gap-10">
-            {services.map((service, index) => (
-              <ServiceSplit key={service.title} service={service} reversed={index % 2 === 1} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-soft px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-          <div>
-            <SectionHeading
-              eyebrow="Takip Ayrıcalığı"
-              title="Süreci sadece yaptırmazsınız, şeffaf şekilde takip edersiniz."
-              text="BLAAG ile yürütülen projelerde önemli aşamalar, fotoğraflar ve gelişmeler size özel takip bağlantısı üzerinden düzenli olarak sunulur."
-            />
-            <div className="mt-8 grid gap-4">
-              {[
-                "Aşama bazlı fotoğraflı güncellemeler",
-                "Size özel takip bağlantısı",
-                "Onaylı ve düzenlenmiş müşteri bilgilendirmeleri",
-                "Belgeler, ödemeler ve teslim süreci için tek noktadan görünürlük"
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <CheckCircle2 className="text-gold" size={20} />
-                  <span className="text-muted">{item}</span>
-                </div>
-              ))}
-            </div>
-            <p className="mt-8 max-w-2xl border-l border-gold pl-5 leading-8 text-muted">
-              Sahadan gelen fotoğraflar ekibimiz tarafından kontrol edilir,
-              açıklamaları düzenlenir ve müşteriye anlaşılır şekilde sunulur.
-            </p>
-          </div>
-          <div className="rounded-[2rem] border border-border bg-surface p-5 shadow-premium">
-            <MiniProjectCard compact />
-            <div className="mt-5 grid grid-cols-4 gap-3">
-              {["Cephe", "Mutfak", "Detay", "Teslim"].map((item) => (
-                <div key={item} className="aspect-[4/3] rounded-2xl bg-soft p-3 text-xs font-medium text-muted">
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="Süreç"
-            title="Beş sade adımda kapsam netleşir, uygulama kontrollü ilerler."
-          />
-          <div className="mt-10 grid gap-4 md:grid-cols-5">
-            {steps.map(([step, text], index) => (
-              <div key={step} className="border-t border-border pt-5">
-                <p className="text-sm text-black/35">{String(index + 1).padStart(2, "0")}</p>
-                <h3 className="mt-5 text-xl font-semibold">{step}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted">{text}</p>
-              </div>
-            ))}
-          </div>
-          <a href="/surec" className="mt-10 inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 font-medium">
-            Süreci detaylı incele
-            <ArrowRight size={17} />
-          </a>
-        </div>
-      </section>
-
-      <section className="bg-soft px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="Proje Kanıtı"
-            title="Her proje görünür aşamalarla ilerler."
-            text="Dönüşüm yalnızca sonuç fotoğrafı değildir; mevcut durumun okunması, uygulamanın belgelenmesi ve teslimin net kapanmasıdır."
-          />
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {[
-              ["Öncesi", "Mevcut durum analiz edilir ve kayıt altına alınır."],
-              ["Süreç", "Uygulama aşamaları kontrollü şekilde ilerletilir ve önemli adımlar belgelenir."],
-              ["Sonrası", "Teslim, belgeler ve garanti süreci net şekilde tamamlanır."]
-            ].map(([title, text], index) => (
-              <article key={title} className="border-t border-border bg-surface p-6">
-                <p className="text-sm text-black/35">{String(index + 1).padStart(2, "0")}</p>
-                <h3 className="mt-7 text-2xl font-semibold">{title}</h3>
-                <p className="mt-3 leading-7 text-muted">{text}</p>
-                <div className="mt-8 h-px bg-border" />
-                <div className="mt-5 flex items-start gap-3 text-sm font-medium text-stoneDark">
-                  <CheckCircle2 className="mt-0.5 shrink-0 text-gold" size={18} />
-                  <span>
-                    {index === 0 && "Kontrollü uygulama için başlangıç netliği"}
-                    {index === 1 && "Belgeli ilerleme ve düzenli kontrol"}
-                    {index === 2 && "Net teslim süreci ve kapanış disiplini"}
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
-          <div className="mt-6 flex flex-wrap gap-3">
-            {["Kontrollü uygulama", "Belgeli ilerleme", "Net teslim süreci"].map((item) => (
-              <span key={item} className="rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-muted">
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-7xl bg-stoneDark p-8 text-white md:p-14">
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-            <h2 className="max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
-              Projenizi birlikte netleştirelim.
-            </h2>
-            <a href="/teklif-al" className="inline-flex justify-center rounded-full bg-gold px-8 py-4 font-medium text-stoneDark">
-              Projemi Başlat
-            </a>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
+      <ProjectTrackingSection />
+      <ServicesSection />
+      <WorkFlowSection />
+      <PortfolioPreviewSection />
+      <MaterialTransparencySection />
+      <QualitySection />
+      <ValueRenovationSection />
+      <ExpatTrackingSection />
+      <FinalCtaSection />
     </main>
   );
 }
 
-function MiniProjectCard({ compact = false }) {
-  const scenario = useMemo(
-    () => projectScenarios[Math.floor(Math.random() * projectScenarios.length)],
-    []
-  );
-
+function HeroSection() {
   return (
-    <div className={compact ? "rounded-[1.5rem] bg-stoneDark p-7 text-white transition-transform duration-200 hover:-translate-y-1" : "rounded-[2rem] border border-white/10 bg-white p-6 text-stoneDark shadow-[0_28px_80px_rgba(0,0,0,0.28)] transition-transform duration-200 hover:-translate-y-1 lg:p-7"}>
-      <div className={compact ? "" : "rounded-[1.5rem] bg-cream p-7 lg:p-8"}>
-        <p className={compact ? "text-sm text-white/45" : "text-sm text-black/40"}>{scenario.name}</p>
-        <h2 className="mt-3 text-3xl font-semibold">{scenario.type}</h2>
-        <div className="mt-10">
-          <p className={compact ? "text-sm font-medium text-white/55" : "text-sm font-medium text-muted"}>Bugün:</p>
-          <div className="mt-4 grid gap-3">
-            {scenario.today.map((item) => (
-              <div key={item} className="flex items-start gap-2 text-sm">
-                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold" />
-                <span className={compact ? "text-white/75" : "text-muted"}>{item}</span>
-              </div>
-            ))}
+    <section className="bg-stoneDark px-4 py-12 text-white sm:px-6 md:py-16">
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div>
+          <p className="text-sm uppercase tracking-[0.25em] text-white/35">
+            BLAAG Construction and Architecture
+          </p>
+          <h1 className="mt-5 max-w-5xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            Tadilat ve İnşaat Sürecinizi Fotoğraflı Takip Sistemiyle Şeffaf Hale Getiriyoruz
+          </h1>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">
+            BLAAG Construction and Architecture; konut, villa, tadilat ve değer artırma projelerinde keşiften teslimata kadar tüm süreci planlar, belgelendirir ve takip edilebilir hale getirir.
+          </p>
+          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
+            <PrimaryLink href="/teklif-al">Teklif Al</PrimaryLink>
+            <SecondaryLink href="#proje-takip">Proje Takip Sistemini Gör</SecondaryLink>
+            <SecondaryLink href={createWhatsAppLink()} icon={MessageCircle}>WhatsApp ile İletişime Geç</SecondaryLink>
           </div>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          <SmallInfo label="Durum" value={scenario.status} compact={compact} />
-          <SmallInfo label="Sonraki adım" value={scenario.next} compact={compact} />
+
+        <div className="rounded-[2rem] border border-white/10 bg-white p-5 text-stoneDark shadow-[0_30px_90px_rgba(0,0,0,0.28)]">
+          <div className="rounded-[1.5rem] bg-cream p-5">
+            <p className="text-sm font-medium text-muted">Özel proje takip ekranı</p>
+            <h2 className="mt-3 text-3xl font-semibold">Villa Renovasyon Süreci</h2>
+            <div className="mt-6 grid gap-3">
+              {[
+                ["Bugün", "Mutfak söküm işlemi tamamlandı."],
+                ["Sıradaki adım", "Elektrik altyapı kontrolü."],
+                ["Durum", "BLAAG onaylı güncelleme"]
+              ].map(([label, value]) => (
+                <div key={label} className="rounded-2xl bg-white p-4">
+                  <p className="text-xs uppercase tracking-[0.16em] text-black/35">{label}</p>
+                  <p className="mt-2 font-medium">{value}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 grid grid-cols-3 gap-3">
+              {["Öncesi", "Süreç", "Teslim"].map((label) => (
+                <div key={label} className="aspect-[4/3] rounded-2xl border border-border bg-soft p-3 text-xs font-semibold text-muted">
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function SmallInfo({ label, value, compact }) {
-  return (
-    <div className={compact ? "rounded-2xl bg-white/10 p-4" : "rounded-2xl bg-white p-4"}>
-      <p className={compact ? "text-xs uppercase tracking-[0.16em] text-white/35" : "text-xs uppercase tracking-[0.16em] text-black/35"}>{label}</p>
-      <p className={compact ? "mt-2 text-sm font-medium text-white/80" : "mt-2 text-sm font-medium text-stoneDark"}>{value}</p>
-    </div>
-  );
-}
-
-function ServiceSplit({ service, reversed }) {
-  const Icon = service.icon;
-  return (
-    <article className={`grid gap-7 lg:grid-cols-2 lg:items-center ${reversed ? "lg:[&>*:first-child]:order-2" : ""}`}>
-      <div className="py-4">
-        <Icon className="text-gold" size={30} />
-        <h3 className="mt-6 text-3xl font-semibold tracking-tight md:text-5xl">{service.title}</h3>
-        <p className="mt-5 max-w-xl leading-8 text-muted">{service.text}</p>
-        {service.concept && <ValueTransformationHint label={service.concept} />}
-        <a href="/hizmetler" className="mt-7 inline-flex items-center gap-2 text-sm font-medium">
-          Detayları incele
-          <ArrowRight size={16} />
-        </a>
+      <div className="mx-auto mt-10 grid max-w-7xl gap-3 md:grid-cols-3">
+        {heroTrustItems.map((item) => (
+          <div key={item.title} className="rounded-2xl border border-white/10 bg-white/8 p-5">
+            <CheckCircle2 className="text-gold" size={22} />
+            <h3 className="mt-4 text-xl font-semibold">{item.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-white/60">{item.text}</p>
+          </div>
+        ))}
       </div>
-      <div className="min-h-72 bg-soft p-6">
-        <ImageFrame label={service.image} tall />
-      </div>
-    </article>
+    </section>
   );
 }
 
-function ValueTransformationHint({ label }) {
+function ProjectTrackingSection() {
   return (
-    <div className="group relative mt-6 w-fit">
-      <button
-        type="button"
-        className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-stoneDark hover:border-gold hover:bg-white"
-        aria-describedby="value-transformation-note"
-      >
-        <Info size={16} className="text-gold" />
-        {label}
-      </button>
-      <div
-        id="value-transformation-note"
-        className="pointer-events-none absolute bottom-full left-0 z-20 mb-3 hidden w-[min(20rem,calc(100vw-3rem))] rounded-2xl border border-border bg-white p-4 text-sm leading-6 text-muted shadow-premium group-hover:block group-focus-within:block"
-      >
-        Mevcut gayrimenkulünüzü isterseniz doğrudan satışa çıkarabilir, isterseniz
-        değer artırıcı tadilat ile daha yüksek bir satış potansiyeli oluşturabilirsiniz.
-        <span className="mt-3 block font-medium text-stoneDark">
-          BLAAG, bu iki süreci birlikte planlar ve yönetir.
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function ImageFrame({ label, tall = false }) {
-  return (
-    <div className={`relative overflow-hidden border border-border bg-cream shadow-sm shadow-black/5 ${tall ? "min-h-60" : "aspect-[4/3]"}`}>
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(198,168,91,0.16),rgba(255,255,255,0)_42%),linear-gradient(90deg,rgba(17,17,17,0.06)_1px,transparent_1px),linear-gradient(0deg,rgba(17,17,17,0.05)_1px,transparent_1px)] bg-[length:auto,44px_44px,44px_44px]" />
-      <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-4">
-        <div>
-          <span className="block h-px w-16 bg-gold" />
-          <p className="mt-3 max-w-xs text-sm font-medium text-muted">{label}</p>
+    <section id="proje-takip" className="px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <SectionIntro
+          eyebrow="Proje Takip Sistemi"
+          title="Müşteriye Özel Proje Takip Linki"
+          text="Projeniz başladıktan sonra size özel bağlantı oluşturulur. Kayıt olmadan fotoğrafları, iş durumunu, ödeme planını, kullanılan malzemeleri ve belgeleri tek ekrandan takip edebilirsiniz."
+        />
+        <div className="grid gap-3 sm:grid-cols-2">
+          {trackingFeatures.map((feature, index) => {
+            const Icon = trackingIcons[index] || ShieldCheck;
+            return (
+              <FeatureCard key={feature} icon={Icon} title={feature} />
+            );
+          })}
         </div>
-        <Route className="shrink-0 text-gold/70" size={26} />
       </div>
-    </div>
+    </section>
   );
 }
 
-function SectionHeading({ eyebrow, title, text }) {
+function ServicesSection() {
+  return (
+    <section className="bg-soft px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <SectionIntro
+          eyebrow="Hizmetler"
+          title="İnşaat, tadilat ve değer artırma işleri tek merkezden yönetilir."
+          text="Her hizmette kapsam, malzeme, ödeme ve teslim adımları açık tutulur."
+        />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {homeServices.map((service, index) => {
+            const Icon = serviceIcons[index] || Building2;
+            return (
+              <article key={service.title} className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
+                <Icon className="text-gold" size={25} />
+                <h3 className="mt-5 text-xl font-semibold">{service.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted">{service.text}</p>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WorkFlowSection() {
+  return (
+    <section className="px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <SectionIntro
+          eyebrow="Nasıl Çalışıyoruz?"
+          title="Sade adımlar, kayıtlı süreç, kontrollü teslim."
+        />
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {workSteps.map((step, index) => (
+            <div key={step} className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
+              <p className="text-sm font-semibold text-gold">{String(index + 1).padStart(2, "0")}</p>
+              <h3 className="mt-5 text-xl font-semibold">{step}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PortfolioPreviewSection() {
+  return (
+    <section className="bg-soft px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <SectionIntro
+            eyebrow="Öncesi / Sonrası Projeler"
+            title="Filtrelenebilir proje kartları için kısa önizleme."
+            text="Her proje; konum, hizmet tipi ve aşama bilgisiyle kayıt altına alınır."
+          />
+          <a href="/hizmetler" className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 font-medium">
+            Tüm Hizmetleri Gör
+            <ArrowRight size={17} />
+          </a>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {homePortfolioPreview.map((project) => (
+            <article key={project.title} className="rounded-[1.5rem] border border-border bg-surface p-4 shadow-card">
+              <div className="aspect-[4/3] rounded-2xl bg-cream p-4">
+                <span className="rounded-full bg-stoneDark px-3 py-2 text-xs font-medium text-white">
+                  {project.stage}
+                </span>
+              </div>
+              <h3 className="mt-5 text-xl font-semibold">{project.title}</h3>
+              <p className="mt-2 text-sm text-muted">{project.category}</p>
+              <p className="mt-1 text-sm text-muted">{project.location}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MaterialTransparencySection() {
+  return (
+    <section className="px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+        <SectionIntro
+          eyebrow="Malzeme ve Marka Şeffaflığı"
+          title="Hangi malzeme kullanılıyor, hangi aşamada, tek ekranda görünür."
+          text="Malzeme listesi müşteri için anlaşılır, admin için yönetilebilir şekilde tutulur."
+        />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {materialCategories.map((category) => (
+            <div key={category} className="rounded-2xl border border-border bg-surface p-4 text-center font-semibold shadow-card">
+              {category}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function QualitySection() {
+  return (
+    <section className="bg-stoneDark px-4 py-14 text-white sm:px-6 md:py-20">
+      <div className="mx-auto max-w-7xl">
+        <SectionIntro
+          dark
+          eyebrow="Kalite / Teslim Kontrol Sistemi"
+          title="Kontrollü Şantiye, Kayıtlı Süreç"
+          text="BLAAG, sahadaki işi yalnızca uygulamaz; kayıt altına alır, kontrol eder ve teslim öncesi netleştirir."
+        />
+        <div className="mt-8 grid gap-4 md:grid-cols-4">
+          {qualityItems.map((item) => (
+            <div key={item} className="rounded-[1.5rem] border border-white/10 bg-white/8 p-5">
+              <ShieldCheck className="text-gold" size={24} />
+              <h3 className="mt-5 text-xl font-semibold">{item}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ValueRenovationSection() {
+  return (
+    <section className="px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
+        <SectionIntro
+          eyebrow="Değer Artırma Tadilatı"
+          title="Satış öncesi doğru tadilat, gayrimenkulün algısını güçlendirir."
+          text="BLAAG, hangi müdahalenin değer üreteceğini belirler ve işi kontrollü şekilde uygular."
+        />
+        <Checklist items={valueRenovationItems} />
+      </div>
+    </section>
+  );
+}
+
+function ExpatTrackingSection() {
+  return (
+    <section className="bg-soft px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
+        <SectionIntro
+          eyebrow="Gurbetçi Ev Takip Sistemi"
+          title="Uzaktayken de projenizin ne durumda olduğunu net görün."
+          text="Kayıt gerekmez. Size özel bağlantıdan fotoğrafları, belgeleri, ödemeleri ve ilerlemeyi takip edersiniz."
+        />
+        <Checklist items={expatTrackingItems} />
+      </div>
+    </section>
+  );
+}
+
+function FinalCtaSection() {
+  return (
+    <section className="px-4 py-14 sm:px-6 md:py-20">
+      <div className="mx-auto max-w-7xl rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-12">
+        <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="text-sm uppercase tracking-[0.25em] text-white/35">Teklif Al</p>
+            <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
+              Projenizi kısa form ile başlatın.
+            </h2>
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-white/65">
+              Ekibimiz kapsamı inceler ve sizinle doğrudan iletişime geçer.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:min-w-72">
+            <PrimaryLink href="/teklif-al">Teklif Al</PrimaryLink>
+            <SecondaryLink href={createWhatsAppLink()} icon={MessageCircle}>WhatsApp ile İletişime Geç</SecondaryLink>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SectionIntro({ eyebrow, title, text, dark = false }) {
   return (
     <div>
-      <p className="text-sm uppercase tracking-[0.3em] text-black/40">{eyebrow}</p>
-      <h2 className="mt-4 max-w-5xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
+      <p className={`text-sm uppercase tracking-[0.25em] ${dark ? "text-white/35" : "text-black/40"}`}>
+        {eyebrow}
+      </p>
+      <h2 className={`mt-4 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-stoneDark"}`}>
         {title}
       </h2>
-      {text && <p className="mt-5 max-w-3xl leading-8 text-muted">{text}</p>}
+      {text && (
+        <p className={`mt-5 max-w-3xl text-lg leading-8 ${dark ? "text-white/65" : "text-muted"}`}>
+          {text}
+        </p>
+      )}
     </div>
+  );
+}
+
+function FeatureCard({ icon: Icon, title }) {
+  return (
+    <div className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
+      <Icon className="text-gold" size={24} />
+      <h3 className="mt-4 text-xl font-semibold">{title}</h3>
+    </div>
+  );
+}
+
+function Checklist({ items }) {
+  return (
+    <div className="grid gap-3">
+      {items.map((item) => (
+        <div key={item} className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-5 shadow-card">
+          <CheckCircle2 className="mt-1 shrink-0 text-gold" size={22} />
+          <p className="text-lg font-medium">{item}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PrimaryLink({ href, children }) {
+  return (
+    <a href={href} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
+      {children}
+      <ArrowRight size={18} />
+    </a>
+  );
+}
+
+function SecondaryLink({ href, children, icon: Icon }) {
+  const isExternal = href.startsWith("http");
+
+  return (
+    <a href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/18 px-7 py-4 font-semibold text-white hover:bg-white/5">
+      {Icon && <Icon size={18} />}
+      {children}
+    </a>
   );
 }

@@ -1,0 +1,99 @@
+/hizmetler ve alt hizmet sayfalarını oluştur veya yeniden düzenle.
+
+Amaç:
+BLAAG’in hizmetleri “tadilat yapıyoruz” gibi basit görünmemeli. Her hizmet ayrı bir problem ve çözüm olarak sunulmalı.
+
+Ana hizmetler:
+1. Anahtar Teslim İnşaat
+2. Villa Renovasyonu
+3. Konut Tadilatı
+4. Banyo & Mutfak Yenileme
+5. Dış Cephe & Yalıtım
+6. Satış Öncesi Değer Artırma
+7. Gurbetçi Ev Takip Sistemi
+8. Malzeme + İşçilik Yönetimi
+9. Gayrimenkul Satışa Hazırlık / Danışmanlık
+
+/hizmetler sayfası:
+- Hero
+- Hizmet kartları
+- “Hangi hizmet size uygun?” kısa rehber
+- Süreç özeti
+- CTA
+
+Her hizmet kartında:
+- Başlık
+- 2-3 satır açıklama
+- Kimler için uygun?
+- Kapsama neler girebilir?
+- Detay butonu
+- Teklif al butonu
+
+Alt hizmet sayfaları:
+Her sayfa aynı şablonu kullansın:
+- Hero
+- Bu hizmet kimler için?
+- Kapsama neler dahil olabilir?
+- Süreç nasıl işler?
+- Malzeme / kalite yaklaşımı
+- Proje takip sistemi bu hizmette nasıl kullanılır?
+- Sık sorulan sorular
+- CTA
+
+Özel sayfa: Satış Öncesi Değer Artırma
+Bu hizmet BLAAG için çok önemli.
+Mesaj:
+“Satılacak konutlarda düşük maliyetli ama yüksek algı yaratan tadilatlarla mülkün satış değerini ve pazarlanabilirliğini artırıyoruz.”
+
+Bu sayfada vurgulanacaklar:
+- Boya
+- Zemin
+- Banyo
+- Mutfak
+- Dış cephe
+- Işıklandırma
+- Temizlik
+- Fotoğraf öncesi hazırlık
+- Emlak satışına hazırlık
+
+Özel sayfa: Gurbetçi Ev Takip Sistemi
+Mesaj:
+“Türkiye’deki evinizin tadilat sürecini uzaktan, fotoğraflı ve belgeli şekilde takip edin.”
+
+Vurgular:
+- Kayıt olmadan özel link
+- Fotoğraflı güncelleme
+- Ödeme takibi
+- Malzeme takibi
+- Belge/fatura alanı
+- WhatsApp desteği
+
+Dil:
+- Sade Türkçe
+- Satış odaklı ama abartısız
+- Uzun kurumsal paragraf yok
+- Her sayfada net CTA
+
+Tasarım:
+- Premium kartlar
+- Büyük başlıklar
+- Mobil-first
+- Temiz boşluklar
+- Tekrarlanan şablon component ile yönetilsin
+
+Teknik:
+- Hizmet datası tek bir data dosyasında dursun.
+- Alt sayfalar dinamik route veya ayrı route olabilir.
+- SEO title ve description ekle.
+- Componentleri ayır:
+  - ServiceHero
+  - ServiceCard
+  - ServiceDetailLayout
+  - ServiceProcess
+  - ServiceScope
+  - ServiceFAQ
+  - ServiceCTA
+
+Sonunda:
+- Oluşturulan route’ları yaz.
+- Hizmet içeriklerinin hangi dosyadan güncelleneceğini belirt.

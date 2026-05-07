@@ -1,0 +1,48 @@
+/iletisim sayfasını ve global WhatsApp/CTA yapısını düzenle.
+
+Amaç:
+Kullanıcı form doldurmak istemezse hızlıca WhatsApp veya telefon üzerinden iletişime geçebilsin.
+
+İletişim sayfası içeriği:
+- Başlık: “Projenizi Beraber Planlayalım”
+- Açıklama:
+“Yapılacak işi, konumu ve varsa fotoğrafları bizimle paylaşın. Ekibimiz kapsamı inceleyip sizinle iletişime geçsin.”
+
+İletişim seçenekleri:
+- Telefon
+- WhatsApp
+- E-posta
+- İl / Bölge
+- Çalışma saatleri
+- Teklif formuna yönlendirme
+
+WhatsApp butonu:
+Tüm önemli sayfalarda görünmeli:
+- Ana sayfa
+- Hizmetler
+- Teklif al
+- Projeler
+- Süreç
+- Proje takip demo
+
+WhatsApp mesaj template’i:
+“Merhaba, BLAAG üzerinden bilgi almak istiyorum. Projem hakkında görüşebilir miyiz?”
+
+Eğer sayfa hizmet sayfasıysa mesaj:
+“Merhaba, BLAAG üzerinden [Hizmet Adı] hakkında bilgi almak istiyorum.”
+
+Eğer proje sayfasıysa:
+“Merhaba, bu projeye benzer bir çalışma için bilgi almak istiyorum: [Proje Adı]”
+
+UX:
+- Mobilde WhatsApp butonu görünür ve kolay basılabilir olmalı.
+- Sabit floating WhatsApp olabilir ama ekranı kaplamamalı.
+- CTA butonları sade olsun.
+
+Teknik:
+- WhatsApp link üretimini utility fonksiyonuna al.
+- Telefon/e-posta bilgilerini tek config dosyasında tut.
+- Daha sonra kolay değiştirilebilir olsun.
+
+Sonunda:
+- İletişim bilgilerinin hangi dosyada düzenleneceğini yaz.

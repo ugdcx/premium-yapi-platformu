@@ -2,631 +2,414 @@
 
 import { useMemo, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
-  Building2,
   CheckCircle2,
   FileImage,
-  Hammer,
-  Home,
+  MessageCircle,
+  Send,
+  Trash2,
   Upload
 } from "lucide-react";
+import { homeServices } from "../../lib/data/homePage";
+import { validateOfferPhone } from "../../lib/helpers/phone";
+import { createWhatsAppLink } from "../../lib/helpers/whatsapp";
+import { createApplication } from "../../lib/mockStorage";
 
-const services = [
-  {
-    id: "build",
-    icon: Building2,
-    title: "Anahtar Teslim Yapı Geliştirme",
-    value:
-      "Arsa, fikir, planlanan yatırım aralığı ve teslim beklentinizi tek profesyonel değerlendirmede netleştirelim."
-  },
-  {
-    id: "renovation",
-    icon: Hammer,
-    title: "Tadilat & Değer Artırma Çalışmaları",
-    value:
-      "Konutunuzu daha konforlu, modern, kiraya veya satışa hazır hale getirecek doğru kapsamı birlikte belirleyelim."
-  },
-  {
-    id: "realEstate",
-    icon: Home,
-    title: "Gayrimenkul Satış Danışmanlığı",
-    value:
-      "Satış, kiralama, satın alma veya yatırım kararınızı doğru sunum ve stratejiyle netleştirelim."
-  }
+const MAX_FILE_SIZE_MB = 8;
+const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
+
+const serviceOptions = [...homeServices.map((service) => service.title), "Diğer"];
+
+const budgetOptions = [
+  "Belirtmek istemiyorum",
+  "100.000 TL altı",
+  "100.000 - 250.000 TL",
+  "250.000 - 500.000 TL",
+  "500.000 - 1.000.000 TL",
+  "1.000.000 TL üzeri"
 ];
 
-const questionSets = {
-  build: [
-    { key: "land", label: "Arsanız var mı?", type: "chips", options: ["Evet", "Hayır"] },
-    { key: "location", label: "Konum", type: "input", placeholder: "İl / ilçe / bölge" },
-    {
-      key: "structureType",
-      label: "Yapı tipi",
-      type: "chips",
-      options: ["Villa", "Müstakil", "Ticari"]
-    },
-    { key: "floors", label: "Kat sayısı", type: "input", placeholder: "Örn. 2 kat" },
-    { key: "rooms", label: "Oda sayısı", type: "input", placeholder: "Örn. 5+1" },
-    {
-      key: "quality",
-      label: "Hedef kalite",
-      type: "chips",
-      options: ["Standart", "Özel", "Üst Segment"],
-      helper: "Malzeme, detay seviyesi ve bitiş beklentisini hızlıca anlamamıza yardımcı olur."
-    },
-    { key: "start", label: "Başlama zamanı", type: "input", placeholder: "Örn. hemen / 3 ay içinde" }
-  ],
-  renovation: [
-    {
-      key: "scope",
-      label: "Kapsam",
-      type: "visual",
-      options: ["Komple ev", "Mutfak", "Banyo", "Oda", "Dış cephe", "Satışa hazırlık"]
-    },
-    {
-      key: "goal",
-      label: "Hedef",
-      type: "chips",
-      options: ["Konfor", "Yenileme", "Kiraya hazırlık", "Satışa hazırlık"]
-    },
-    {
-      key: "issues",
-      label: "Öncelikli odak nedir?",
-      type: "multi",
-      options: ["Elektrik", "Tesisat", "Zemin", "Duvar"]
-    }
-  ],
-  realEstate: [
-    {
-      key: "need",
-      label: "İhtiyaç tipi",
-      type: "chips",
-      options: ["Satmak", "Kiraya Vermek", "Satın Almak", "Yatırım Danışmanlığı"]
-    },
-    {
-      key: "propertyType",
-      label: "Gayrimenkul tipi",
-      type: "chips",
-      options: ["Daire", "Villa", "Arsa", "Ticari"]
-    },
-    { key: "location", label: "Konum", type: "input", placeholder: "İl / ilçe / bölge" },
-    { key: "size", label: "Yaklaşık m²", type: "input", placeholder: "Örn. 180 m²" },
-    {
-      key: "expectation",
-      label: "Beklenti",
-      type: "chips",
-      options: ["Hızlı satış", "Maksimum değer", "Önce değer artırma"]
-    },
-    { key: "listing", label: "Mevcut ilan linki", type: "input", placeholder: "Varsa ilan bağlantısı" },
-    {
-      key: "price",
-      label: "Beklenen değer veya planlanan yatırım aralığı",
-      type: "input",
-      placeholder: "Örn. 6M - 7M hedef değer"
-    }
-  ]
-};
+const startOptions = [
+  "Hemen",
+  "1 ay içinde",
+  "1-3 ay içinde",
+  "3 ay sonrası",
+  "Sadece fiyat araştırıyorum"
+];
 
-const demoFiles = ["Cephe fotoğrafı.jpg", "Tapu bilgisi.pdf", "Salon mevcut durum.png"];
-
-const steps = ["Hizmet", "Kapsam", "Dosya", "İletişim", "Özet"];
-
-const initialState = {
-  serviceId: "",
-  answers: {},
-  files: [],
-  contact: {
-    name: "",
-    phone: "",
-    email: "",
-    note: ""
-  }
+const initialForm = {
+  fullName: "",
+  phone: "",
+  city: "",
+  district: "",
+  serviceType: "",
+  description: "",
+  budgetRange: "Belirtmek istemiyorum",
+  startTime: "",
+  notes: "",
+  photos: []
 };
 
 export default function IntakeFlow() {
-  const [step, setStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [data, setData] = useState(initialState);
+  const [form, setForm] = useState(initialForm);
+  const [errors, setErrors] = useState({});
+  const [submittedApplication, setSubmittedApplication] = useState(null);
 
-  const selectedService = services.find((service) => service.id === data.serviceId);
-  const questions = data.serviceId ? questionSets[data.serviceId] : [];
+  const photoNames = useMemo(() => form.photos.map((photo) => photo.name), [form.photos]);
 
-  const summaryAnswers = useMemo(() => {
-    return questions
-      .map((question) => ({
-        label: question.label,
-        value: Array.isArray(data.answers[question.key])
-          ? data.answers[question.key].join(", ")
-          : data.answers[question.key]
-      }))
-      .filter((item) => item.value);
-  }, [data.answers, questions]);
-
-  function chooseService(serviceId) {
-    setData((current) => ({ ...current, serviceId, answers: {} }));
+  function updateField(field, value) {
+    setForm((current) => ({ ...current, [field]: value }));
+    setErrors((current) => ({ ...current, [field]: "" }));
   }
 
-  function setAnswer(key, value) {
-    setData((current) => ({
-      ...current,
-      answers: { ...current.answers, [key]: value }
-    }));
-  }
+  function addPhotos(fileList) {
+    const files = Array.from(fileList || []);
+    const nextErrors = {};
+    const validFiles = [];
 
-  function toggleAnswer(key, value) {
-    setData((current) => {
-      const selected = current.answers[key] || [];
-      const next = selected.includes(value)
-        ? selected.filter((item) => item !== value)
-        : [...selected, value];
+    files.forEach((file) => {
+      const validType = ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+      if (!validType) {
+        nextErrors.photos = "JPG, PNG veya WEBP formatında fotoğraf ekleyin.";
+        return;
+      }
 
-      return {
-        ...current,
-        answers: { ...current.answers, [key]: next }
-      };
+      if (file.size > MAX_FILE_SIZE) {
+        nextErrors.photos = `Her fotoğraf en fazla ${MAX_FILE_SIZE_MB} MB olmalıdır.`;
+        return;
+      }
+
+      validFiles.push({
+        id: `${file.name}-${file.lastModified}-${file.size}`,
+        name: file.name,
+        size: file.size,
+        url: typeof URL !== "undefined" ? URL.createObjectURL(file) : ""
+      });
     });
+
+    if (validFiles.length) {
+      setForm((current) => ({
+        ...current,
+        photos: [...current.photos, ...validFiles]
+      }));
+    }
+
+    setErrors((current) => ({ ...current, photos: nextErrors.photos || "" }));
   }
 
-  function addDemoFiles() {
-    setData((current) => ({ ...current, files: demoFiles }));
-  }
-
-  function setContact(key, value) {
-    setData((current) => ({
+  function removePhoto(id) {
+    setForm((current) => ({
       ...current,
-      contact: { ...current.contact, [key]: value }
+      photos: current.photos.filter((photo) => photo.id !== id)
     }));
   }
 
-  function nextStep() {
-    setStep((current) => Math.min(current + 1, steps.length - 1));
+  function validateForm() {
+    const nextErrors = {};
+    const phoneResult = validateOfferPhone(form.phone);
+
+    if (!form.fullName.trim()) nextErrors.fullName = "Ad soyad zorunludur.";
+    if (!phoneResult.valid) nextErrors.phone = phoneResult.error;
+    if (!form.city.trim()) nextErrors.city = "İl zorunludur.";
+    if (!form.district.trim()) nextErrors.district = "İlçe zorunludur.";
+    if (!form.serviceType) nextErrors.serviceType = "Lütfen hizmet tipi seçin.";
+    if (!form.description.trim()) nextErrors.description = "Proje açıklaması zorunludur.";
+    if (!form.startTime) nextErrors.startTime = "Lütfen başlama zamanı seçin.";
+
+    return { nextErrors, phoneResult };
   }
 
-  function previousStep() {
-    setStep((current) => Math.max(current - 1, 0));
+  function submitApplication(event) {
+    event.preventDefault();
+    const { nextErrors, phoneResult } = validateForm();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length) return;
+
+    const now = new Date().toISOString();
+    const application = createApplication({
+      fullName: form.fullName.trim(),
+      customer: form.fullName.trim(),
+      phone: form.phone.trim(),
+      normalizedPhone: phoneResult.normalizedPhone,
+      city: form.city.trim(),
+      district: form.district.trim(),
+      location: `${form.city.trim()} / ${form.district.trim()}`,
+      serviceType: form.serviceType,
+      service: form.serviceType,
+      description: form.description.trim(),
+      projectScale: form.description.trim(),
+      budgetRange: form.budgetRange,
+      startTime: form.startTime,
+      photos: photoNames,
+      files: photoNames,
+      status: "Yeni",
+      createdAt: now,
+      updatedAt: now,
+      adminNotes: form.notes.trim(),
+      note: form.notes.trim(),
+      date: new Date().toLocaleDateString("tr-TR"),
+      source: "Ön Başvuru Formu",
+      answers: [
+        ["İl", form.city.trim()],
+        ["İlçe", form.district.trim()],
+        ["Hizmet Tipi", form.serviceType],
+        ["Proje / İş Açıklaması", form.description.trim()],
+        ["Yaklaşık Bütçe Aralığı", form.budgetRange],
+        ["Başlama Zamanı", form.startTime],
+        ["Notlar", form.notes.trim() || "Belirtilmedi"]
+      ]
+    });
+
+    setSubmittedApplication(application);
   }
 
-  function resetFlow() {
-    setSubmitted(false);
-    setStep(0);
-    setData(initialState);
+  function resetForm() {
+    setForm(initialForm);
+    setErrors({});
+    setSubmittedApplication(null);
   }
 
-  if (submitted) {
+  if (submittedApplication) {
     return (
-      <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6 sm:py-10">
-        <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl items-center justify-center">
-          <section className="w-full rounded-[2rem] border border-border bg-surface p-6 text-center shadow-card sm:p-8 md:p-12">
+      <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6">
+        <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-3xl items-center">
+          <div className="w-full rounded-[2rem] border border-border bg-surface p-6 text-center shadow-card sm:p-10">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stoneDark text-gold">
               <CheckCircle2 size={32} />
             </div>
-            <h1 className="mt-8 text-5xl font-semibold tracking-tight">
-              Talebiniz alındı.
+            <h1 className="mt-7 text-4xl font-semibold tracking-tight sm:text-5xl">
+              Başvurunuz alındı.
             </h1>
-            <p className="mx-auto mt-5 max-w-xl leading-8 text-muted">
-              Ekibimiz bilgilerinizi inceleyerek sizinle iletişime geçecek.
-              Onaylanan işler için size özel takip bağlantısı oluşturulur.
+            <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-muted">
+              Ekibimiz projenizi inceleyip sizinle iletişime geçecektir.
             </p>
-            <div className="mx-auto mt-6 w-fit rounded-full bg-cream px-5 py-2 text-sm font-medium text-stoneDark">
-              Talep No: BLAAG-2026-001
+            <div className="mx-auto mt-6 w-fit rounded-full bg-cream px-5 py-2 text-sm font-medium">
+              Talep No: {submittedApplication.applicationNo}
             </div>
-            <div className="mx-auto mt-8 grid max-w-2xl gap-4 text-left md:grid-cols-2">
-              <SummaryCard title="Hizmet tipi">
-                <p className="font-semibold">{selectedService?.title || "Tadilat & Değer Artırma Çalışmaları"}</p>
-              </SummaryCard>
-              <SummaryCard title="İletişim özeti">
-                <SummaryLine label="Ad Soyad" value={data.contact.name || "Ali Atmaca"} />
-                <SummaryLine label="Telefon" value={data.contact.phone || "Belirtilmedi"} />
-                <SummaryLine label="E-posta" value={data.contact.email || "Belirtilmedi"} />
-              </SummaryCard>
-            </div>
-            <div className="mx-auto mt-6 grid max-w-lg gap-3 text-left">
-              {[
-                "İlk değerlendirme talebiniz incelenir",
-                "Ekibimiz sizinle iletişime geçer",
-                "Hizmet kapsamı ve yol haritası netleşir",
-                "Onaylanan işler için süreç başlatılır",
-                "Size özel takip bağlantısı oluşturulur"
-              ].map((item, index) => (
-                <div key={item} className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted shadow-card">
-                  {index + 1}. {item}
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <button
-                onClick={resetFlow}
-                className="inline-flex justify-center rounded-full border border-border px-7 py-4"
-              >
-                Yeni değerlendirme talebi oluştur
-              </button>
-            </div>
-          </section>
-        </div>
+            <button
+              type="button"
+              onClick={resetForm}
+              className="mt-8 rounded-full border border-border px-7 py-4 font-medium"
+            >
+              Yeni başvuru oluştur
+            </button>
+          </div>
+        </section>
       </main>
     );
   }
 
   return (
     <main className="min-h-screen bg-cream px-4 py-6 text-stoneDark sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-7xl">
-        <header className="grid gap-6 rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-10 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
-            <div className="flex gap-5">
-              <a href="/" className="text-sm text-white/55">
-                Ana sayfa
-              </a>
-            </div>
-            <p className="mt-12 text-sm uppercase tracking-[0.3em] text-white/35">
-              İlk Değerlendirme Talebi
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
-              Projenizi Netleştirelim
-            </h1>
-            <p className="mt-6 max-w-2xl leading-8 text-white/60">
-              Birkaç sakin adımda konumunuzu, hizmet ihtiyacınızı, proje
-              kapsamınızı, zamanlamanızı ve ölçeğinizi paylaşın. Ekibimiz
-              talebinizi BLAAG hizmet modeli içinde değerlendirsin.
-            </p>
-          </div>
-
-          <div className="rounded-2xl bg-white/10 p-5 text-sm text-white/60 lg:w-72">
-            <strong className="block text-base text-white">Uzmanla görüşmeye ilk adım</strong>
-            <span className="mt-2 block">
-              Gereksiz form kalabalığı yerine doğru kapsamı netleştiren kısa ve sakin akış.
-            </span>
-          </div>
+      <div className="mx-auto max-w-5xl">
+        <header className="rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8">
+          <a href="/" className="text-sm text-white/60">Ana sayfa</a>
+          <p className="mt-10 text-sm uppercase tracking-[0.25em] text-white/35">
+            Teklif Başvurusu
+          </p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">
+            Projenizi kolayca anlatın.
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/65">
+            Kısa formu doldurun. BLAAG ekibi kapsamı incelesin ve sizi doğrudan arasın.
+          </p>
+          <a
+            href="#teklif-formu"
+            className="mt-7 inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark"
+          >
+            Forma Başla
+            <Send size={18} />
+          </a>
         </header>
 
-        <section className="mt-6 rounded-[2rem] border border-border bg-surface p-4 shadow-card sm:p-5 md:p-7">
-          <Stepper current={step} />
+        <form id="teklif-formu" onSubmit={submitApplication} className="mt-6 grid gap-5">
+          <FormSection title="1. İletişim Bilgileri" description="Ekibimizin size ulaşması için temel bilgiler.">
+            <div className="grid gap-4 md:grid-cols-2">
+              <TextField label="Ad Soyad" value={form.fullName} onChange={(value) => updateField("fullName", value)} error={errors.fullName} placeholder="Adınız ve soyadınız" />
+              <TextField label="Telefon" value={form.phone} onChange={(value) => updateField("phone", value)} error={errors.phone} placeholder="05XXXXXXXXX" inputMode="tel" helper="05, 5, +90 veya 0090 ile başlayan cep telefonu yazabilirsiniz." />
+              <TextField label="İl" value={form.city} onChange={(value) => updateField("city", value)} error={errors.city} placeholder="Örn. Sakarya" />
+              <TextField label="İlçe" value={form.district} onChange={(value) => updateField("district", value)} error={errors.district} placeholder="Örn. Akyazı" />
+            </div>
+          </FormSection>
 
-          <div className="mt-8">
-            {step === 0 && (
-              <StepShell
-                eyebrow="1. Adım"
-                title="Size en yakın hizmet yolunu seçin."
-                description="Hizmet tipini seçtiğinizde yalnızca gerekli kapsam sorularını gösteririz."
-              >
-                <div className="grid gap-4 lg:grid-cols-3">
-                  {services.map((service) => {
-                    const Icon = service.icon;
-                    const isSelected = data.serviceId === service.id;
-                    return (
+          <FormSection title="2. Proje Bilgileri" description="Yapılacak işi kısa ve net anlatın.">
+            <div className="grid gap-4">
+              <ChoiceGrid label="Hizmet Tipi" options={serviceOptions} value={form.serviceType} onChange={(value) => updateField("serviceType", value)} error={errors.serviceType} />
+              <TextAreaField label="Proje / İş Açıklaması" value={form.description} onChange={(value) => updateField("description", value)} error={errors.description} placeholder="Örn. Mutfak ve banyo yenileme, dış cephe boya, satış öncesi tadilat..." />
+            </div>
+          </FormSection>
+
+          <FormSection title="3. Fotoğraf Yükleme" description={`JPG, PNG veya WEBP yükleyin. Her fotoğraf en fazla ${MAX_FILE_SIZE_MB} MB olabilir.`}>
+            <label className="flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-black/20 bg-soft p-6 text-center hover:border-gold">
+              <Upload className="text-gold" size={34} />
+              <span className="mt-4 text-2xl font-semibold">Fotoğraf Ekle</span>
+              <span className="mt-2 max-w-xl text-muted">
+                Mobilde kameradan fotoğraf seçebilirsiniz.
+              </span>
+              <input
+                type="file"
+                multiple
+                accept="image/jpeg,image/png,image/webp"
+                capture="environment"
+                onChange={(event) => addPhotos(event.target.files)}
+                className="sr-only"
+              />
+            </label>
+            {errors.photos && <ErrorText>{errors.photos}</ErrorText>}
+            {form.photos.length > 0 && (
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {form.photos.map((photo) => (
+                  <div key={photo.id} className="overflow-hidden rounded-2xl border border-border bg-surface">
+                    {photo.url ? (
+                      <img src={photo.url} alt={photo.name} className="aspect-square w-full object-cover" />
+                    ) : (
+                      <div className="flex aspect-square items-center justify-center bg-soft">
+                        <FileImage className="text-gold" size={24} />
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between gap-2 p-3">
+                      <span className="truncate text-sm text-muted">{photo.name}</span>
                       <button
-                        key={service.id}
-                        onClick={() => chooseService(service.id)}
-                        className={`rounded-[2rem] border p-6 text-left ${
-                          isSelected
-                            ? "border-gold bg-stoneDark text-white"
-                            : "border-border bg-surface shadow-card hover:border-gold hover:bg-white"
-                        }`}
+                        type="button"
+                        onClick={() => removePhoto(photo.id)}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream text-muted"
+                        aria-label={`${photo.name} fotoğrafını sil`}
                       >
-                        <div
-                          className={`mb-8 flex h-14 w-14 items-center justify-center rounded-2xl ${
-                            isSelected ? "bg-white/10 text-gold" : "bg-stoneDark text-white"
-                          }`}
-                        >
-                          <Icon size={26} />
-                        </div>
-                        <h3 className="text-2xl font-semibold">{service.title}</h3>
-                        <p
-                          className={`mt-4 leading-7 ${
-                            isSelected ? "text-white/60" : "text-muted"
-                          }`}
-                        >
-                          {service.value}
-                        </p>
+                        <Trash2 size={17} />
                       </button>
-                    );
-                  })}
-                </div>
-              </StepShell>
-            )}
-
-            {step === 1 && (
-              <StepShell
-                eyebrow="2. Adım"
-                title={selectedService?.title || "Proje kapsamı"}
-                description="Seçtiğiniz hizmete göre yalnızca karar vermemizi sağlayan temel bilgileri paylaşırsınız."
-              >
-                <div className="grid gap-5 lg:grid-cols-2">
-                  {questions.map((question) => (
-                    <Question
-                      key={question.key}
-                      question={question}
-                      value={data.answers[question.key]}
-                      onChange={setAnswer}
-                      onToggle={toggleAnswer}
-                    />
-                  ))}
-                </div>
-              </StepShell>
-            )}
-
-            {step === 2 && (
-              <StepShell
-                eyebrow="3. Adım"
-                title="Fotoğraf ve evrak ekleyin."
-                description="Fotoğraf ve evraklar ilk değerlendirmenin daha doğru yapılmasına yardımcı olur."
-              >
-                <button
-                  onClick={addDemoFiles}
-                  className="flex min-h-64 w-full flex-col items-center justify-center rounded-[2rem] border border-dashed border-black/20 bg-soft p-8 text-center shadow-card hover:border-gold hover:bg-white"
-                >
-                  <Upload className="text-gold" size={34} />
-                  <strong className="mt-5 text-2xl">
-                    Dosyaları buraya sürükleyin veya seçin
-                  </strong>
-                  <span className="mt-3 max-w-2xl leading-7 text-muted">
-                    Fotoğraf, tapu, imar durumu veya mevcut ilan görsellerinizi
-                    buraya ekleyebilirsiniz.
-                  </span>
-                  <span className="mt-4 text-sm text-black/40">
-                    Net cephe, oda, tesisat ve sorun fotoğrafları daha doğru
-                    değerlendirme sağlar.
-                  </span>
-                </button>
-
-                {data.files.length > 0 && (
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    {data.files.map((file) => (
-                      <span
-                        key={file}
-                        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm text-muted"
-                      >
-                        <FileImage size={16} />
-                        {file}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </StepShell>
-            )}
-
-            {step === 3 && (
-              <StepShell
-                eyebrow="4. Adım"
-                title="Sizinle nasıl iletişime geçelim?"
-                description="İlk değerlendirme sonrası ekibimizin size doğru kanaldan ulaşabilmesi için iletişim bilgilerinizi paylaşın."
-              >
-                <div className="grid gap-5 md:grid-cols-2">
-                  <Field
-                    label="Ad Soyad"
-                    value={data.contact.name}
-                    onChange={(value) => setContact("name", value)}
-                    placeholder="Adınız ve soyadınız"
-                  />
-                  <Field
-                    label="Telefon"
-                    value={data.contact.phone}
-                    onChange={(value) => setContact("phone", value)}
-                    placeholder="Telefon numaranız"
-                  />
-                  <Field
-                    label="E-posta"
-                    value={data.contact.email}
-                    onChange={(value) => setContact("email", value)}
-                    placeholder="E-posta adresiniz"
-                  />
-                  <label className="grid gap-2 md:col-span-2">
-                    <span className="text-sm font-medium text-muted">
-                      Not / Ek açıklama
-                    </span>
-                    <textarea
-                      value={data.contact.note}
-                      onChange={(event) => setContact("note", event.target.value)}
-                      className="min-h-36 rounded-2xl border border-border bg-cream px-5 py-4 outline-none placeholder:text-black/35"
-                      placeholder="Öncelikleriniz, zaman baskısı veya özel beklentiler"
-                    />
-                  </label>
-                </div>
-              </StepShell>
-            )}
-
-            {step === 4 && (
-              <StepShell
-                eyebrow="5. Adım"
-                title="Talebinizi son kez kontrol edin."
-                description="Seçimleriniz ve iletişim bilgileriniz ilk değerlendirme özeti olarak ekibimize iletilecek."
-              >
-                <div className="grid gap-5 lg:grid-cols-2">
-                  <SummaryCard title="Seçilen hizmet">
-                    <p className="text-xl font-semibold">{selectedService?.title}</p>
-                  </SummaryCard>
-                  <SummaryCard title="İletişim özeti">
-                    <SummaryLine label="Ad Soyad" value={data.contact.name} />
-                    <SummaryLine label="Telefon" value={data.contact.phone} />
-                    <SummaryLine label="E-posta" value={data.contact.email} />
-                  </SummaryCard>
-                  <SummaryCard title="Proje cevapları" wide>
-                    <div className="grid gap-3 md:grid-cols-2">
-                      {summaryAnswers.map((item) => (
-                        <SummaryLine
-                          key={item.label}
-                          label={item.label}
-                          value={item.value}
-                        />
-                      ))}
                     </div>
-                  </SummaryCard>
-                  <SummaryCard title="Dosyalar">
-                    <p className="text-muted">
-                      {data.files.length
-                        ? data.files.join(", ")
-                        : "Dosya eklenmedi"}
-                    </p>
-                  </SummaryCard>
-                </div>
-              </StepShell>
+                  </div>
+                ))}
+              </div>
             )}
-          </div>
+          </FormSection>
 
-          <div className="mt-8 flex flex-col-reverse gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <button
-              onClick={previousStep}
-              disabled={step === 0}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-35"
-            >
-              <ArrowLeft size={17} />
-              Geri
-            </button>
+          <FormSection title="4. Bütçe ve Zaman" description="Yaklaşık bilgi vermeniz teklif sürecini hızlandırır.">
+            <div className="grid gap-4 lg:grid-cols-2">
+              <SelectField label="Yaklaşık Bütçe Aralığı" value={form.budgetRange} options={budgetOptions} onChange={(value) => updateField("budgetRange", value)} />
+              <SelectField label="Başlama Zamanı" value={form.startTime} options={["", ...startOptions]} onChange={(value) => updateField("startTime", value)} error={errors.startTime} placeholder="Seçiniz" />
+            </div>
+          </FormSection>
 
-            {step < 4 ? (
-              <button
-                onClick={nextStep}
-                disabled={step === 0 && !data.serviceId}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-stoneDark px-7 py-4 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-35"
-              >
-                Devam Et
-                <ArrowRight size={17} />
+          <FormSection title="5. Notlar" description="Varsa özel beklentinizi veya uygun aranma saatini yazabilirsiniz.">
+            <TextAreaField label="Notlar" value={form.notes} onChange={(value) => updateField("notes", value)} placeholder="İsteğe bağlı" />
+          </FormSection>
+
+          <div className="rounded-[2rem] border border-border bg-surface p-5 shadow-card">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <button className="inline-flex min-h-16 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-lg font-semibold text-stoneDark">
+                Başvuruyu Gönder
+                <Send size={20} />
               </button>
-            ) : (
-              <button
-                onClick={() => setSubmitted(true)}
-                className="inline-flex items-center justify-center rounded-full bg-gold px-7 py-4 text-sm font-medium text-stoneDark"
+              <a
+                href={createWhatsAppLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-16 items-center justify-center gap-2 rounded-full border border-border px-7 py-4 text-lg font-semibold text-stoneDark"
               >
-                Projemi Başlat
-              </button>
-            )}
+                <MessageCircle size={20} />
+                WhatsApp Alternatifi
+              </a>
+            </div>
           </div>
-        </section>
+        </form>
       </div>
     </main>
   );
 }
 
-function Stepper({ current }) {
+function FormSection({ title, description, children }) {
   return (
-    <div className="grid gap-3 md:grid-cols-5">
-      {steps.map((label, index) => (
-        <div key={label} className="flex items-center gap-3">
-          <div
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm ${
-              index <= current ? "bg-stoneDark text-white" : "bg-cream text-black/40"
-            }`}
-          >
-            {index + 1}
-          </div>
-          <span
-            className={`text-sm ${
-              index <= current ? "text-stoneDark" : "text-black/40"
-            }`}
-          >
-            {label}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function StepShell({ eyebrow, title, description, children }) {
-  return (
-    <section>
-      <p className="text-sm uppercase tracking-[0.25em] text-black/35">
-        {eyebrow}
-      </p>
-      <h2 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">
-        {title}
-      </h2>
-      <p className="mt-4 max-w-3xl leading-8 text-muted">{description}</p>
-      <div className="mt-8">{children}</div>
+    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-card sm:p-6">
+      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
+      <p className="mt-2 max-w-2xl text-base leading-7 text-muted">{description}</p>
+      <div className="mt-5">{children}</div>
     </section>
   );
 }
 
-function Question({ question, value, onChange, onToggle }) {
-  if (question.type === "chips" || question.type === "multi" || question.type === "visual") {
-    const selectedValues = question.type === "multi" ? value || [] : [value];
-    const isVisual = question.type === "visual";
-    return (
-      <div className="rounded-[1.5rem] border border-border bg-soft p-5 shadow-card">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
-          <p className="text-sm font-medium text-muted">{question.label}</p>
-          {question.helper && (
-            <p className="max-w-sm text-xs leading-5 text-black/40">{question.helper}</p>
-          )}
-        </div>
-        <div className={isVisual ? "grid gap-3 sm:grid-cols-2" : "flex flex-wrap gap-2"}>
-          {question.options.map((option) => {
-            const isSelected = selectedValues.includes(option);
-            return (
-              <button
-                key={option}
-                onClick={() =>
-                  question.type === "multi"
-                    ? onToggle(question.key, option)
-                    : onChange(question.key, option)
-                }
-                className={
-                  isVisual
-                    ? `min-h-20 rounded-2xl border px-5 py-4 text-left text-base font-medium ${
-                        isSelected
-                          ? "border-stoneDark bg-stoneDark text-white"
-                          : "border-border bg-white text-stoneDark hover:border-gold hover:bg-white"
-                      }`
-                    : `rounded-full px-5 py-3 text-sm font-medium ${
-                        isSelected
-                          ? "bg-stoneDark text-white"
-                          : "bg-white text-muted hover:bg-stoneDark hover:text-white"
-                      }`
-                }
-              >
-                {option}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
-
+function TextField({ label, value, onChange, placeholder, error, helper, inputMode }) {
   return (
-    <Field
-      label={question.label}
-      value={value || ""}
-      onChange={(nextValue) => onChange(question.key, nextValue)}
-      placeholder={question.placeholder}
-    />
-  );
-}
-
-function Field({ label, value, onChange, placeholder }) {
-  return (
-    <label className="grid gap-2 rounded-[1.5rem] border border-border bg-soft p-5 shadow-card">
-      <span className="text-sm font-medium text-muted">{label}</span>
+    <label className="grid gap-2">
+      <span className="text-sm font-semibold text-muted">{label}</span>
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="rounded-2xl border border-border bg-white px-5 py-4 outline-none placeholder:text-black/35"
+        inputMode={inputMode}
+        className={`min-h-14 rounded-2xl border bg-white px-5 py-4 text-lg outline-none placeholder:text-black/35 ${
+          error ? "border-red-500" : "border-border"
+        }`}
         placeholder={placeholder}
       />
+      {helper && <span className="text-sm leading-6 text-muted">{helper}</span>}
+      {error && <ErrorText>{error}</ErrorText>}
     </label>
   );
 }
 
-function SummaryCard({ title, children, wide }) {
+function TextAreaField({ label, value, onChange, placeholder, error }) {
   return (
-    <div
-      className={`rounded-[1.5rem] border border-border bg-soft p-5 shadow-card ${
-        wide ? "lg:col-span-2" : ""
-      }`}
-    >
-      <p className="mb-4 text-sm uppercase tracking-[0.2em] text-black/35">
-        {title}
-      </p>
-      {children}
+    <label className="grid gap-2">
+      <span className="text-sm font-semibold text-muted">{label}</span>
+      <textarea
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className={`min-h-36 rounded-2xl border bg-white px-5 py-4 text-lg outline-none placeholder:text-black/35 ${
+          error ? "border-red-500" : "border-border"
+        }`}
+        placeholder={placeholder}
+      />
+      {error && <ErrorText>{error}</ErrorText>}
+    </label>
+  );
+}
+
+function ChoiceGrid({ label, options, value, onChange, error }) {
+  return (
+    <div>
+      <p className="mb-3 text-sm font-semibold text-muted">{label}</p>
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {options.map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(option)}
+            className={`min-h-14 rounded-2xl border px-4 py-3 text-left font-semibold ${
+              value === option
+                ? "border-stoneDark bg-stoneDark text-white"
+                : "border-border bg-soft text-stoneDark hover:border-gold"
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+      {error && <ErrorText>{error}</ErrorText>}
     </div>
   );
 }
 
-function SummaryLine({ label, value }) {
+function SelectField({ label, value, options, onChange, error, placeholder }) {
   return (
-    <div>
-      <p className="text-xs uppercase tracking-[0.16em] text-black/35">{label}</p>
-      <p className="mt-1 text-black/70">{value || "Belirtilmedi"}</p>
-    </div>
+    <label className="grid gap-2">
+      <span className="text-sm font-semibold text-muted">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className={`min-h-14 rounded-2xl border bg-white px-5 py-4 text-lg outline-none ${
+          error ? "border-red-500" : "border-border"
+        }`}
+      >
+        {options.map((option) => (
+          <option key={option || "empty"} value={option}>
+            {option || placeholder || "Seçiniz"}
+          </option>
+        ))}
+      </select>
+      {error && <ErrorText>{error}</ErrorText>}
+    </label>
   );
+}
+
+function ErrorText({ children }) {
+  return <p className="mt-2 text-sm font-semibold text-red-700">{children}</p>;
 }

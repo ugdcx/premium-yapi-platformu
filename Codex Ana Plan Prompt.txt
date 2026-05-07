@@ -1,0 +1,59 @@
+Mevcut proje:
+premium-yapi-platformu
+
+Marka:
+BLAAG Construction and Architecture
+
+Görev:
+Bu projeyi analiz et ve kod yazmadan önce kapsamlı bir uygulama planı çıkar.
+
+Bağlam:
+Bu site bir inşaat/tadilat firması için geliştiriliyor. Hedef sadece broşür site yapmak değil; teklif toplayan, fotoğraf yükleten, admin panelde başvuruları gösteren, müşteriye özel proje takip linki oluşturan ve ustaya özel fotoğraf yükleme ekranı olan premium bir inşaat platformu oluşturmak.
+
+Benchmark özeti:
+100 farklı inşaat şirketi sitesi incelendi. Büyük şirketlerde doğru bulunan noktalar:
+- Güven veren kurumsal yapı
+- Proje portföyü
+- Süreç anlatımı
+- Kalite/güvenlik vurgusu
+- Hizmetlerin ayrı ayrı sunulması
+- Malzeme, kalite ve teslim disiplini
+- Proje yönetimi dili
+- Güçlü CTA alanları
+- Filtrelenebilir proje kartları
+- Kurumsal ama net bilgi mimarisi
+
+Ancak BLAAG büyük holding gibi görünmemeli. Fazla soğuk, uzun, kurumsal ve karmaşık dilden kaçınılmalı. Site premium ama sade, anlaşılır ve mobilde kusursuz olmalı.
+
+BLAAG’in ana farkı:
+“Proje Takip Sistemi”
+
+Ana mesaj:
+“Tadilat ve inşaat sürecinizi fotoğraflı takip sistemiyle şeffaf hale getiriyoruz.”
+
+Öncelikler:
+1. Mevcut dosya yapısını incele.
+2. Sayfaları, componentleri, stilleri ve form yapısını analiz et.
+3. Çalışmayan veya eksik alanları tespit et.
+4. Mobil sorunları belirle.
+5. Formların admin tarafına ulaşması için mevcut mimariyi incele.
+6. Fotoğraf yükleme altyapısının olup olmadığını kontrol et.
+7. Sonra uygulanabilir teknik plan çıkar.
+
+Önemli:
+Bu aşamada kod yazma. Önce detaylı plan hazırla.
+
+Plan şu başlıklarla gelsin:
+- Mevcut durum analizi
+- Kırık/eksik alanlar
+- Yeni sayfa yapısı
+- Yeni component yapısı
+- Veri modeli önerisi
+- Form ve admin akışı
+- Müşteri proje takip akışı
+- Usta fotoğraf yükleme akışı
+- Mobil UX düzeltmeleri
+- Uygulama sırası
+- Riskler ve dikkat edilmesi gerekenler
+
+Kod değişikliğine başlamadan önce benden onay bekleme; ama bu ilk promptta sadece plan üret.

@@ -1,0 +1,136 @@
+Projede kullanılacak veri modelini düzenle ve mock data yapısını temizle.
+
+Amaç:
+Şu an gerçek backend olmasa bile site, ileride kolayca Supabase/Firebase/Prisma gibi bir sisteme bağlanabilecek veri yapısıyla çalışsın.
+
+TypeScript tipleri oluştur:
+- LeadApplication
+- Project
+- Customer
+- Worker
+- WorkItem
+- ProjectPhoto
+- PaymentItem
+- MaterialItem
+- ProjectDocument
+- ProjectNote
+- Service
+- PortfolioProject
+
+LeadApplication:
+- id
+- fullName
+- phone
+- normalizedPhone
+- city
+- district
+- serviceType
+- description
+- budgetRange
+- startTime
+- photos
+- status
+- createdAt
+- updatedAt
+- adminNotes
+
+Project:
+- id
+- slug
+- title
+- customerName
+- customerPhone
+- location
+- serviceType
+- status
+- progress
+- startDate
+- estimatedEndDate
+- totalAmount
+- paidAmount
+- remainingAmount
+- clientToken
+- workerToken
+- workItems
+- photos
+- payments
+- materials
+- documents
+- notes
+
+WorkItem:
+- id
+- title
+- description
+- status
+- plannedDate
+- completedDate
+- notes
+
+ProjectPhoto:
+- id
+- url
+- caption
+- uploadedBy
+- workItemId
+- stage
+- createdAt
+
+PaymentItem:
+- id
+- title
+- amount
+- dueDate
+- paidDate
+- status
+
+MaterialItem:
+- id
+- category
+- brand
+- model
+- quantity
+- unit
+- status
+- documentUrl
+
+ProjectDocument:
+- id
+- title
+- type
+- url
+- createdAt
+
+ProjectNote:
+- id
+- visibility
+- content
+- createdAt
+
+Mock data:
+- En az 5 başvuru
+- En az 4 proje
+- En az 1 aktif müşteri takip projesi
+- En az 1 usta takip projesi
+- En az 6 portföy projesi
+- En az 9 hizmet
+
+Dosya yapısı:
+- /src/types
+- /src/data
+- /src/lib
+
+Eğer proje src kullanmıyorsa mevcut yapıya uyum sağla.
+
+Önemli:
+- Mock data UI içine gömülmesin.
+- Tüm sayfalar data dosyalarından beslensin.
+- Token ile proje bulma helper fonksiyonu oluştur.
+- Telefon validasyon helper’ı oluştur.
+- Para formatlama helper’ı oluştur.
+- Tarih formatlama helper’ı oluştur.
+
+Sonunda:
+- Oluşturulan tipleri açıkla.
+- Mock data dosyalarının yerini yaz.
+- Hangi sayfaların bu datayı kullandığını belirt.

@@ -1,0 +1,60 @@
+/surec sayfasını oluştur veya yeniden düzenle.
+
+Amaç:
+Müşterinin en büyük korkusu belirsizliktir. Bu sayfa “BLAAG ile çalışırsam süreç nasıl ilerler?” sorusunu net cevaplamalı.
+
+Sayfa başlığı:
+“BLAAG Süreci Nasıl İşler?”
+
+Alt başlık:
+“Keşiften teslimata kadar her adımı planlı, kayıtlı ve takip edilebilir şekilde yönetiyoruz.”
+
+Adımlar:
+1. Ön Başvuru
+2. Keşif / Uzaktan İnceleme
+3. Kapsam Belirleme
+4. Malzeme Alternatifleri
+5. Anahtar Teslim Teklif
+6. Onay ve Başlangıç
+7. Fotoğraflı İlerleme Takibi
+8. Ödeme ve Belge Takibi
+9. Teslim Öncesi Kontrol
+10. Teslim ve Kapanış
+
+Her adımda:
+- Kısa başlık
+- 2-3 satır açıklama
+- Müşteri ne yapar?
+- BLAAG ne yapar?
+- Çıktı nedir?
+
+Örnek:
+Ön Başvuru:
+Müşteri formu doldurur, fotoğraf ekler ve yapılacak işi kısaca anlatır.
+BLAAG başvuruyu inceler, eksik bilgi varsa iletişime geçer.
+Çıktı: İncelenmeye hazır başvuru kaydı.
+
+Teslim Öncesi Kontrol:
+Boya, seramik, kapı, pencere, elektrik, tesisat ve temizlik gibi kalemler kontrol edilir.
+Çıktı: Fotoğraflı teslim kontrol kaydı.
+
+Sayfaya ayrıca “Proje Takip Sistemi bu süreçte nerede devreye girer?” bölümü ekle.
+
+Bu bölümde:
+- Onay sonrası müşteri takip linki oluşturulur.
+- Usta için ayrı fotoğraf yükleme linki oluşturulur.
+- Fotoğraflar, ödeme planı, malzeme listesi ve belgeler müşteri ekranında görünür.
+
+CTA:
+“Projenizi planlamak için ön başvuru oluşturun.”
+
+UX:
+- Timeline görünümü olabilir.
+- Mobilde adımlar kart olarak alt alta gelmeli.
+- Çok uzun metin yazma.
+- Anlaşılır ikonlar kullan.
+- Teknik ama sade Türkçe kullan.
+
+Sonunda:
+- Sayfanın hangi route’ta olduğunu belirt.
+- Kullanılan componentleri listele.

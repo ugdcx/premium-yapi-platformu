@@ -1,0 +1,64 @@
+Tüm siteyi mobil UX ve erişilebilirlik açısından denetle ve düzelt.
+
+Öncelikli problem:
+Site mobilde darmadağın ve karmaşık görünüyor. Ayrıca 65 yaş üstü kullanıcı için anlaşılması zor.
+
+Görev:
+Tüm ana sayfaları kontrol et:
+- /
+- /hizmetler
+- /projeler
+- /surec
+- /teklif-al
+- /proje-takip
+- /iletisim
+- /admin
+- müşteri proje takip route’u
+- usta takip route’u
+
+Mobil UX kuralları:
+- Tek kolon düzen
+- Büyük fontlar
+- Minimum 16px body text
+- Büyük butonlar
+- Buton yüksekliği en az 44px
+- Form inputları büyük ve dokunulabilir
+- Kartlar arası yeterli boşluk
+- Görseller taşmamalı
+- Header ekranı kaplamamalı
+- Mobil menü sade olmalı
+- CTA butonları net olmalı
+- Uzun paragraflar bölünmeli
+- Yatay scroll sadece filtre chiplerinde kabul edilebilir
+- Tablolar mobilde kart yapısına dönüşmeli
+
+Erişilebilirlik:
+- Kontrast yeterli olsun
+- Form label’ları net olsun
+- Placeholder label yerine geçmesin
+- Hata mesajları anlaşılır olsun
+- Buton metinleri net olsun
+- Görsellere anlamlı alt text ekle
+- Klavye navigasyonu bozulmasın
+- Focus state’leri görünür olsun
+
+Yaşlı kullanıcı için:
+- Az seçenek
+- Net buton
+- Kısa cümle
+- Açık yönlendirme
+- “Yardım / WhatsApp” butonu
+- Gereksiz animasyon yok
+- Karmaşık teknik terimler yok
+
+Teknik:
+- Tailwind responsive class’larını düzenle.
+- CSS tekrarlarını azalt.
+- Componentleri kırmadan düzelt.
+- Build/lint çalıştır.
+- Görsel taşma ve overflow sorunlarını çöz.
+
+Sonunda:
+- Hangi mobil sorunları bulduğunu yaz.
+- Hangi dosyaları değiştirdiğini yaz.
+- Hangi sayfaların mobilde iyileştirildiğini yaz.

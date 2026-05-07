@@ -1,7 +1,10 @@
 const serviceLinks = [
   ["Hizmetler", "/hizmetler"],
+  ["Projeler", "/projeler"],
   ["Süreç", "/surec"],
-  ["Projemi Başlat", "/teklif-al"]
+  ["Proje Takip", "/proje-takip"],
+  ["İletişim", "/iletisim"],
+  ["Teklif Al", "/teklif-al"]
 ];
 
 export default function Footer() {
@@ -10,10 +13,8 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.9fr]">
         <div className="min-w-0">
           <h2 className="text-2xl font-semibold">BLAAG Construction and Architecture</h2>
-          <p className="mt-4 max-w-md leading-7 text-white/60">
-            Anahtar teslim yapı, tadilat ve gayrimenkul danışmanlığında
-            profesyonel uygulama, şeffaf iletişim ve müşteriye özel süreç
-            takibi sunan premium hizmet şirketi.
+          <p className="mt-4 max-w-md text-base leading-7 text-white/60">
+            Anahtar teslim yapı, tadilat ve gayrimenkul danışmanlığında şeffaf takip sistemiyle çalışan premium hizmet şirketi.
           </p>
         </div>
 
@@ -23,13 +24,12 @@ export default function Footer() {
           <h3 className="text-sm uppercase tracking-[0.25em] text-white/35">
             İletişim
           </h3>
-          <p className="mt-5 max-w-sm text-sm leading-7 text-white/65">
-            İletişim bilgileri yakında güncellenecektir.
+          <p className="mt-5 max-w-sm text-base leading-7 text-white/65">
+            Projenizle ilgili ekibimizle iletişime geçmek için formu kullanabilirsiniz.
           </p>
-          <p className="mt-6 rounded-2xl bg-white/10 p-4 text-sm text-white/55">
-            Talebiniz sonrası ekibimiz kapsamı inceler, sizinle iletişime geçer
-            ve hizmet planını netleştirir.
-          </p>
+          <a href="/teklif-al" className="mt-6 inline-flex min-h-14 items-center justify-center rounded-full bg-gold px-6 py-3 font-semibold text-stoneDark">
+            Teklif Al
+          </a>
         </div>
       </div>
     </footer>
@@ -42,9 +42,9 @@ function FooterGroup({ title, links }) {
       <h3 className="text-sm uppercase tracking-[0.25em] text-white/35">
         {title}
       </h3>
-      <div className="mt-5 grid gap-2 text-sm text-white/65">
+      <div className="mt-5 grid gap-2 text-base text-white/65">
         {links.map(([label, href]) => (
-          <a key={label} href={href} className="inline-flex items-center rounded-full px-1 hover:text-white">
+          <a key={label} href={href} className="inline-flex min-h-11 items-center rounded-full px-1 hover:text-white">
             {label}
           </a>
         ))}

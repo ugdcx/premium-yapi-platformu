@@ -1,0 +1,121 @@
+/admin sayfasını BLAAG operasyon paneli gibi yeniden düzenle.
+
+Amaç:
+Admin siteye gelen teklif başvurularını, proje durumlarını, müşteri bilgilerini, fotoğrafları, ödeme planlarını ve proje takip linklerini yönetebilsin.
+
+Bu aşamada gerçek backend yoksa mock data kullanılabilir; ama mimari daha sonra Supabase/Firebase/Prisma gibi bir backend’e bağlanabilir olmalı.
+
+Admin Dashboard üst metrikleri:
+- Toplam Başvuru
+- Yeni Başvuru
+- İncelenen Başvuru
+- Teklif Gönderilen
+- Onaylanan Proje
+- Aktif Proje
+- Tamamlanan Proje
+- Toplam Tahsilat
+- Toplam Maliyet
+- Net Kâr
+
+Başvuru Kanban kolonları:
+1. Yeni
+2. İnceleniyor
+3. Eksik Bilgi
+4. Teklif Hazırlanıyor
+5. Teklif Gönderildi
+6. Onaylandı
+7. İptal
+
+Başvuru kartında:
+- Müşteri adı
+- Telefon
+- İl / İlçe
+- Hizmet tipi
+- Başvuru tarihi
+- Kısa açıklama
+- Fotoğraf var/yok etiketi
+- Durum etiketi
+
+Başvuru detayında:
+- Tüm müşteri bilgileri
+- Telefon
+- Lokasyon
+- Hizmet tipi
+- Açıklama
+- Yüklenen fotoğraflar
+- Yaklaşık bütçe
+- Başlama zamanı
+- Admin notları
+- Durum değiştirme
+- “Projeye Dönüştür” butonu
+
+Projeye dönüştürme:
+Admin başvuruyu projeye dönüştürebilmeli.
+
+Proje alanları:
+- Proje adı
+- Müşteri adı
+- Slug
+- Müşteri takip token
+- Usta takip token
+- Lokasyon
+- Başlangıç tarihi
+- Tahmini bitiş tarihi
+- Hizmet türü
+- Proje durumu
+- Toplam teklif tutarı
+- Tahsil edilen
+- Kalan bakiye
+- Ödeme planı
+- Malzeme listesi
+- Fotoğraf timeline
+- Belgeler
+
+Proje takip linkleri:
+Müşteri:
+/client/[slug]/proje-takip/[token]
+
+Usta:
+/field/[slug]/usta-takip/[token]
+
+Admin proje listesi:
+- Proje adı
+- Müşteri
+- Durum
+- İlerleme %
+- Toplam teklif
+- Tahsil edilen
+- Kalan
+- Son güncelleme
+- Müşteri linki kopyala
+- Usta linki kopyala
+
+Güvenlik notu:
+Bu aşamada gerçek auth yoksa bile admin paneli demo olarak kalsın. Daha sonra auth eklenebilecek şekilde yapılandır.
+
+UX:
+- Admin panel sade ve hızlı okunabilir olsun.
+- Mobilde de kullanılabilir olsun ama öncelik desktop/tablet.
+- Tablolar taşmasın.
+- Kart + tablo hibrit yapı kullanılabilir.
+- Renkli durum etiketleri olsun.
+- Boş state’ler güzel görünsün.
+
+Teknik:
+- Mock data varsa /data veya /lib/mock-data içinde tut.
+- TypeScript type/interface oluştur.
+- Componentleri ayır:
+  - AdminDashboardStats
+  - ApplicationKanban
+  - ApplicationCard
+  - ApplicationDetail
+  - ProjectTable
+  - ProjectDetailPanel
+  - CopyLinkButton
+  - StatusBadge
+- Build hatası bırakma.
+
+Sonunda:
+- Hangi dosyaların değiştiğini yaz.
+- Hangi özelliklerin mock olduğunu belirt.
+- Sonraki backend entegrasyon adımlarını kısa listele.

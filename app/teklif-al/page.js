@@ -1,10 +1,12 @@
 import IntakeFlow from "./IntakeFlow";
+import { createSeoMetadata } from "../../lib/seo";
 
-export const metadata = {
-  title: "Projenizi Netleştirelim | BLAAG Construction and Architecture",
+export const metadata = createSeoMetadata({
+  title: "Teklif Al | BLAAG Construction and Architecture",
   description:
-    "Yapı, tadilat ve gayrimenkul danışmanlığı için BLAAG ilk değerlendirme talebi."
-};
+    "Projeniz için ön başvuru oluşturun, fotoğraf ekleyin ve BLAAG ekibinden dönüş alın.",
+  path: "/teklif-al"
+});
 
 export default function QuotePage() {
   return <IntakeFlow />;
