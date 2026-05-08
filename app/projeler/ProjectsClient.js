@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { ArrowRight, Camera, Filter, MapPin } from "lucide-react";
@@ -16,7 +16,7 @@ export default function ProjectsClient() {
       <div className="mx-auto max-w-7xl">
         <header className="rounded-[2rem] bg-stoneDark p-6 text-white md:p-10">
           <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-            BLAAG portföy
+            BLAGG portföy
           </p>
           <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">
             Projeler ve Uygulama Örnekleri
@@ -144,3 +144,4 @@ function filterProjects(projects, filter) {
   }
   return projects.filter((project) => project.category === filter || project.serviceType.includes(filter));
 }
+

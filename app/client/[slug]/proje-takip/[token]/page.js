@@ -17,7 +17,7 @@ import { projects } from "../../../../../lib/data/mockData";
 import { formatCurrency, formatDate, formatDateTime } from "../../../../../lib/helpers/format";
 import { createWhatsAppLink } from "../../../../../lib/helpers/whatsapp";
 
-const authorizedPerson = "BLAAG Proje Ekibi";
+const authorizedPerson = "BLAGG Studio";
 
 export default function ClientProjectTrackingPage({ params }) {
   const project = projects.find(
@@ -29,7 +29,8 @@ export default function ClientProjectTrackingPage({ params }) {
   const activeWorkItem = project.workItems.find((item) => item.status === "Uygulamada");
   const completedCount = project.workItems.filter((item) => item.status === "Tamamlandı").length;
   const remainingCount = project.workItems.filter((item) => item.status !== "Tamamlandı").length;
-  const lastPhoto = [...project.photos].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+  const visiblePhotos = project.photos.filter((photo) => photo.status === "approved" && photo.visible_to_customer);
+  const lastPhoto = [...visiblePhotos].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
   return (
     <main className="min-h-screen bg-cream px-4 py-5 text-stoneDark sm:px-6 sm:py-8">
@@ -52,7 +53,7 @@ export default function ClientProjectTrackingPage({ params }) {
             </div>
           </Panel>
 
-          <PhotoTimeline photos={project.photos} workItems={project.workItems} />
+          <PhotoTimeline photos={visiblePhotos} workItems={project.workItems} />
           <WorkItemsList items={project.workItems} />
           <PaymentPlan project={project} />
           <MaterialList materials={project.materials} />
@@ -70,13 +71,13 @@ function ClientProjectHeader({ project, lastPhoto }) {
       <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-            BLAAG Construction and Architecture
+            Private Project Access
           </p>
           <h1 className="mt-5 text-4xl font-semibold tracking-tight md:text-6xl">
             {project.title}
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-8 text-white/65">
-            Kayıt olmadan, size özel bağlantı ile projenizin güncel durumunu takip edebilirsiniz.
+            Your BLAGG Remote project overview. Proje görünümü.
           </p>
         </div>
 
@@ -99,7 +100,7 @@ function ClientProjectHeader({ project, lastPhoto }) {
         <HeaderInfo icon={CalendarDays} label="Tahmini teslim" value={formatDate(project.estimatedEndDate)} />
         <HeaderInfo icon={Camera} label="Son güncelleme" value={lastPhoto ? formatDateTime(lastPhoto.createdAt) : "Henüz yok"} />
         <HeaderInfo icon={CheckCircle2} label="Yetkili" value={authorizedPerson} />
-        <HeaderInfo icon={MessageCircle} label="İletişim" value="BLAAG ekibi" />
+        <HeaderInfo icon={MessageCircle} label="İletişim" value="BLAGG Studio" />
       </div>
     </header>
   );
@@ -273,7 +274,7 @@ function NotFoundProject() {
           <AlertCircle className="mx-auto text-gold" size={42} />
           <h1 className="mt-6 text-4xl font-semibold">Proje bulunamadı</h1>
           <p className="mt-4 leading-7 text-muted">
-            Bu bağlantı hatalı veya süresi dolmuş olabilir. Lütfen BLAAG ekibiyle iletişime geçin.
+            Bu bağlantı hatalı veya süresi dolmuş olabilir. Lütfen BLAGG Studio ile iletişime geçin.
           </p>
           <a href="/" className="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-stoneDark px-6 py-3 font-semibold text-white">
             Ana sayfaya dön

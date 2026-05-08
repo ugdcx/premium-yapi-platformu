@@ -1,9 +1,9 @@
-import { ArrowRight, Building2, CheckCircle2, DraftingCompass, ShieldCheck } from "lucide-react";
+﻿import { ArrowRight, Building2, CheckCircle2, DraftingCompass, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-  title: "Hakkımızda | BLAAG Construction and Architecture",
+  title: "Hakkımızda | BLAGG Studio",
   description:
-    "BLAAG Construction and Architecture; yapı, tadilat ve gayrimenkul kararlarını planlı, şeffaf ve hizmet odaklı şekilde yönetir."
+    "BLAGG Studio; yapı, tadilat ve gayrimenkul kararlarını planlı, şeffaf ve hizmet odaklı şekilde yönetir."
 };
 
 const principles = [
@@ -48,7 +48,7 @@ export default function AboutPage() {
               </h1>
             </div>
             <p className="max-w-2xl text-lg leading-8 text-white/65">
-              BLAAG Construction and Architecture, yapı geliştirme, tadilat ve
+              BLAGG Studio, yapı geliştirme, tadilat ve
               gayrimenkul danışmanlığı süreçlerinde müşterinin karar yükünü
               azaltan; planlama, koordinasyon ve takip disiplinini tek hizmet
               yaklaşımında birleştiren profesyonel bir ekiptir.
@@ -109,3 +109,4 @@ export default function AboutPage() {
     </main>
   );
 }
+

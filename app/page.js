@@ -1,4 +1,5 @@
-import {
+﻿import {
+  ArrowDown,
   ArrowRight,
   BadgeCheck,
   Building2,
@@ -6,134 +7,147 @@ import {
   CheckCircle2,
   ClipboardCheck,
   FileText,
-  Hammer,
-  Home,
   Layers3,
-  MessageCircle,
   PackageCheck,
-  ReceiptText,
   ShieldCheck,
   Smartphone,
   WalletCards
 } from "lucide-react";
 import {
-  expatTrackingItems,
   heroTrustItems,
   homePortfolioPreview,
   homeServices,
   materialCategories,
-  qualityItems,
   trackingFeatures,
-  valueRenovationItems,
   workSteps
 } from "../lib/data/homePage";
-import { createWhatsAppLink } from "../lib/helpers/whatsapp";
 import { createSeoMetadata } from "../lib/seo";
 
 export const metadata = createSeoMetadata({
-  title:
-    "BLAAG Construction and Architecture | Fotoğraflı İnşaat ve Tadilat Takibi",
+  title: "BLAGG Studio | Design. Build. Track.",
   description:
-    "Tadilat ve inşaat sürecinizi fotoğraflı proje takip sistemiyle şeffaf hale getirin.",
+    "Renovasyon sürecinizi tasarımdan teslimata kadar görünür hale getiren premium yapı stüdyosu.",
   path: "/"
 });
 
-const serviceIcons = [Building2, Home, Hammer, Layers3, ShieldCheck, BadgeCheck, Smartphone, PackageCheck];
-const trackingIcons = [Camera, ClipboardCheck, WalletCards, PackageCheck, FileText, ShieldCheck, Smartphone];
+const serviceIcons = [Building2, Layers3, BadgeCheck, PackageCheck, ShieldCheck, Smartphone];
+const trackingIcons = [Camera, WalletCards, ClipboardCheck];
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-cream text-stoneDark">
+      <IntroSection />
       <HeroSection />
-      <ProjectTrackingSection />
+      <SignatureStatement />
+      <BlaggRemoteSection />
       <ServicesSection />
-      <WorkFlowSection />
+      <ProjectFlowSection />
       <PortfolioPreviewSection />
-      <MaterialTransparencySection />
-      <QualitySection />
-      <ValueRenovationSection />
-      <ExpatTrackingSection />
+      <ControlSignalSection />
       <FinalCtaSection />
     </main>
   );
 }
 
-function HeroSection() {
+function IntroSection() {
   return (
-    <section className="bg-stoneDark px-4 py-12 text-white sm:px-6 md:py-16">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-            BLAAG Construction and Architecture
-          </p>
-          <h1 className="mt-5 max-w-5xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
-            Tadilat ve İnşaat Sürecinizi Fotoğraflı Takip Sistemiyle Şeffaf Hale Getiriyoruz
-          </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">
-            BLAAG Construction and Architecture; konut, villa, tadilat ve değer artırma projelerinde keşiften teslimata kadar tüm süreci planlar, belgelendirir ve takip edilebilir hale getirir.
-          </p>
-          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
-            <PrimaryLink href="/teklif-al">Teklif Al</PrimaryLink>
-            <SecondaryLink href="#proje-takip">Proje Takip Sistemini Gör</SecondaryLink>
-            <SecondaryLink href={createWhatsAppLink()} icon={MessageCircle}>WhatsApp ile İletişime Geç</SecondaryLink>
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-white/10 bg-white p-5 text-stoneDark shadow-[0_30px_90px_rgba(0,0,0,0.28)]">
-          <div className="rounded-[1.5rem] bg-cream p-5">
-            <p className="text-sm font-medium text-muted">Özel proje takip ekranı</p>
-            <h2 className="mt-3 text-3xl font-semibold">Villa Renovasyon Süreci</h2>
-            <div className="mt-6 grid gap-3">
-              {[
-                ["Bugün", "Mutfak söküm işlemi tamamlandı."],
-                ["Sıradaki adım", "Elektrik altyapı kontrolü."],
-                ["Durum", "BLAAG onaylı güncelleme"]
-              ].map(([label, value]) => (
-                <div key={label} className="rounded-2xl bg-white p-4">
-                  <p className="text-xs uppercase tracking-[0.16em] text-black/35">{label}</p>
-                  <p className="mt-2 font-medium">{value}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mt-5 grid grid-cols-3 gap-3">
-              {["Öncesi", "Süreç", "Teslim"].map((label) => (
-                <div key={label} className="aspect-[4/3] rounded-2xl border border-border bg-soft p-3 text-xs font-semibold text-muted">
-                  {label}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mx-auto mt-10 grid max-w-7xl gap-3 md:grid-cols-3">
-        {heroTrustItems.map((item) => (
-          <div key={item.title} className="rounded-2xl border border-white/10 bg-white/8 p-5">
-            <CheckCircle2 className="text-gold" size={22} />
-            <h3 className="mt-4 text-xl font-semibold">{item.title}</h3>
-            <p className="mt-2 text-sm leading-6 text-white/60">{item.text}</p>
-          </div>
-        ))}
+    <section className="flex min-h-[100svh] items-center justify-center bg-stoneDark px-4 text-white">
+      <div className="text-center">
+        <h1 className="text-5xl font-semibold tracking-[0.12em] sm:text-6xl md:text-7xl">
+          BLAGG Studio
+        </h1>
+        <p className="mt-5 text-sm uppercase tracking-[0.24em] text-white/50">
+          Private Architecture & Renovation Studio
+        </p>
+        <p className="mt-10 text-xl tracking-[0.18em] text-white/75">
+          Design. Build. Track.
+        </p>
+        <a href="#hero" aria-label="Ana içeriğe geç" className="mx-auto mt-16 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white/70">
+          <ArrowDown size={20} />
+        </a>
       </div>
     </section>
   );
 }
 
-function ProjectTrackingSection() {
+function HeroSection() {
   return (
-    <section id="proje-takip" className="px-4 py-14 sm:px-6 md:py-20">
+    <section id="hero" className="px-4 py-16 sm:px-6 md:py-24">
+      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <div>
+          <p className="text-sm uppercase tracking-[0.25em] text-muted">BLAGG Studio</p>
+          <h2 className="mt-5 max-w-5xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
+            Renovasyon sürecinizi tasarımdan teslimata kadar görünür hale getiriyoruz.
+          </h2>
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">
+            BLAGG Studio; seçilmiş yapı ve renovasyon projelerini tasarım, uygulama ve takip sistemiyle yöneten premium proje stüdyosudur.
+          </p>
+          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
+            <PrimaryLink href="/teklif-al">Projenizi Başlatın</PrimaryLink>
+            <SecondaryLink href="/blagg-remote">BLAGG Remote'u Görün</SecondaryLink>
+          </div>
+          <div className="mt-10 grid gap-3 sm:grid-cols-3">
+            {heroTrustItems.map((item) => (
+              <div key={item.title} className="border-t border-border pt-4">
+                <h3 className="text-xl font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[2rem] border border-border bg-surface p-4 shadow-card">
+          <div className="aspect-[4/5] rounded-[1.5rem] bg-stoneDark p-5 text-white">
+            <div className="flex h-full flex-col justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-[0.22em] text-white/40">Private Project Access</p>
+                <h3 className="mt-4 text-4xl font-semibold">BLAGG Remote</h3>
+              </div>
+              <div className="grid gap-3">
+                {["Onaylı fotoğraflar", "Ödeme planı", "Belgeler"].map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/10 bg-white/8 p-4">
+                    <p className="font-medium">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SignatureStatement() {
+  return (
+    <section className="bg-stoneDark px-4 py-16 text-white sm:px-6 md:py-24">
+      <div className="mx-auto max-w-7xl">
+        <div className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
+          <p>Selected projects.</p>
+          <p>Controlled execution.</p>
+          <p>Visible progress.</p>
+        </div>
+        <p className="mt-8 max-w-2xl text-lg leading-8 text-white/60">
+          Seçilmiş projeler. Kontrollü uygulama. Görünür ilerleme.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function BlaggRemoteSection() {
+  return (
+    <section className="px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <SectionIntro
-          eyebrow="Proje Takip Sistemi"
-          title="Müşteriye Özel Proje Takip Linki"
-          text="Projeniz başladıktan sonra size özel bağlantı oluşturulur. Kayıt olmadan fotoğrafları, iş durumunu, ödeme planını, kullanılan malzemeleri ve belgeleri tek ekrandan takip edebilirsiniz."
+          eyebrow="BLAGG Remote"
+          title="Projenize özel bağlantı ile ilerlemeyi tek ekrandan izleyin."
+          text="Fotoğraflar, ödemeler, belgeler ve ilerleme notları kayıt olmadan görüntülenir."
         />
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-3">
           {trackingFeatures.map((feature, index) => {
             const Icon = trackingIcons[index] || ShieldCheck;
-            return (
-              <FeatureCard key={feature} icon={Icon} title={feature} />
-            );
+            return <FeatureCard key={feature} icon={Icon} title={feature} />;
           })}
         </div>
       </div>
@@ -143,21 +157,25 @@ function ProjectTrackingSection() {
 
 function ServicesSection() {
   return (
-    <section className="bg-soft px-4 py-14 sm:px-6 md:py-20">
+    <section className="bg-soft px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
-          eyebrow="Hizmetler"
-          title="İnşaat, tadilat ve değer artırma işleri tek merkezden yönetilir."
-          text="Her hizmette kapsam, malzeme, ödeme ve teslim adımları açık tutulur."
+          eyebrow="Studio Services"
+          title="Tasarım, renovasyon ve uygulama yönetimi."
+          text="Her hizmet kısa kapsam, net aksiyon ve takip edilebilir teslim mantığıyla ele alınır."
         />
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {homeServices.map((service, index) => {
             const Icon = serviceIcons[index] || Building2;
             return (
               <article key={service.title} className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
-                <Icon className="text-gold" size={25} />
-                <h3 className="mt-5 text-xl font-semibold">{service.title}</h3>
+                <Icon className="text-graphite" size={25} />
+                <h3 className="mt-5 text-2xl font-semibold">{service.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-muted">{service.text}</p>
+                <a href={service.href} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-stoneDark">
+                  Detay
+                  <ArrowRight size={16} />
+                </a>
               </article>
             );
           })}
@@ -167,20 +185,21 @@ function ServicesSection() {
   );
 }
 
-function WorkFlowSection() {
+function ProjectFlowSection() {
   return (
-    <section className="px-4 py-14 sm:px-6 md:py-20">
+    <section className="px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
-          eyebrow="Nasıl Çalışıyoruz?"
-          title="Sade adımlar, kayıtlı süreç, kontrollü teslim."
+          eyebrow="Three-step project flow."
+          title="Karmaşık renovasyon sürecini üç net aşamada yönetiyoruz."
         />
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
           {workSteps.map((step, index) => (
-            <div key={step} className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
-              <p className="text-sm font-semibold text-gold">{String(index + 1).padStart(2, "0")}</p>
-              <h3 className="mt-5 text-xl font-semibold">{step}</h3>
-            </div>
+            <article key={step.title} className="rounded-[1.5rem] border border-border bg-surface p-6 shadow-card">
+              <p className="text-sm font-semibold text-graphite">{String(index + 1).padStart(2, "0")}</p>
+              <h3 className="mt-5 text-3xl font-semibold">{step.title}</h3>
+              <p className="mt-3 leading-7 text-muted">{step.text}</p>
+            </article>
           ))}
         </div>
       </div>
@@ -190,24 +209,23 @@ function WorkFlowSection() {
 
 function PortfolioPreviewSection() {
   return (
-    <section className="bg-soft px-4 py-14 sm:px-6 md:py-20">
+    <section className="bg-soft px-4 py-16 sm:px-6 md:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
           <SectionIntro
-            eyebrow="Öncesi / Sonrası Projeler"
-            title="Filtrelenebilir proje kartları için kısa önizleme."
-            text="Her proje; konum, hizmet tipi ve aşama bilgisiyle kayıt altına alınır."
+            eyebrow="Selected Projects"
+            title="Gerçek uygulamalar ve süreç kayıtları burada yer alır."
           />
-          <a href="/hizmetler" className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 font-medium">
-            Tüm Hizmetleri Gör
+          <a href="/projeler" className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 font-medium">
+            Projeleri Gör
             <ArrowRight size={17} />
           </a>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {homePortfolioPreview.map((project) => (
             <article key={project.title} className="rounded-[1.5rem] border border-border bg-surface p-4 shadow-card">
-              <div className="aspect-[4/3] rounded-2xl bg-cream p-4">
-                <span className="rounded-full bg-stoneDark px-3 py-2 text-xs font-medium text-white">
+              <div className="aspect-[4/3] rounded-2xl bg-[linear-gradient(135deg,#0A0A0A_0%,#1F2937_55%,#E5E7EB_100%)] p-4">
+                <span className="rounded-full bg-white/90 px-3 py-2 text-xs font-medium text-stoneDark">
                   {project.stage}
                 </span>
               </div>
@@ -222,75 +240,26 @@ function PortfolioPreviewSection() {
   );
 }
 
-function MaterialTransparencySection() {
+function ControlSignalSection() {
   return (
-    <section className="px-4 py-14 sm:px-6 md:py-20">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-        <SectionIntro
-          eyebrow="Malzeme ve Marka Şeffaflığı"
-          title="Hangi malzeme kullanılıyor, hangi aşamada, tek ekranda görünür."
-          text="Malzeme listesi müşteri için anlaşılır, admin için yönetilebilir şekilde tutulur."
-        />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {materialCategories.map((category) => (
-            <div key={category} className="rounded-2xl border border-border bg-surface p-4 text-center font-semibold shadow-card">
-              {category}
+    <section className="px-4 py-16 sm:px-6 md:py-24">
+      <div className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] bg-stoneDark p-7 text-white md:p-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <div>
+          <p className="text-sm uppercase tracking-[0.25em] text-white/35">BLAGG Control</p>
+          <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-6xl">
+            Behind every project, a controlled operating system.
+          </h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/60">
+            Başvurular, teklifler, fotoğraflar, ödemeler ve saha ilerlemesi BLAGG Control üzerinden yönetilir.
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {materialCategories.slice(0, 6).map((item) => (
+            <div key={item} className="rounded-2xl border border-white/10 bg-white/8 p-4 font-medium text-white/75">
+              {item}
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-function QualitySection() {
-  return (
-    <section className="bg-stoneDark px-4 py-14 text-white sm:px-6 md:py-20">
-      <div className="mx-auto max-w-7xl">
-        <SectionIntro
-          dark
-          eyebrow="Kalite / Teslim Kontrol Sistemi"
-          title="Kontrollü Şantiye, Kayıtlı Süreç"
-          text="BLAAG, sahadaki işi yalnızca uygulamaz; kayıt altına alır, kontrol eder ve teslim öncesi netleştirir."
-        />
-        <div className="mt-8 grid gap-4 md:grid-cols-4">
-          {qualityItems.map((item) => (
-            <div key={item} className="rounded-[1.5rem] border border-white/10 bg-white/8 p-5">
-              <ShieldCheck className="text-gold" size={24} />
-              <h3 className="mt-5 text-xl font-semibold">{item}</h3>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ValueRenovationSection() {
-  return (
-    <section className="px-4 py-14 sm:px-6 md:py-20">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
-        <SectionIntro
-          eyebrow="Değer Artırma Tadilatı"
-          title="Satış öncesi doğru tadilat, gayrimenkulün algısını güçlendirir."
-          text="BLAAG, hangi müdahalenin değer üreteceğini belirler ve işi kontrollü şekilde uygular."
-        />
-        <Checklist items={valueRenovationItems} />
-      </div>
-    </section>
-  );
-}
-
-function ExpatTrackingSection() {
-  return (
-    <section className="bg-soft px-4 py-14 sm:px-6 md:py-20">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
-        <SectionIntro
-          eyebrow="Gurbetçi Ev Takip Sistemi"
-          title="Uzaktayken de projenizin ne durumda olduğunu net görün."
-          text="Kayıt gerekmez. Size özel bağlantıdan fotoğrafları, belgeleri, ödemeleri ve ilerlemeyi takip edersiniz."
-        />
-        <Checklist items={expatTrackingItems} />
       </div>
     </section>
   );
@@ -298,42 +267,30 @@ function ExpatTrackingSection() {
 
 function FinalCtaSection() {
   return (
-    <section className="px-4 py-14 sm:px-6 md:py-20">
-      <div className="mx-auto max-w-7xl rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-12">
+    <section className="px-4 pb-16 sm:px-6 md:pb-24">
+      <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-surface p-7 shadow-card md:p-12">
         <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-white/35">Teklif Al</p>
-            <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
-              Projenizi kısa form ile başlatın.
+            <p className="text-sm uppercase tracking-[0.25em] text-muted">Start</p>
+            <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
+              Projenizi görünür hale getirelim.
             </h2>
-            <p className="mt-4 max-w-2xl text-lg leading-8 text-white/65">
-              Ekibimiz kapsamı inceler ve sizinle doğrudan iletişime geçer.
-            </p>
           </div>
-          <div className="grid gap-3 sm:min-w-72">
-            <PrimaryLink href="/teklif-al">Teklif Al</PrimaryLink>
-            <SecondaryLink href={createWhatsAppLink()} icon={MessageCircle}>WhatsApp ile İletişime Geç</SecondaryLink>
-          </div>
+          <PrimaryLink href="/teklif-al">Projenizi Başlatın</PrimaryLink>
         </div>
       </div>
     </section>
   );
 }
 
-function SectionIntro({ eyebrow, title, text, dark = false }) {
+function SectionIntro({ eyebrow, title, text }) {
   return (
     <div>
-      <p className={`text-sm uppercase tracking-[0.25em] ${dark ? "text-white/35" : "text-black/40"}`}>
-        {eyebrow}
-      </p>
-      <h2 className={`mt-4 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-stoneDark"}`}>
+      <p className="text-sm uppercase tracking-[0.25em] text-muted">{eyebrow}</p>
+      <h2 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
         {title}
       </h2>
-      {text && (
-        <p className={`mt-5 max-w-3xl text-lg leading-8 ${dark ? "text-white/65" : "text-muted"}`}>
-          {text}
-        </p>
-      )}
+      {text && <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">{text}</p>}
     </div>
   );
 }
@@ -341,41 +298,27 @@ function SectionIntro({ eyebrow, title, text, dark = false }) {
 function FeatureCard({ icon: Icon, title }) {
   return (
     <div className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
-      <Icon className="text-gold" size={24} />
+      <Icon className="text-graphite" size={24} />
       <h3 className="mt-4 text-xl font-semibold">{title}</h3>
-    </div>
-  );
-}
-
-function Checklist({ items }) {
-  return (
-    <div className="grid gap-3">
-      {items.map((item) => (
-        <div key={item} className="flex items-start gap-3 rounded-2xl border border-border bg-surface p-5 shadow-card">
-          <CheckCircle2 className="mt-1 shrink-0 text-gold" size={22} />
-          <p className="text-lg font-medium">{item}</p>
-        </div>
-      ))}
     </div>
   );
 }
 
 function PrimaryLink({ href, children }) {
   return (
-    <a href={href} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
+    <a href={href} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-stoneDark px-7 py-4 font-semibold text-white">
       {children}
       <ArrowRight size={18} />
     </a>
   );
 }
 
-function SecondaryLink({ href, children, icon: Icon }) {
-  const isExternal = href.startsWith("http");
-
+function SecondaryLink({ href, children }) {
   return (
-    <a href={href} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/18 px-7 py-4 font-semibold text-white hover:bg-white/5">
-      {Icon && <Icon size={18} />}
+    <a href={href} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-border bg-white px-7 py-4 font-semibold text-stoneDark">
       {children}
+      <ArrowRight size={18} />
     </a>
   );
 }
+

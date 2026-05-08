@@ -1,27 +1,26 @@
-Repo kök dizinine AGENTS.md dosyası oluştur.
-
-Bu dosya Codex’in bu projede her zaman takip edeceği kuralları içersin.
-
-İçerik:
-
-# BLAAG Construction and Architecture — Agent Guidelines
+# BLAGG Studio — Agent Guidelines
 
 ## Project Purpose
-This project is a premium construction and renovation platform for BLAAG Construction and Architecture. It is not only a marketing website. It must support lead generation, project tracking, admin workflows, customer transparency, and worker photo uploads.
+This project is a premium construction, architecture, renovation, project tracking, field upload, and operations platform for BLAGG Studio. It is not only a marketing website. It must support lead generation, project tracking, admin workflows, customer transparency, and worker photo uploads.
 
 ## Brand Positioning
-BLAAG is a premium but understandable construction and renovation company. The tone should be professional, clear, trustworthy, and customer-friendly.
+BLAGG Studio is a premium but understandable architecture and renovation studio. The tone should be professional, clear, trustworthy, controlled, and customer-friendly.
 
 Main positioning:
-“Tadilat ve inşaat sürecinizi fotoğraflı takip sistemiyle şeffaf hale getiriyoruz.”
+“Renovasyon sürecinizi tasarımdan teslimata kadar görünür hale getiriyoruz.”
 
-## Main Product Difference
-The key differentiator is the Project Tracking System:
-- Customers receive a unique project tracking link.
-- Customers do not need to register or log in.
-- Workers receive a separate upload link.
-- Workers can upload photos and notes.
-- Admin manages applications, projects, payments, materials, documents, and status.
+Short brand language:
+“Design. Build. Track.”
+
+Turkish equivalent:
+“Tasarla. Uygula. Takip Et.”
+
+## Product Ecosystem
+- BLAGG Studio: public brand and service surface.
+- BLAGG Remote: customer project tracking through a private link without login.
+- BLAGG Field: worker upload screen for photos, notes, and work status.
+- BLAGG Control: admin and operations panel for applications, quotes, projects, photos, finance, documents, and settings.
+- BLAGG Signature: refined model for selected premium projects.
 
 ## UX Rules
 - Mobile-first.
@@ -36,27 +35,30 @@ The key differentiator is the Project Tracking System:
 - Avoid fake scale or exaggerated claims.
 
 ## Design Direction
-Use a premium construction/architecture style:
-- Deep navy
-- Warm off-white
-- Stone gray
-- Beige
-- Subtle bronze/gold accents
-- Clean cards
-- Large spacing
-- Strong typography
-- High readability
+Use a high-end black, white, warm stone, and taupe architecture style:
+- Obsidian Black: #0A0A0A
+- Soft Ivory: #F6F1E8
+- Warm Stone: #D8CDBF
+- Champagne Taupe: #B9A58B
+- Deep Espresso: #2A211B
+- Muted Bronze: #8C7356
+- Line Sand: #E5DACC
+- Text Graphite: #2F2F2F
+- Soft Gray: #8B837A
+
+Avoid gold-heavy, shiny, ornamental, or exaggerated luxury styling.
 
 ## Technical Rules
 - Use Next.js App Router if the project already uses it.
-- Use TypeScript where possible.
+- Use TypeScript entity definitions where possible.
 - Use Tailwind CSS consistently.
 - Keep components reusable.
 - Do not hard-code duplicated UI.
-- Keep mock data isolated in a data file.
+- Keep mock data isolated in data files.
+- Keep service-layer files ready for future Supabase/PostgreSQL queries.
 - Do not break existing routes.
-- Run lint/build checks after significant changes.
-- Fix TypeScript and build errors before finishing.
+- Run build checks after significant changes.
+- Fix build errors before finishing.
 
 ## Required Main Routes
 - /
@@ -65,13 +67,16 @@ Use a premium construction/architecture style:
 - /hizmetler/tadilat
 - /hizmetler/villa-renovasyonu
 - /hizmetler/deger-artirma
-- /hizmetler/gurbetci-ev-takip
+- /hizmetler/blagg-remote
 - /projeler
 - /surec
+- /blagg-remote
+- /deger-artirma
 - /teklif-al
 - /proje-takip
 - /iletisim
 - /admin
+- /admin/finance
 - /client/[slug]/proje-takip/[token]
 - /field/[slug]/usta-takip/[token]
 
@@ -88,6 +93,7 @@ Use a premium construction/architecture style:
 - Payment plan component.
 - Document list component.
 - Photo timeline component.
+- Photo approval flow: worker upload, admin review, customer-visible approved records only.
 
 ## Phone Validation Rules
 Accept:
@@ -103,14 +109,16 @@ Reject:
 - Obvious fake numbers
 
 ## Content Rules
-Prefer clear Turkish.
-Avoid long corporate paragraphs.
-Use practical construction language.
-Focus on trust, process, transparency, material quality, and controlled delivery.
+Prefer clear Turkish. Avoid long corporate paragraphs. Use practical construction language. Focus on trust, process, transparency, material quality, controlled delivery, and visible progress.
+
+Do not use the old brand name or the old remote-tracking wording. Use:
+- BLAGG Studio
+- BLAGG Remote
+- Uzaktan Proje Yönetimi
 
 ## Build Discipline
 Before completing any implementation:
 - Check changed files.
-- Run available lint/build/test commands.
+- Run available build/test commands.
 - Report what changed.
 - Report any remaining limitations.

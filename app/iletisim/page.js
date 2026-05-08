@@ -1,4 +1,4 @@
-import {
+﻿import {
   ArrowRight,
   Clock,
   Mail,
@@ -12,9 +12,9 @@ import { createWhatsAppLink } from "../../lib/helpers/whatsapp";
 import { createSeoMetadata } from "../../lib/seo";
 
 export const metadata = createSeoMetadata({
-  title: "İletişim | BLAAG Construction and Architecture",
+  title: "İletişim | BLAGG Studio",
   description:
-    "İnşaat, tadilat ve proje takip hizmetleri için BLAAG ile iletişime geçin.",
+    "İnşaat, tadilat ve proje takip hizmetleri için BLAGG ile iletişime geçin.",
   path: "/iletisim"
 });
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
             title="Teklif Formu"
             text="İş kapsamı, lokasyon ve fotoğrafları tek akışta paylaşın."
             href="/teklif-al"
-            cta="Teklif Al"
+            cta="Projenizi Başlatın"
           />
         </section>
       </div>
@@ -118,3 +118,4 @@ function InfoCard({ icon: Icon, title, text }) {
     </article>
   );
 }
+

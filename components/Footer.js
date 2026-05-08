@@ -2,9 +2,9 @@ const serviceLinks = [
   ["Hizmetler", "/hizmetler"],
   ["Projeler", "/projeler"],
   ["Süreç", "/surec"],
-  ["Proje Takip", "/proje-takip"],
+  ["BLAGG Remote", "/blagg-remote"],
   ["İletişim", "/iletisim"],
-  ["Teklif Al", "/teklif-al"]
+  ["Projenizi Başlatın", "/teklif-al"]
 ];
 
 export default function Footer() {
@@ -12,9 +12,9 @@ export default function Footer() {
     <footer className="border-t border-border bg-stoneDark px-4 py-10 text-white sm:px-6 sm:py-12">
       <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.9fr]">
         <div className="min-w-0">
-          <h2 className="text-2xl font-semibold">BLAAG Construction and Architecture</h2>
+          <h2 className="text-2xl font-semibold tracking-[0.08em]">BLAGG Studio</h2>
           <p className="mt-4 max-w-md text-base leading-7 text-white/60">
-            Anahtar teslim yapı, tadilat ve gayrimenkul danışmanlığında şeffaf takip sistemiyle çalışan premium hizmet şirketi.
+            Design. Build. Track. Seçilmiş renovasyon ve yapı projeleri için kontrollü stüdyo yaklaşımı.
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export default function Footer() {
             Projenizle ilgili ekibimizle iletişime geçmek için formu kullanabilirsiniz.
           </p>
           <a href="/teklif-al" className="mt-6 inline-flex min-h-14 items-center justify-center rounded-full bg-gold px-6 py-3 font-semibold text-stoneDark">
-            Teklif Al
+            Projenizi Başlatın
           </a>
         </div>
       </div>

@@ -1,0 +1,195 @@
+BLAGG Studio sitesinde canlıya çıkmadan önce kalite ve tutarlılık revizyonu yap.
+
+Mevcut sorunlar:
+1. /surec sayfasındaki 3’lü kartlarda butonlar aynı hizada değil.
+2. Bazı kartların yükseklikleri tutarsız.
+3. /teklif-al sayfasında form alanları hizasız.
+4. /teklif-al sayfasında “Forma başla” gibi anlamsız butonlar var. Kullanıcı zaten o sayfadaysa bu tip kendi sayfasına yönlendiren butonları kaldır.
+5. Site içinde “demo”, “mock”, “placeholder”, “örnek veri”, “gerçek görseller eklenecek” gibi canlı site ciddiyetini bozan ifadeler kalmamalı.
+6. /surec ve /blagg-remote sayfaları birbirine fazla benziyor. Bunları ayrı ayrı uzun anlatmak yerine daha kompakt ve bütünsel bir yapı oluştur.
+7. Public site hâlâ fazla yazılı. Metinleri azalt.
+8. Fotoğraf alanları canlı siteye uygun görünmeli; demo hissi vermemeli.
+9. Tasarımda eski kahverengi/bej/taupe/bronze etkileri tamamen kaldırılmalı.
+10. Tüm hizalar, spacing, kart boyları ve CTA düzenleri profesyonel olmalı.
+
+GENEL TASARIM KURALI
+BLAGG Studio artık canlıya geçmiş ciddi bir marka gibi görünmeli.
+Demo ürün, MVP, test sitesi veya geliştirici önizlemesi gibi görünmemeli.
+
+Renk:
+- Siyah
+- Beyaz
+- Gri
+- Grafit
+- Off-white
+- Cam/metal hissi
+
+Kullanma:
+- Kahverengi
+- Bej
+- Taupe
+- Bronze
+- Sand
+- Cream-heavy
+- Demo/placeholder metinleri
+
+PUBLIC SITE METİN KURALI
+Her section:
+- 1 kısa başlık
+- 1 kısa açıklama
+- maksimum 3 kısa madde
+- 1 net aksiyon
+
+Uzun paragrafları kaldır.
+Gereksiz tekrarları kaldır.
+“Forma başla”, “Bu sayfaya git”, “Demo ekranı” gibi amatör CTA metinlerini kaldır.
+
+CTA dili:
+- Projenizi Başlatın
+- BLAGG Remote’u İnceleyin
+- Ön Başvuru Oluştur
+- Proje Deneyimini Gör
+
+“Teklif Al” ikincil olabilir ama ana dil “Projenizi Başlatın” olmalı.
+
+SÜREÇ + BLAGG REMOTE YAPISI
+/surec ve /blagg-remote sayfaları çok benzerse aşağıdaki şekilde ayrıştır:
+
+/surec:
+Kısa ve kompakt süreç sayfası olsun.
+Ana yapı:
+1. Planla
+2. Uygula
+3. Takip Et
+
+Her kartta:
+- Başlık
+- 1 cümle
+- 3 kısa madde
+- Buton varsa tüm kartlarda aynı hizada
+
+Buton hizalama:
+Tüm 3’lü kartlarda kartlar eşit yükseklikte olsun.
+Butonlar card footer alanında sabitlensin.
+CSS olarak flex-col + justify-between veya grid auto rows kullan.
+Kart içi CTA her zaman en altta aynı hizada dursun.
+
+/blagg-remote:
+Sadece uzaktan proje takibine odaklansın.
+Sayfa uzun olmasın.
+Ana yapı:
+1. Private Project Access
+2. Onaylı fotoğraflar
+3. Ödeme ve belge görünürlüğü
+4. Şehir dışında/yurtdışında takip
+5. CTA
+
+“Gurbetçi” kelimesi kullanılmayacak.
+“Demo” kelimesi kullanılmayacak.
+Bunun yerine:
+- Özel proje bağlantısı
+- BLAGG Remote ekranı
+- Müşteri proje görünümü
+
+TEKLİF-AL SAYFASI
+/teklif-al sayfasını hizalama ve profesyonellik açısından düzelt.
+
+Form layout:
+- Desktop’ta iki kolon kullanılabilir ama tüm label/input hizaları düzgün olmalı.
+- Mobilde tek kolon.
+- Field grupları aynı spacing ile ilerlemeli.
+- Input yükseklikleri tutarlı.
+- Select, textarea, upload alanı aynı görsel dile sahip.
+- Gereksiz üst butonları kaldır.
+- Kullanıcı zaten /teklif-al sayfasındaysa “Forma başla” gibi butonlar olmamalı.
+- Sayfa başında sadece kısa açıklama ve form olmalı.
+
+Sayfa başlığı:
+“Projenizi Başlatın”
+
+Alt açıklama:
+“Proje bilgilerinizi paylaşın. BLAGG Studio ekibi kapsamı inceleyip sizinle iletişime geçsin.”
+
+Form bölümleri:
+1. İletişim
+2. Proje Bilgileri
+3. Fotoğraflar
+4. Zamanlama ve Notlar
+
+FOTOĞRAF EKLEME YAKLAŞIMI
+Fotoğraf alanları canlı siteye uygun olmalı.
+
+Müşteri başvuru formunda:
+- “Fotoğraf ekleyin” alanı olmalı.
+- Kullanıcı sürükle-bırak veya dosya seç ile fotoğraf ekleyebilmeli.
+- Mobilde kameradan seçime uygun olmalı.
+- Yüklenen fotoğraf önizlemeleri düzgün görünmeli.
+- Henüz gerçek storage bağlı değilse bile UI’da “demo/mock” yazma.
+- Kullanıcıya teknik detay gösterme.
+- Kabul edilen formatlar küçük şekilde yazılabilir:
+JPG, PNG, WEBP
+
+Admin tarafında:
+- Gelen fotoğraflar “Onay Bekleyen Fotoğraflar” alanına düşmeli.
+- Admin fotoğrafı görüntüleyebilmeli.
+- Açıklama düzenleyebilmeli.
+- Müşteriye göster/gizle seçebilmeli.
+- Onaylayabilmeli veya reddedebilmeli.
+
+Müşteri ekranında:
+- Sadece onaylı fotoğraflar görünsün.
+- Fotoğraflar tarih ve iş kalemine göre sade listelensin.
+- “Demo fotoğraf” gibi metinler görünmesin.
+
+CANLI SITE CİDDİYETİ
+Şu kelimeleri public UI’dan kaldır:
+- demo
+- mock
+- placeholder
+- test
+- örnek veri
+- gerçek görseller eklenecek
+- yakında eklenecek
+- lorem
+- sample
+
+Geliştirici notları kullanıcıya görünmemeli.
+
+DİL SEÇENEĞİ
+Şimdilik tam çoklu dil altyapısı kurma.
+Ama header’a sade bir language switcher iskeleti eklenebilir:
+TR | EN | DE
+
+Varsayılan TR olsun.
+EN ve DE tıklanınca şimdilik sayfayı bozmadan pasif kalabilir veya “Dil seçeneği hazırlanıyor” gibi kullanıcıya gösterilmeyen bir state olabilir.
+Public UI’da “hazırlanıyor” yazma.
+
+Kod yapısı ileride i18n’e uygun olsun:
+- Metinleri mümkün olduğunca merkezi content/data yapısına taşı.
+- Hard-coded uzun metinleri azalt.
+- Dil seçici componenti hazırla.
+- Gerçek çeviri entegrasyonu sonraki aşamaya kalsın.
+
+KART HİZALAMA
+Tüm 3’lü / çoklu kart gridlerinde:
+- Eşit yükseklik
+- Butonlar aynı hizada
+- Başlık ve açıklama spacing’i tutarlı
+- Card footer alanı sabit
+- Mobilde tek kolon
+- Tablet’te iki kolon olabilir
+- Desktop’ta üç kolon
+
+ADMIN / FINANCE
+Bu promptta admin ve finance’i yeniden icat etme; sadece canlı ciddiyetini bozan hizalama, renk ve demo metinleri temizle.
+Admin/finance için daha büyük revizyon ayrı promptla yapılacak.
+
+BUILD VE RAPOR
+Sonunda:
+- npm run build çalıştır.
+- Public UI’da demo/mock/placeholder/test kelimeleri kalıp kalmadığını tara.
+- Kahverengi/bej/taupe/bronze renklerin kalıp kalmadığını tara.
+- /surec kart hizalamalarını düzeltildiğini belirt.
+- /teklif-al form hizalarının düzeldiğini belirt.
+- Fotoğraf ekleme alanlarının canlı siteye uygun hale geldiğini belirt.
+- Değiştirilen dosyaları raporla.

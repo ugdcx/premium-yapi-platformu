@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { Camera, ShieldCheck } from "lucide-react";
-import { getApprovedUpdates } from "../../../../lib/mockStorage";
+import { getApprovedUpdates } from "../../../../lib/localStorageRecords";
 import { findProjectByClientToken } from "../../../../lib/helpers/projectLookup";
 import { formatDateTime } from "../../../../lib/helpers/format";
 import { statusChipClass } from "../../../../lib/designSystem";
@@ -20,20 +20,20 @@ export default function PrivateProjectTrackingPage() {
       <div className="mx-auto max-w-5xl">
         <header className="rounded-[2rem] bg-stoneDark p-6 text-white md:p-10">
           <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-            BLAAG özel takip bağlantısı
+            BLAGG özel takip bağlantısı
           </p>
           <h1 className="mt-6 text-4xl font-semibold tracking-tight md:text-6xl">
             {project?.title || "Proje Takibi"}
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/65">
-            Burada yalnızca BLAAG ekibinin onayladığı gelişmeler görünür.
+            Burada yalnızca BLAGG ekibinin onayladığı gelişmeler görünür.
           </p>
         </header>
 
         <section className="mt-6 grid gap-4 sm:grid-cols-3">
           <SummaryCard title="Müşteri" value="Ahmet S." />
-          <SummaryCard title="Hizmet" value={project?.serviceType || "BLAAG hizmeti"} />
-          <SummaryCard title="Durum" value={project?.status || "BLAAG takipte"} />
+          <SummaryCard title="Hizmet" value={project?.serviceType || "BLAGG hizmeti"} />
+          <SummaryCard title="Durum" value={project?.status || "BLAGG takipte"} />
         </section>
 
         <section className="mt-8 rounded-[2rem] border border-border bg-surface p-5 shadow-card sm:p-6">
@@ -48,7 +48,7 @@ export default function PrivateProjectTrackingPage() {
                 Henüz yayınlanmış güncelleme yok.
               </p>
               <p className="mt-2 leading-7">
-                BLAAG ekibi onaylanan gelişmeleri burada paylaşacaktır.
+                BLAGG ekibi onaylanan gelişmeleri burada paylaşacaktır.
               </p>
             </div>
           )}
@@ -66,7 +66,7 @@ export default function PrivateProjectTrackingPage() {
                     </h3>
                   </div>
                   <span className={statusChipClass("Onaylandı")}>
-                    BLAAG onaylı güncelleme
+                    BLAGG onaylı güncelleme
                   </span>
                 </div>
 
@@ -102,3 +102,4 @@ function SummaryCard({ title, value }) {
     </div>
   );
 }
+

@@ -97,7 +97,7 @@ export default function FieldPanel() {
             <p className="text-xs font-semibold uppercase tracking-wide text-muted">Özel saha bağlantısı</p>
             <p className="mt-2 leading-7 text-muted">
               Usta yalnızca fotoğraf yükler. Açıklama yazımı ve müşteri yayını
-              BLAAG yönetim ekibi tarafından yapılır.
+              BLAGG Control ekibi tarafından yapılır.
             </p>
           </div>
 
@@ -150,7 +150,7 @@ export default function FieldPanel() {
             <div className="rounded-2xl border border-[#2D5A38]/15 bg-[#E6F0E7] p-4">
               <p className="font-semibold text-[#2D5A38]">Fotoğraflar gönderildi.</p>
               <p className="mt-1 text-sm leading-6 text-[#2D5A38]/75">
-                Admin açıklama yazımı ve onayından sonra müşteri takip alanında yayınlanacaktır.
+                Fotoğrafınız BLAGG Studio ekibi tarafından incelendikten sonra proje kaydına eklenecektir.
               </p>
             </div>
           )}

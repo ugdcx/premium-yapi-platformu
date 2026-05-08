@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { leadApplications, projects as baseProjects } from "../../lib/data/mockData";
 import { formatCurrency, formatDate } from "../../lib/helpers/format";
-import { getApplications, updateApplicationStatus as persistApplicationStatus } from "../../lib/mockStorage";
+import { getApplications, updateApplicationStatus as persistApplicationStatus } from "../../lib/localStorageRecords";
 import { useDemoRoleGuard } from "../../lib/demoAuth";
 import DemoLogoutButton from "../../components/DemoLogoutButton";
 
@@ -129,18 +129,18 @@ export default function AdminKanban() {
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-                BLAAG Operasyon Paneli
+                BLAGG Control
               </p>
               <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-                Başvurular, projeler ve takip linkleri
+                Operasyon, proje ve onay merkezi
               </h1>
               <p className="mt-4 max-w-3xl leading-8 text-white/65">
-                Demo panel gerçek backend olmadan çalışır. Veri yapısı Supabase, Firebase veya Prisma entegrasyonuna hazır tutulur.
+                Başvurular, teklifler, projeler, fotoğraf onayları, finans ve saha ilerlemesi tek kontrol alanında izlenir.
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:min-w-72 lg:grid-cols-1">
               <a href="/teklif-al" className="inline-flex min-h-12 items-center justify-center rounded-full bg-gold px-6 py-3 font-medium text-stoneDark">
-                Yeni Başvuru Formu
+                Projenizi Başlatın
               </a>
               <DemoLogoutButton dark />
             </div>
@@ -149,6 +149,9 @@ export default function AdminKanban() {
 
         <div className="mt-6 grid gap-6">
           <AdminDashboardStats stats={stats} />
+          <ControlModules />
+          <PhotoApprovalBoard projects={projects} />
+          <FinanceSnapshot projects={projects} />
           <ApplicationKanban
             applications={applications}
             onSelect={setSelectedApplication}
@@ -191,6 +194,163 @@ function AdminDashboardStats({ stats }) {
           </article>
         );
       })}
+    </section>
+  );
+}
+
+function ControlModules() {
+  const modules = [
+    "Genel Bakış",
+    "Projeler",
+    "Başvurular",
+    "Teklifler",
+    "Müşteriler",
+    "Ustalar",
+    "Tedarikçiler",
+    "Onaylar",
+    "Finans",
+    "Belgeler",
+    "Ayarlar"
+  ];
+
+  return (
+    <section className="grid gap-4 rounded-[2rem] border border-border bg-surface p-4 shadow-card lg:grid-cols-[16rem_1fr]">
+      <aside className="rounded-[1.5rem] bg-stoneDark p-4 text-white">
+        <p className="text-sm uppercase tracking-[0.25em] text-white/35">BLAGG Control</p>
+        <nav className="mt-5 grid gap-1">
+          {modules.map((module, index) => (
+            <a
+              key={module}
+              href={module === "Finans" ? "/admin/finance" : "#"}
+              className={`flex min-h-11 items-center rounded-2xl px-4 text-sm font-medium ${
+                index === 0 ? "bg-gold text-stoneDark" : "text-white/70 hover:bg-white/8 hover:text-white"
+              }`}
+            >
+              {module}
+            </a>
+          ))}
+        </nav>
+      </aside>
+      <div className="grid gap-4 md:grid-cols-3">
+        {[
+          ["Başvurudan projeye", "Başvuru açılır, teklif hazırlanır, onaylanınca proje kaydı oluşur."],
+          ["Fotoğraf onayı", "Usta yükler, admin inceler, müşteri yalnızca onaylananı görür."],
+          ["Finans görünümü", "Tahsilat, gider, usta ve tedarikçi ödemeleri proje bazında ayrılır."]
+        ].map(([title, text]) => (
+          <article key={title} className="rounded-[1.5rem] border border-border bg-cream p-5">
+            <h3 className="text-xl font-semibold">{title}</h3>
+            <p className="mt-3 text-sm leading-6 text-muted">{text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PhotoApprovalBoard({ projects }) {
+  const photos = projects.flatMap((project) =>
+    (project.photos || []).map((photo) => ({ ...photo, projectTitle: project.title }))
+  );
+  const pending = photos.filter((photo) => photo.status === "pending_review");
+  const approved = photos.filter((photo) => photo.status === "approved" && photo.visible_to_customer);
+
+  return (
+    <section className="rounded-[2rem] border border-border bg-surface p-4 shadow-card md:p-6">
+      <SectionHeader
+        eyebrow="Fotoğraf Onay Sistemi"
+        title="Usta → Admin Onayı → Müşteri"
+        text="Fotoğraflar pending_review, approved veya rejected statüsüyle tutulur. Müşteri yalnızca approved ve visible_to_customer kayıtlarını görür."
+      />
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <PhotoApprovalColumn title="Onay bekliyor" photos={pending} empty="Onay bekleyen fotoğraf yok." />
+        <PhotoApprovalColumn title="Müşteriye görünür" photos={approved} empty="Yayınlanan fotoğraf yok." />
+      </div>
+    </section>
+  );
+}
+
+function PhotoApprovalColumn({ title, photos, empty }) {
+  return (
+    <div className="rounded-[1.5rem] bg-cream p-4">
+      <h3 className="text-xl font-semibold">{title}</h3>
+      <div className="mt-4 grid gap-3">
+        {photos.length ? (
+          photos.map((photo) => (
+            <article key={photo.id} className="rounded-2xl border border-border bg-surface p-4">
+              <div className="grid gap-4 sm:grid-cols-[8rem_1fr]">
+                <div className="flex aspect-square items-center justify-center rounded-2xl bg-soft">
+                  <ImageIcon className="text-graphite" size={28} />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.16em] text-black/35">{photo.projectTitle}</p>
+                  <p className="mt-2 font-semibold">{photo.caption}</p>
+                  <textarea
+                    defaultValue={photo.caption}
+                    className="mt-3 min-h-20 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
+                    aria-label="Fotoğraf açıklaması"
+                  />
+                  <label className="mt-3 flex items-center gap-2 text-sm font-medium text-muted">
+                    <input type="checkbox" defaultChecked={photo.visible_to_customer} />
+                    Müşteriye göster
+                  </label>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button type="button" className="rounded-full bg-stoneDark px-4 py-2 text-sm font-semibold text-white">
+                      Onayla
+                    </button>
+                    <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold">
+                      Reddet
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))
+        ) : (
+          <EmptyState text={empty} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FinanceSnapshot({ projects }) {
+  const totalRevenue = projects.reduce((sum, project) => sum + Number(project.paidAmount || 0), 0);
+  const pendingRevenue = projects.reduce((sum, project) => sum + Number(project.remainingAmount || 0), 0);
+  const totalOffer = projects.reduce((sum, project) => sum + Number(project.totalAmount || 0), 0);
+  const totalExpense = Math.round(totalOffer * 0.62);
+  const netProfit = totalRevenue - totalExpense;
+  const margin = totalOffer ? Math.round((netProfit / totalOffer) * 100) : 0;
+
+  const items = [
+    ["Toplam Tahsilat", formatCurrency(totalRevenue)],
+    ["Bekleyen Tahsilat", formatCurrency(pendingRevenue)],
+    ["Toplam Gider", formatCurrency(totalExpense)],
+    ["Usta Ödemeleri", formatCurrency(Math.round(totalExpense * 0.38))],
+    ["Tedarikçi Ödemeleri", formatCurrency(Math.round(totalExpense * 0.44))],
+    ["Genel Giderler", formatCurrency(Math.round(totalExpense * 0.18))],
+    ["Net Kâr", formatCurrency(netProfit)],
+    ["Kâr Marjı", `%${margin}`],
+    ["Kasa Durumu", formatCurrency(totalRevenue - Math.round(totalExpense * 0.4))]
+  ];
+
+  return (
+    <section className="rounded-[2rem] border border-border bg-surface p-4 shadow-card md:p-6">
+      <SectionHeader
+        eyebrow="Finans / Muhasebe"
+        title="Tahsilat, gider ve proje kârlılığı"
+        text="Bu alan Supabase bağlantısında müşteri tahsilatları, usta ödemeleri, tedarikçi ödemeleri ve genel gider kayıtlarına bağlanacak."
+      />
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map(([label, value]) => (
+          <article key={label} className="rounded-2xl border border-border bg-cream p-4">
+            <p className="text-sm text-muted">{label}</p>
+            <p className="mt-2 text-2xl font-semibold">{value}</p>
+          </article>
+        ))}
+      </div>
+      <a href="/admin/finance" className="mt-5 inline-flex min-h-12 items-center justify-center rounded-full bg-stoneDark px-5 py-3 font-semibold text-white">
+        Finans ekranını aç
+      </a>
     </section>
   );
 }
@@ -349,7 +509,7 @@ function ProjectTable({ projects, onSelect }) {
       <SectionHeader
         eyebrow="Proje listesi"
         title="Aktif ve dönüştürülen projeler"
-        text="Müşteri ve usta takip linkleri demo tokenlarla oluşturulur."
+        text="Müşteri ve usta takip linkleri proje kaydı üzerinden oluşturulur."
       />
       <div className="mt-6">
         <div className="grid gap-3">
@@ -526,16 +686,17 @@ function buildDashboardStats(applications, projects) {
   const netProfit = totalRevenue - estimatedCost;
 
   return [
-    { label: "Toplam Başvuru", value: applications.length, icon: ClipboardList },
-    { label: "Yeni Başvuru", value: countByStatus(applications, "Yeni"), icon: BriefcaseBusiness },
-    { label: "İncelenen Başvuru", value: countByStatus(applications, "İnceleniyor"), icon: FileText },
-    { label: "Teklif Gönderilen", value: countByStatus(applications, "Teklif Gönderildi"), icon: ReceiptText },
-    { label: "Onaylanan Proje", value: projects.filter((project) => project.sourceApplicationId || project.status !== "Planlama").length, icon: CheckCircle2 },
-    { label: "Aktif Proje", value: projects.filter((project) => project.status === "Uygulamada").length, icon: FolderKanban },
-    { label: "Tamamlanan Proje", value: projects.filter((project) => project.status === "Tamamlandı").length, icon: CheckCircle2 },
-    { label: "Toplam Tahsilat", value: formatCurrency(totalRevenue), icon: Wallet },
-    { label: "Toplam Maliyet", value: formatCurrency(estimatedCost), icon: BriefcaseBusiness },
-    { label: "Net Kâr", value: formatCurrency(netProfit), icon: TrendingUp }
+    { label: "Aktif Projeler", value: projects.filter((project) => project.status === "Uygulamada").length, icon: FolderKanban },
+    { label: "Yeni Başvurular", value: countByStatus(applications, "Yeni"), icon: ClipboardList },
+    { label: "Bekleyen Teklifler", value: countByStatus(applications, "Teklif Hazırlanıyor"), icon: ReceiptText },
+    { label: "Onay Bekleyen Fotoğraflar", value: projects.flatMap((project) => project.photos || []).filter((photo) => photo.status === "pending_review").length, icon: ImageIcon },
+    { label: "Bugünkü Tahsilatlar", value: formatCurrency(totalRevenue), icon: Wallet },
+    { label: "Yaklaşan Usta Ödemeleri", value: formatCurrency(Math.round(estimatedCost * 0.18)), icon: BriefcaseBusiness },
+    { label: "Yaklaşan Tedarikçi Ödemeleri", value: formatCurrency(Math.round(estimatedCost * 0.22)), icon: BriefcaseBusiness },
+    { label: "Toplam Gelir", value: formatCurrency(totalRevenue), icon: Wallet },
+    { label: "Toplam Gider", value: formatCurrency(estimatedCost), icon: BriefcaseBusiness },
+    { label: "Net Kâr", value: formatCurrency(netProfit), icon: TrendingUp },
+    { label: "Kasa Durumu", value: formatCurrency(totalRevenue - Math.round(estimatedCost * 0.4)), icon: Wallet }
   ];
 }
 
@@ -546,7 +707,7 @@ function countByStatus(applications, status) {
 function mapLeadApplication(application, index) {
   return {
     id: application.id,
-    applicationNo: `BLAAG-2026-${String(index + 1).padStart(3, "0")}`,
+    applicationNo: `BLAGG-2026-${String(index + 1).padStart(3, "0")}`,
     fullName: application.fullName,
     phone: application.phone,
     normalizedPhone: application.normalizedPhone,

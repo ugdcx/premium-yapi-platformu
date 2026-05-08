@@ -3,9 +3,9 @@ import { services } from "../../lib/data/services";
 import { createSeoMetadata } from "../../lib/seo";
 
 export const metadata = createSeoMetadata({
-  title: "Hizmetler | BLAAG Construction and Architecture",
+  title: "Studio Services | BLAGG Studio",
   description:
-    "Anahtar teslim inşaat, villa renovasyonu, konut tadilatı, dış cephe, banyo, mutfak ve değer artırma çözümleri.",
+    "BLAGG Studio tasarım, renovasyon, uygulama yönetimi ve uzaktan proje takibi hizmetleri.",
   path: "/hizmetler"
 });
 
@@ -13,10 +13,10 @@ const guideItems = [
   ["Yeni yapı istiyorum", "Anahtar Teslim İnşaat"],
   ["Villamı yenilemek istiyorum", "Villa Renovasyonu"],
   ["Evi satmadan önce hazırlamak istiyorum", "Satış Öncesi Değer Artırma"],
-  ["Türkiye dışından takip etmek istiyorum", "Gurbetçi Ev Takip Sistemi"]
+  ["Şehir dışından takip etmek istiyorum", "BLAGG Remote"]
 ];
 
-const processSteps = ["Ön görüşme", "Keşif / uzaktan inceleme", "Kapsam ve malzeme", "Teklif", "Uygulama", "Fotoğraflı takip", "Teslim kontrolü"];
+const processSteps = ["Planla", "Uygula", "Takip Et"];
 
 export default function ServicesPage() {
   return (
@@ -55,15 +55,15 @@ export default function ServicesPage() {
 function ServiceHero() {
   return (
     <header className="rounded-[2rem] bg-stoneDark p-7 text-white md:p-12">
-      <p className="text-sm uppercase tracking-[0.25em] text-white/35">BLAAG Hizmetleri</p>
+      <p className="text-sm uppercase tracking-[0.25em] text-white/35">Studio Services</p>
       <h1 className="mt-4 max-w-5xl text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
         Her hizmet ayrı bir problem, net bir çözüm.
       </h1>
       <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-        Tadilat, inşaat, değer artırma ve uzaktan takip işlerini kapsam, malzeme, fotoğraf ve teslim kontrolüyle yönetiriz.
+        Tasarım, renovasyon ve uygulama yönetimini sade kapsam, güçlü takip ve kontrollü teslim yaklaşımıyla yürütürüz.
       </p>
       <a href="/teklif-al" className="mt-9 inline-flex items-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
-        Teklif Al
+        Projenizi Başlatın
         <ArrowRight size={18} />
       </a>
     </header>
@@ -94,7 +94,7 @@ function ServiceCard({ service }) {
           Detay
         </a>
         <a href="/teklif-al" className="inline-flex min-h-12 items-center justify-center rounded-full bg-gold px-5 py-3 font-semibold text-stoneDark">
-          Teklif Al
+          Projenizi Başlatın
         </a>
       </div>
     </article>

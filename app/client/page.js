@@ -1,11 +1,12 @@
-import ClientDashboard from "./ClientDashboard";
+﻿import ClientDashboard from "./ClientDashboard";
 
 export const metadata = {
-  title: "Özel Proje Takibi | BLAAG Construction and Architecture",
+  title: "Özel Proje Takibi | BLAGG Studio",
   description:
-    "BLAAG müşterileri için özel bağlantıyla proje durumu, teklif, fotoğraf, ödeme, belge ve teslim takibi."
+    "BLAGG müşterileri için özel bağlantıyla proje durumu, teklif, fotoğraf, ödeme, belge ve teslim takibi."
 };
 
 export default function ClientPage() {
   return <ClientDashboard />;
 }
+

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { projects } from "../../../../../lib/data/mockData";
 import { formatDate } from "../../../../../lib/helpers/format";
-import { createWorkerUpload } from "../../../../../lib/mockStorage";
+import { createWorkerUpload } from "../../../../../lib/localStorageRecords";
 
 const workItems = ["Zemin", "Seramik", "Boya", "Elektrik", "Tesisat", "Mutfak", "Banyo", "Dış Cephe", "Temizlik", "Diğer"];
 const statusOptions = ["Devam Ediyor", "Tamamlandı", "Sorun Var", "Malzeme Bekliyor"];
@@ -40,7 +40,7 @@ function FieldProjectHeader({ project }) {
   return (
     <header className="rounded-[1.5rem] bg-stoneDark p-5 text-white">
       <p className="text-sm uppercase tracking-[0.2em] text-white/35">
-        BLAAG saha bağlantısı
+        BLAGG Field
       </p>
       <h1 className="mt-4 text-3xl font-semibold tracking-tight">
         {project.title}
@@ -50,7 +50,7 @@ function FieldProjectHeader({ project }) {
         <InfoLine icon={CalendarDays} text={formatDate(new Date().toISOString())} />
       </div>
       <p className="mt-5 text-lg leading-7 text-white/70">
-        Bu ekrandan yaptığınız işe ait fotoğraf ve notları BLAAG ekibine iletebilirsiniz.
+        Bu ekrandan yalnızca kendi iş kaleminize ait fotoğraf, not ve durum gönderebilirsiniz.
       </p>
     </header>
   );
@@ -114,7 +114,8 @@ function WorkerUploadForm({ project }) {
       workStatus: status,
       note: note.trim(),
       photos,
-      status: "Onay Bekliyor"
+      status: "pending_review",
+      visible_to_customer: false
     });
 
     setSubmitted(true);
@@ -246,7 +247,7 @@ function SubmitSuccessState({ onNewUpload }) {
     <section className="mt-5 rounded-[1.5rem] border border-[#BFD8C3] bg-[#E6F0E7] p-5 text-[#2D5A38]">
       <CheckCircle2 size={32} />
       <h2 className="mt-4 text-2xl font-semibold">
-        Fotoğraflar ve notunuz BLAAG ekibine iletildi.
+        Fotoğrafınız BLAGG Studio ekibi tarafından incelendikten sonra proje kaydına eklenecektir.
       </h2>
       <button
         type="button"
@@ -269,7 +270,7 @@ function InvalidWorkerLinkState() {
             Geçersiz veya süresi dolmuş bağlantı
           </h1>
           <p className="mt-4 leading-7 text-muted">
-            Lütfen BLAAG ekibinden size gönderilen güncel bağlantıyı kullanın.
+            Lütfen BLAGG Studio ekibinden size gönderilen güncel bağlantıyı kullanın.
           </p>
         </div>
       </section>

@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Camera, CheckCircle2, MapPin, MessageCircle, PackageCheck, ShieldCheck } from "lucide-react";
+﻿import { ArrowLeft, ArrowRight, Camera, CheckCircle2, MapPin, MessageCircle, PackageCheck, ShieldCheck } from "lucide-react";
 import { portfolioProjects } from "../../../lib/data/portfolioProjects";
 import { createProjectWhatsAppLink } from "../../../lib/helpers/whatsapp";
 import { createSeoMetadata } from "../../../lib/seo";
@@ -10,8 +10,8 @@ export function generateStaticParams() {
 export function generateMetadata({ params }) {
   const project = portfolioProjects.find((item) => item.slug === params.slug);
   return createSeoMetadata({
-    title: project ? `${project.title} | BLAAG` : "Proje Detayı | BLAAG",
-    description: project?.summary || "BLAAG proje detayı.",
+    title: project ? `${project.title} | BLAGG` : "Proje Detayı | BLAGG",
+    description: project?.summary || "BLAGG proje detayı.",
     path: project ? `/projeler/${project.slug}` : "/projeler"
   });
 }
@@ -103,7 +103,7 @@ function ProjectCTA({ project }) {
         </div>
         <div className="grid gap-3 sm:min-w-64">
           <a href="/teklif-al" className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
-            Teklif Al
+            Projenizi Başlatın
             <ArrowRight size={18} />
           </a>
           <a
@@ -174,3 +174,4 @@ function HeroInfo({ label, value, icon: Icon }) {
     </div>
   );
 }
+

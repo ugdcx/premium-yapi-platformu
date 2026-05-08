@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Camera, CheckCircle2, Send } from "lucide-react";
 import { findProjectByWorkerToken } from "../../../../lib/helpers/projectLookup";
-import { createWorkerUpload } from "../../../../lib/mockStorage";
+import { createWorkerUpload } from "../../../../lib/localStorageRecords";
 
 const areas = ["Mutfak", "Banyo", "Salon", "Dış Cephe", "Elektrik", "Tesisat", "Diğer"];
 const project = findProjectByWorkerToken("1234567");
@@ -69,7 +69,7 @@ export default function WorkerUploadLinkPage() {
       <div className="mx-auto max-w-xl">
         <header className="rounded-[1.5rem] bg-stoneDark p-5 text-white">
           <p className="text-sm uppercase tracking-[0.2em] text-white/35">
-            BLAAG saha bağlantısı
+            BLAGG saha bağlantısı
           </p>
           <h1 className="mt-4 text-3xl font-semibold tracking-tight">
             Fotoğraf Gönder
@@ -85,7 +85,7 @@ export default function WorkerUploadLinkPage() {
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="mt-1 shrink-0" size={22} />
                 <p className="font-semibold">
-                  Fotoğraflar BLAAG ekibinin onayına gönderildi.
+                  Fotoğraflar BLAGG ekibinin onayına gönderildi.
                 </p>
               </div>
             </div>
@@ -170,3 +170,4 @@ export default function WorkerUploadLinkPage() {
 function ErrorText({ children }) {
   return <p className="mt-3 text-sm font-semibold text-red-700">{children}</p>;
 }
+

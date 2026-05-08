@@ -1,9 +1,10 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Yönlendiriliyor | BLAAG Construction and Architecture"
+  title: "Yönlendiriliyor | BLAGG Studio"
 };
 
 export default function LoginPage() {
-  redirect("/blaag-admin");
+  redirect("/control");
 }
+

@@ -1,9 +1,9 @@
 import AdminKanban from "./AdminKanban";
 
 export const metadata = {
-  title: "BLAAG İç Operasyon Merkezi",
+  title: "BLAGG Control",
   description:
-    "BLAAG başvurular, teklifler, projeler, müşteriler, ustalar, proje linkleri, fotoğraf onayları, ödemeler, belgeler ve teslim süreçleri."
+    "BLAGG Control başvurular, teklifler, projeler, müşteriler, ustalar, fotoğraf onayları, finans ve belgeler."
 };
 
 export default function AdminPage() {

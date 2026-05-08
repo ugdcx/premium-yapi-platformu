@@ -1,23 +1,26 @@
 import { ArrowLeft, ArrowRight, CheckCircle2, HelpCircle, MessageCircle, PackageCheck, Route, ShieldCheck } from "lucide-react";
-import { services } from "../../../lib/data/services";
+import { findServiceBySlug, services } from "../../../lib/data/services";
 import { createServiceWhatsAppLink } from "../../../lib/helpers/whatsapp";
 import { createSeoMetadata } from "../../../lib/seo";
 
 export function generateStaticParams() {
-  return services.map((service) => ({ slug: service.slug }));
+  return services.flatMap((service) => [
+    { slug: service.slug },
+    ...(service.aliases || []).map((slug) => ({ slug }))
+  ]);
 }
 
 export function generateMetadata({ params }) {
-  const service = services.find((item) => item.slug === params.slug);
+  const service = findServiceBySlug(params.slug);
   return createSeoMetadata({
-    title: service ? `${service.title} | BLAAG Hizmetleri` : "Hizmet Detayı | BLAAG",
-    description: service?.shortDescription || "BLAAG hizmet detayı.",
+    title: service ? `${service.title} | BLAGG Studio` : "Hizmet Detayı | BLAGG Studio",
+    description: service?.shortDescription || "BLAGG Studio hizmet detayı.",
     path: service ? `/hizmetler/${service.slug}` : "/hizmetler"
   });
 }
 
 export default function ServiceDetailPage({ params }) {
-  const service = services.find((item) => item.slug === params.slug);
+  const service = findServiceBySlug(params.slug);
 
   if (!service) {
     return (
@@ -77,7 +80,7 @@ function ServiceHero({ service }) {
         <ArrowLeft size={17} />
         Hizmetlere dön
       </a>
-      <p className="mt-10 text-sm uppercase tracking-[0.25em] text-white/35">BLAAG Hizmeti</p>
+      <p className="mt-10 text-sm uppercase tracking-[0.25em] text-white/35">BLAGG Studio Service</p>
       <h1 className="mt-4 max-w-5xl text-4xl font-semibold tracking-tight md:text-6xl">
         {service.title}
       </h1>
@@ -86,7 +89,7 @@ function ServiceHero({ service }) {
       </p>
       <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
         <a href="/teklif-al" className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
-          Bu hizmet için teklif al
+          Projenizi Başlatın
           <ArrowRight size={18} />
         </a>
         <a
@@ -178,7 +181,7 @@ function ServiceCTA({ title }) {
         </div>
         <div className="grid gap-3 sm:min-w-64">
           <a href="/teklif-al" className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
-            Teklif Al
+            Projenizi Başlatın
             <ArrowRight size={18} />
           </a>
           <a

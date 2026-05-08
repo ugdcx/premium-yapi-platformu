@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #f4f1ec;
+  --color-bg: #f7f7f5;
   --color-surface: #ffffff;
-  --color-text: #1c1b19;
-  --color-muted: #6b665e;
-  --color-gold: #c6a85b;
-  --color-border: rgb(0 0 0 / 0.08);
-  --color-dark: #111111;
+  --color-text: #2f2f2f;
+  --color-muted: #6b7280;
+  --color-gold: #e5e7eb;
+  --color-border: rgb(10 10 10 / 0.10);
+  --color-dark: #0a0a0a;
 }
 
 * {
@@ -98,7 +98,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(198 168 91 / 18%);
+  box-shadow: 0 0 0 3px rgb(17 24 39 / 12%);
 }
 
 @media (max-width: 640px) {

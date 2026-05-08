@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,7 @@ export default function LoginForm() {
           <section className="flex flex-col justify-between rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 md:p-10">
             <div>
               <a href="/" className="text-sm text-white/55">
-                BLAAG Construction and Architecture
+                BLAGG Studio
               </a>
               <div className="mt-10 inline-flex rounded-full border border-white/10 px-4 py-2 text-sm text-white/55 md:mt-16">
                 İç operasyon erişimi
@@ -44,7 +44,7 @@ export default function LoginForm() {
                 Yetkili Erişim
               </h1>
               <p className="mt-5 max-w-xl text-base leading-7 text-white/60 sm:text-lg sm:leading-8">
-                BLAAG yönetim ekibi için başvuru, teklif, proje ve saha
+                BLAGG yönetim ekibi için başvuru, teklif, proje ve saha
                 operasyonlarını yöneten özel erişim alanı.
               </p>
             </div>
@@ -63,7 +63,7 @@ export default function LoginForm() {
               </div>
               <div>
                 <p className="text-sm text-muted">Özel erişim</p>
-                <h2 className="text-2xl font-semibold">BLAAG yetkili erişimi</h2>
+                <h2 className="text-2xl font-semibold">BLAGG yetkili erişimi</h2>
               </div>
             </div>
 
@@ -118,3 +118,4 @@ export default function LoginForm() {
     </main>
   );
 }
+
