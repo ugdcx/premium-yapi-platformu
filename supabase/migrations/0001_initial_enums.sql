@@ -35,4 +35,5 @@ create type public.media_type as enum (
   'document'
 );
 
+
 commit;
