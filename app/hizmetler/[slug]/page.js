@@ -1,21 +1,30 @@
-import { ArrowLeft, ArrowRight, CheckCircle2, HelpCircle, MessageCircle, PackageCheck, Route, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { notFound } from "next/navigation";
+import SectionContainer from "../../../components/SectionContainer";
+import { PublicImageFallback } from "../../../components/PhotoPlaceholder";
 import { findServiceBySlug, services } from "../../../lib/data/services";
-import { createServiceWhatsAppLink } from "../../../lib/helpers/whatsapp";
 import { createSeoMetadata } from "../../../lib/seo";
 
 export function generateStaticParams() {
-  return services.flatMap((service) => [
-    { slug: service.slug },
-    ...(service.aliases || []).map((slug) => ({ slug }))
-  ]);
+  return services.map((service) => ({ slug: service.slug }));
 }
 
 export function generateMetadata({ params }) {
   const service = findServiceBySlug(params.slug);
+
+  if (!service) {
+    return createSeoMetadata({
+      title: "Hizmet | BLAGG Studio",
+      path: "/hizmetler"
+    });
+  }
+
   return createSeoMetadata({
-    title: service ? `${service.title} | BLAGG Studio` : "Hizmet Detayı | BLAGG Studio",
-    description: service?.shortDescription || "BLAGG Studio hizmet detayı.",
-    path: service ? `/hizmetler/${service.slug}` : "/hizmetler"
+    title: `${service.title} | BLAGG Studio`,
+    description: service.shortDescription,
+    path: `/hizmetler/${service.slug}`
   });
 }
 
@@ -23,178 +32,155 @@ export default function ServiceDetailPage({ params }) {
   const service = findServiceBySlug(params.slug);
 
   if (!service) {
-    return (
-      <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6">
-        <div className="mx-auto max-w-3xl rounded-[2rem] border border-border bg-surface p-8 shadow-card">
-          <h1 className="text-4xl font-semibold">Hizmet bulunamadı</h1>
-          <a href="/hizmetler" className="mt-6 inline-flex rounded-full bg-stoneDark px-6 py-3 font-semibold text-white">
-            Hizmetlere dön
-          </a>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
-  return <ServiceDetailLayout service={service} />;
-}
-
-function ServiceDetailLayout({ service }) {
   return (
-    <main className="min-h-screen bg-cream px-4 py-6 text-stoneDark sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-7xl">
-        <ServiceHero service={service} />
+    <main className="bg-[#F7F7F5] pt-24 text-[#111111]">
+      <SectionContainer className="pb-16 pt-6 sm:pb-20">
+        <header className="grid gap-7 rounded-[2rem] bg-black p-6 text-white sm:p-8 lg:min-h-[calc(62svh-6rem)] lg:grid-cols-[minmax(0,0.94fr)_minmax(22rem,0.62fr)] lg:items-stretch lg:p-10">
+          <div className="flex flex-col justify-between">
+            <div>
+              <Link
+                href="/hizmetler"
+                className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.16em] text-white/56"
+              >
+                <ArrowLeft size={16} />
+                Hizmetlere dön
+              </Link>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <ServiceScope title="Bu hizmet kimler için?" items={service.suitableFor} />
-          <ServiceScope title="Kapsama neler dahil olabilir?" items={service.scope} />
-        </div>
+              <p className="mt-9 text-xs uppercase tracking-[0.3em] text-white/42">
+                Uzmanlık alanı
+              </p>
+              <h1 className="mt-5 max-w-5xl text-[2.55rem] leading-[0.92] sm:text-[3.75rem] lg:text-[4.75rem]">
+                {service.title}
+              </h1>
+            </div>
 
-        <ServiceProcess steps={service.process} />
+            <div className="mt-8 grid gap-7 lg:grid-cols-[minmax(0,1fr)_12rem] lg:items-end">
+              <p className="max-w-3xl text-lg leading-8 text-white/64">
+                {service.promise || service.description}
+              </p>
+              <p className="border-t border-white/10 pt-5 text-xs uppercase tracking-[0.22em] text-white/36">
+                {service.disciplinePrinciple || "BLAGG yaklaşımı"}
+              </p>
+            </div>
+          </div>
 
-        <section className="mt-6 grid gap-6 lg:grid-cols-2">
-          <InfoPanel
-            icon={PackageCheck}
-            title="Malzeme / kalite yaklaşımı"
-            text={service.quality}
-          />
-          <InfoPanel
-            icon={Route}
-            title="Proje takip sistemi nasıl kullanılır?"
-            text={service.tracking}
-          />
+          <div className="grid min-h-[24rem] grid-rows-[1fr_auto] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#101010]">
+            {service.image ? (
+              <div className="relative min-h-[15rem]">
+                <Image
+                  src={service.image}
+                  alt={`${service.title} görseli`}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 28vw"
+                  className="object-cover grayscale contrast-110 brightness-90"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/16" />
+              </div>
+            ) : (
+              <PublicImageFallback ratio="wide" className="min-h-[15rem] rounded-none" />
+            )}
+            <div className="border-t border-white/10 p-5 sm:p-6">
+              <p className="text-xs uppercase tracking-[0.28em] text-white/38">
+                Çalışma odağı
+              </p>
+              <p className="mt-4 text-2xl leading-tight text-white/86">
+                Net kapsam. Kontrollü saha. Görünür süreç.
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <section className="grid gap-9 py-10 lg:grid-cols-[0.32fr_0.68fr]">
+          <aside className="lg:sticky lg:top-28 lg:h-fit">
+            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
+              Uzmanlık çerçevesi
+            </p>
+            <h2 className="mt-5 max-w-sm text-[2.05rem] leading-tight sm:text-[2.7rem]">
+              Doğru kapsam, doğru uygulama dili.
+            </h2>
+          </aside>
+
+          <div className="grid gap-10">
+            <EditorialList title="Kimler için?" items={service.suitableFor} />
+            <EditorialList
+              title="Kapsamda değerlendirilen başlıklar"
+              items={service.scope}
+            />
+          </div>
         </section>
 
-        <ServiceFAQ items={service.faq} />
-        <ServiceCTA title={service.title} />
-      </div>
+        <section className="grid gap-8 rounded-[2rem] bg-black p-6 text-white sm:p-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-end">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/42">
+              BLAGG yaklaşımı
+            </p>
+            <h2 className="mt-5 text-[2.15rem] leading-tight sm:text-[2.9rem]">
+              Her kapsam bir tasarım ve uygulama kararıdır.
+            </h2>
+          </div>
+          <div>
+            <p className="max-w-3xl text-base leading-8 text-white/62 sm:text-lg">
+              {service.approach || service.quality}
+            </p>
+            <p className="mt-6 border-t border-white/10 pt-5 text-sm leading-7 text-white/46">
+              {service.tracking}
+            </p>
+          </div>
+        </section>
+
+        <section className="grid gap-8 border-t border-black/8 pt-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-end">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
+              Başlat
+            </p>
+            <h2 className="mt-5 text-[2.05rem] leading-tight sm:text-[2.65rem]">
+              Proje kapsamınızı birlikte değerlendirelim.
+            </h2>
+          </div>
+          <div>
+            <p className="max-w-3xl text-base leading-8 text-black/58 sm:text-lg">
+              Önce kapsam ve uyum netleşir; ardından çalışma çerçevesi kurulur.
+            </p>
+            <PrimaryLink href="/teklif-al" className="mt-8">
+              Projenizi Başlatın
+            </PrimaryLink>
+          </div>
+        </section>
+      </SectionContainer>
     </main>
   );
 }
 
-function ServiceHero({ service }) {
-  const whatsappHref = createServiceWhatsAppLink(service.title);
-
+function EditorialList({ title, items }) {
   return (
-    <header className="rounded-[2rem] bg-stoneDark p-6 text-white md:p-10">
-      <a href="/hizmetler" className="inline-flex items-center gap-2 text-sm text-white/65">
-        <ArrowLeft size={17} />
-        Hizmetlere dön
-      </a>
-      <p className="mt-10 text-sm uppercase tracking-[0.25em] text-white/35">BLAGG Studio Service</p>
-      <h1 className="mt-4 max-w-5xl text-4xl font-semibold tracking-tight md:text-6xl">
-        {service.title}
-      </h1>
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-white/65">
-        {service.description}
-      </p>
-      <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
-        <a href="/teklif-al" className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
-          Projenizi Başlatın
-          <ArrowRight size={18} />
-        </a>
-        <a
-          href={whatsappHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/18 px-7 py-4 font-semibold text-white hover:bg-white/5"
-        >
-          <MessageCircle size={18} />
-          WhatsApp
-        </a>
-      </div>
-    </header>
-  );
-}
-
-function ServiceScope({ title, items }) {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-card md:p-6">
-      <h2 className="text-3xl font-semibold">{title}</h2>
-      <div className="mt-5 grid gap-3">
-        {items.map((item) => (
-          <div key={item} className="flex items-start gap-3 rounded-2xl bg-cream p-4">
-            <CheckCircle2 className="mt-0.5 shrink-0 text-gold" size={20} />
-            <span className="font-medium">{item}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ServiceProcess({ steps }) {
-  return (
-    <section className="mt-6 rounded-[2rem] border border-border bg-soft p-5 shadow-card md:p-6">
-      <h2 className="text-3xl font-semibold">Süreç nasıl işler?</h2>
-      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {steps.map((step, index) => (
-          <div key={step} className="rounded-2xl bg-surface p-4">
-            <p className="text-sm font-semibold text-gold">{String(index + 1).padStart(2, "0")}</p>
-            <p className="mt-3 font-semibold">{step}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function InfoPanel({ icon: Icon, title, text }) {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-card md:p-6">
-      <Icon className="text-gold" size={27} />
-      <h2 className="mt-5 text-3xl font-semibold">{title}</h2>
-      <p className="mt-4 text-lg leading-8 text-muted">{text}</p>
-    </section>
-  );
-}
-
-function ServiceFAQ({ items }) {
-  return (
-    <section className="mt-6 rounded-[2rem] border border-border bg-surface p-5 shadow-card md:p-6">
-      <div className="flex items-center gap-3">
-        <HelpCircle className="text-gold" size={25} />
-        <h2 className="text-3xl font-semibold">Sık sorulan sorular</h2>
-      </div>
-      <div className="mt-5 grid gap-3">
-        {items.map(([question, answer]) => (
-          <div key={question} className="rounded-2xl bg-cream p-5">
-            <h3 className="text-xl font-semibold">{question}</h3>
-            <p className="mt-2 leading-7 text-muted">{answer}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ServiceCTA({ title }) {
-  const whatsappHref = createServiceWhatsAppLink(title);
-
-  return (
-    <section className="mt-8 rounded-[2rem] bg-stoneDark p-6 text-white md:p-10">
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div>
-          <ShieldCheck className="text-gold" size={28} />
-          <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight">
-            {title} için net kapsam çıkaralım.
-          </h2>
-        </div>
-        <div className="grid gap-3 sm:min-w-64">
-          <a href="/teklif-al" className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 font-semibold text-stoneDark">
-            Projenizi Başlatın
-            <ArrowRight size={18} />
-          </a>
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-white/18 px-7 py-4 font-semibold text-white hover:bg-white/5"
+    <section>
+      <p className="text-xs uppercase tracking-[0.3em] text-black/45">{title}</p>
+      <div className="mt-6 grid gap-0 border-t border-black/10">
+        {items.map((item, index) => (
+          <article
+            key={item}
+            className="grid gap-4 border-b border-black/10 py-5 sm:grid-cols-[4rem_minmax(0,1fr)]"
           >
-            <MessageCircle size={18} />
-            WhatsApp
-          </a>
-        </div>
+            <p className="text-xl text-black/22">{String(index + 1).padStart(2, "0")}</p>
+            <p className="text-base leading-8 text-black/64 sm:text-lg">{item}</p>
+          </article>
+        ))}
       </div>
     </section>
+  );
+}
+
+function PrimaryLink({ href, children, className = "" }) {
+  return (
+    <Link
+      href={href}
+      className={`inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-black px-7 py-4 text-base font-medium text-white ${className}`}
+    >
+      {children}
+      <ArrowRight size={18} />
+    </Link>
   );
 }

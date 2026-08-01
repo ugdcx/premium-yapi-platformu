@@ -1,0 +1,86 @@
+You are building a premium website for BLAGG Studio.
+
+BLAGG Studio is a private architecture and renovation studio based in Türkiye. The brand position is:
+"Design-led renovation. Visible execution."
+
+The website must feel like:
+- Apple-level minimalism
+- high-end architecture studio
+- luxury hotel lobby
+- black and white quiet luxury
+- serious, calm, selective, premium
+
+The website must NOT feel like:
+- a classic construction company
+- a cheap renovation contractor
+- a real estate agency
+- a SaaS dashboard
+- a generic template
+- a colorful startup website
+
+Strict visual rules:
+- Use only black, white, off-white and grey tones.
+- Do NOT use brown, beige, taupe, bronze, gold, cream, warm stone or earthy colors.
+- No stock photography.
+- No generic smiling families.
+- No handshakes.
+- No worker-with-helmet stock images.
+- No colorful gradients.
+- No playful animations.
+- No rounded colorful SaaS cards.
+
+Color system:
+- BLAGG Black: #050505
+- Soft Black: #111111
+- Pure White: #FFFFFF
+- Architectural White: #F7F7F5
+- Ink: #161616
+- Muted Grey: #6A6A6A
+- Line Grey: #E5E5E5
+- Chrome Grey: #B8B8B8
+
+Typography:
+- Use a refined editorial heading style.
+- Use Inter or Geist Sans for body text.
+- Headings must feel architectural, premium and minimal.
+- Body text must be readable, not tiny.
+- Turkish content is the main language.
+- English can be used only for core brand manifesto phrases.
+
+CTA language:
+- Main CTA: "Projenizi Başlatın"
+- Secondary CTA examples: "Süreci Görün", "Projeleri İnceleyin", "BLAGG Remote’u Görün"
+
+Core hero text:
+- "Design-led renovation. Visible execution."
+- Turkish subline: "Tasarım, uygulama ve takip tek sistemde."
+
+Photo policy:
+- All photo areas must be prepared as elegant placeholders.
+- Real images will be added later by the owner.
+- Placeholder areas must still look premium without real images.
+- Use monochrome blocks, fine borders, image labels, aspect-ratio containers, subtle grid lines and "Fotoğraf eklenecek" notes.
+- Do not use external image URLs.
+
+Interaction:
+- Use subtle fade-in and translate animations.
+- No parallax.
+- No typing effect.
+- No bouncy animations.
+- No loading spinner.
+- No heavy page transitions.
+
+Mobile:
+- Mobile must feel intentionally designed, not just squeezed.
+- Use a sticky bottom CTA button on mobile: "Projenizi Başlatın".
+- Hamburger menu should open a clean full-screen overlay.
+
+Build with:
+- Next.js App Router
+- Tailwind CSS
+- Framer Motion if already installed or install it if needed
+- Clean reusable components
+- No unnecessary dependencies
+- Production-ready file organization
+
+Before coding, inspect the existing file structure and adapt to it. Do not destroy existing working files unless necessary. Refactor carefully.

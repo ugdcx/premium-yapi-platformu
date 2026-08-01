@@ -1,54 +1,97 @@
-const serviceLinks = [
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+
+const footerLinks = [
   ["Hizmetler", "/hizmetler"],
   ["Projeler", "/projeler"],
-  ["Süreç", "/surec"],
   ["BLAGG Remote", "/blagg-remote"],
+  ["Süreç", "/surec"],
   ["İletişim", "/iletisim"],
   ["Projenizi Başlatın", "/teklif-al"]
 ];
 
+const hiddenPrefixes = [
+  "/admin",
+  "/control",
+  "/login",
+  "/client",
+  "/field",
+  "/blaag-admin",
+  "/ahmet-sezer"
+];
+
 export default function Footer() {
+  const pathname = usePathname();
+  const shouldHide = useMemo(
+    () => hiddenPrefixes.some((prefix) => pathname?.startsWith(prefix)),
+    [pathname]
+  );
+
+  if (shouldHide) {
+    return null;
+  }
+
   return (
-    <footer className="border-t border-border bg-stoneDark px-4 py-10 text-white sm:px-6 sm:py-12">
-      <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.9fr]">
-        <div className="min-w-0">
-          <h2 className="text-2xl font-semibold tracking-[0.08em]">BLAGG Studio</h2>
-          <p className="mt-4 max-w-md text-base leading-7 text-white/60">
-            Design. Build. Track. Seçilmiş renovasyon ve yapı projeleri için kontrollü stüdyo yaklaşımı.
+    <footer className="border-t border-white/10 bg-[#050505] text-white">
+      <div className="mx-auto grid max-w-[90rem] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.8fr] lg:px-10 lg:py-16">
+        <div>
+          <h2 className="font-serif text-[2rem] tracking-[0.12em]">BLAGG Studio</h2>
+          <p className="mt-4 text-xs uppercase tracking-[0.28em] text-white/42">
+            Özel Mimarlık & Renovasyon Stüdyosu
           </p>
+          <p className="mt-6 text-lg text-white/78">Design. Build. Track.</p>
+          <p className="mt-3 max-w-xl text-base leading-7 text-white/52">
+            Tasarım, uygulama ve takip tek sistemde.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            {[
+              "Az sayıda proje",
+              "Görünür süreç",
+              "Kontrollü teslim"
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-[1.25rem] border border-white/10 bg-white/[0.04] px-4 py-4 text-sm text-white/60"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
 
-        <FooterGroup title="Bağlantılar" links={serviceLinks} />
+        <div className="grid gap-10 sm:grid-cols-2">
+          <div>
+            <h3 className="text-xs uppercase tracking-[0.28em] text-white/36">Bağlantılar</h3>
+            <div className="mt-5 grid gap-2">
+              {footerLinks.map(([label, href]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="inline-flex min-h-11 items-center text-base text-white/64 transition-colors duration-200 hover:text-white"
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
 
-        <div className="min-w-0">
-          <h3 className="text-sm uppercase tracking-[0.25em] text-white/35">
-            İletişim
-          </h3>
-          <p className="mt-5 max-w-sm text-base leading-7 text-white/65">
-            Projenizle ilgili ekibimizle iletişime geçmek için formu kullanabilirsiniz.
-          </p>
-          <a href="/teklif-al" className="mt-6 inline-flex min-h-14 items-center justify-center rounded-full bg-gold px-6 py-3 font-semibold text-stoneDark">
-            Projenizi Başlatın
-          </a>
+          <div>
+            <h3 className="text-xs uppercase tracking-[0.28em] text-white/36">Not</h3>
+            <p className="mt-5 max-w-sm text-base leading-7 text-white/52">
+              Başvuru formu yalnızca projenizin kapsamını anlamak için kullanılır. Uygun çalışma modeli netleştikten sonra süreç planlanır.
+            </p>
+            <Link
+              href="/teklif-al"
+              className="mt-6 inline-flex min-h-12 items-center rounded-full border border-white/14 px-5 py-3 text-sm uppercase tracking-[0.14em] text-white/72"
+            >
+              Projenizi Başlatın
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterGroup({ title, links }) {
-  return (
-    <div className="min-w-0">
-      <h3 className="text-sm uppercase tracking-[0.25em] text-white/35">
-        {title}
-      </h3>
-      <div className="mt-5 grid gap-2 text-base text-white/65">
-        {links.map(([label, href]) => (
-          <a key={label} href={href} className="inline-flex min-h-11 items-center rounded-full px-1 hover:text-white">
-            {label}
-          </a>
-        ))}
-      </div>
-    </div>
   );
 }

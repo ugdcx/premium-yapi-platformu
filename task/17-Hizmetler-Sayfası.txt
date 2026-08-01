@@ -1,0 +1,56 @@
+Create the Services page for BLAGG Studio.
+
+Route:
+- /hizmetler
+
+Page title:
+"Hizmetler"
+
+Hero text:
+"BLAGG Studio, seçilmiş projelerde tasarım, uygulama ve takip süreçlerini tek sorumluluk altında yönetir."
+
+Services:
+
+1. Anahtar Teslim İnşaat
+Detailed text:
+"Yeni yapı veya kapsamlı inşaat projelerinde tasarım kararından saha organizasyonuna, malzeme seçiminden teslim sürecine kadar bütün adımlar tek merkezden yönetilir."
+
+Photo placeholder:
+Label:
+"HİZMET GÖRSELİ"
+Title:
+"Anahtar Teslim İnşaat"
+
+2. Konut Yenileme & Tadilat
+Detailed text:
+"Mevcut konutların plan, malzeme, ışık, depolama, yüzey ve kullanım kalitesi yeniden ele alınır. Amaç yalnızca yenilemek değil, yaşam alanını mimari olarak yükseltmektir."
+
+Photo placeholder:
+Title:
+"Konut Yenileme"
+
+3. Gayrimenkul Değer Artışı & Danışmanlığı
+Detailed text:
+"Satış veya kullanım öncesi mülkün algısını güçlendirecek, değerini artıracak ve karar sürecini hızlandıracak tasarım ve uygulama önerileri geliştirilir."
+
+Photo placeholder:
+Title:
+"Değer Odaklı Proje Geliştirme"
+
+4. Peyzaj Mimarisi
+Detailed text:
+"Bahçe, teras, giriş alanı ve dış mekânlar yapının mimari karakteriyle birlikte değerlendirilir. Dış mekân, projenin tamamlayıcı parçası olarak ele alınır."
+
+Photo placeholder:
+Title:
+"Peyzaj & Dış Mekân"
+
+Layout:
+- Alternating text and photo placeholder sections.
+- Very generous spacing.
+- Minimal lines.
+- No icons unless absolutely necessary.
+- No colorful visuals.
+
+Final CTA:
+"Projenizi Başlatın"

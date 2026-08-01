@@ -1,0 +1,30 @@
+Create the final CTA section for the homepage.
+
+Background:
+- #050505
+
+Text:
+White.
+
+Heading:
+"Projenizi birlikte başlatalım."
+
+Body:
+"Kısa formu doldurun. Projenizi değerlendirip size uygun çalışma modelini netleştirelim."
+
+Primary CTA:
+"Projenizi Başlatın"
+
+Secondary text:
+"İlk adım yalnızca projenizi anlamak."
+
+Design:
+- Very spacious.
+- Centered or left-aligned depending on the page rhythm.
+- No image required.
+- No decorative elements except maybe a fine horizontal line.
+- Must feel like a premium invitation, not a sales banner.
+
+Mobile:
+- Button full width.
+- Enough bottom spacing so sticky mobile CTA does not cover it.

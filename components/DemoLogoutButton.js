@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
@@ -19,7 +19,7 @@ export default function DemoLogoutButton({ dark = false }) {
       className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${
         dark
           ? "bg-white/10 text-white hover:bg-white/15"
-          : "border border-border text-stoneDark hover:border-gold"
+          : "border border-border text-stoneDark hover:border-stoneDark"
       }`}
     >
       <LogOut size={15} />
@@ -27,3 +27,4 @@ export default function DemoLogoutButton({ dark = false }) {
     </button>
   );
 }
+

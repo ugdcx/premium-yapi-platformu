@@ -1,0 +1,42 @@
+Prepare the project for future real image insertion.
+
+Create a clear image organization system.
+
+Tasks:
+1. Create a folder structure under public:
+   /public/images/blagg/
+   /public/images/blagg/projects/
+   /public/images/blagg/details/
+   /public/images/blagg/materials/
+   /public/images/blagg/remote/
+
+2. Add a README or comments explaining where future photos should go.
+
+3. Create an image data file:
+   /lib/blagg-images.ts
+or similar.
+
+This file should export image references for future use, but for now values can be empty or null.
+
+Example structure:
+export const projectImages = {
+  villaK: {
+    cover: null,
+    process: [],
+    details: []
+  },
+  residence: {
+    cover: null,
+    process: [],
+    details: []
+  }
+}
+
+4. Update ProjectCard or PhotoPlaceholder usage so future real images can be swapped in easily.
+
+5. Do not add external images.
+6. Do not break current placeholders.
+7. Keep placeholder fallback active if image path is null.
+
+Goal:
+When I later add real photos into /public/images/blagg/projects/, I should be able to update one data file and the website should show the real images automatically.

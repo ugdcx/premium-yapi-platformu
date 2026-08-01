@@ -1,0 +1,26 @@
+Use this future image naming convention:
+
+/public/images/blagg/projects/villa-k/
+- villa-k-cover.webp
+- villa-k-before-01.webp
+- villa-k-before-02.webp
+- villa-k-process-01.webp
+- villa-k-process-02.webp
+- villa-k-detail-01.webp
+- villa-k-detail-02.webp
+- villa-k-final-01.webp
+- villa-k-final-02.webp
+
+/public/images/blagg/projects/residence-dairesi/
+- residence-cover.webp
+- residence-before-01.webp
+- residence-process-01.webp
+- residence-detail-01.webp
+- residence-final-01.webp
+
+Rules:
+- Use lowercase.
+- Use hyphen, not spaces.
+- Use .webp when possible.
+- Keep image sizes optimized.
+- Add meaningful alt text in the project data file.

@@ -1,0 +1,52 @@
+Build the homepage Intro section for BLAGG Studio.
+
+Section requirements:
+- Full viewport height: 100vh.
+- Background: #050505.
+- Text: white.
+- Centered composition, but not generic.
+- Content:
+  Main wordmark:
+  "BLAGG Studio"
+
+  Subtitle:
+  "Private Architecture & Renovation Studio"
+
+  Small line:
+  "Design. Build. Track."
+
+  Bottom:
+  a minimal downward arrow or scroll indicator.
+
+Design details:
+- No background image.
+- No gradient.
+- No decorative colors.
+- Use large typography.
+- Plenty of whitespace.
+- The wordmark should feel premium and architectural.
+- Subtitle should be small and controlled.
+- The scroll indicator should be very subtle.
+
+Animation:
+- On page load:
+  - wordmark fades in
+  - subtitle fades in slightly after
+  - "Design. Build. Track." fades in after subtitle
+  - arrow appears last
+- Animation must be calm.
+- No bounce.
+- No typing effect.
+
+Behavior:
+- Clicking the arrow scrolls to the next section.
+- Add an id to the next section target, for example "#hero".
+- Make sure it works on mobile.
+
+Mobile:
+- Wordmark must not overflow.
+- Use responsive font sizes.
+- Keep the intro premium on small screens.
+
+Do not build the rest of the homepage yet.
+Only add the Intro section to the homepage.

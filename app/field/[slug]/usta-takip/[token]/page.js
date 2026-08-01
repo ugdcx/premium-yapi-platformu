@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertCircle,
   CalendarDays,
   Camera,
   CheckCircle2,
-  ClipboardList,
   MapPin,
   Send,
   Trash2
@@ -15,7 +14,18 @@ import { projects } from "../../../../../lib/data/mockData";
 import { formatDate } from "../../../../../lib/helpers/format";
 import { createWorkerUpload } from "../../../../../lib/localStorageRecords";
 
-const workItems = ["Zemin", "Seramik", "Boya", "Elektrik", "Tesisat", "Mutfak", "Banyo", "Dış Cephe", "Temizlik", "Diğer"];
+const workItems = [
+  "Zemin",
+  "Seramik",
+  "Boya",
+  "Elektrik",
+  "Tesisat",
+  "Mutfak",
+  "Banyo",
+  "Dış Cephe",
+  "Temizlik",
+  "Diğer"
+];
 const statusOptions = ["Devam Ediyor", "Tamamlandı", "Sorun Var", "Malzeme Bekliyor"];
 const maxPhotos = 10;
 
@@ -27,10 +37,10 @@ export default function FieldWorkerTrackingPage({ params }) {
   if (!project) return <InvalidWorkerLinkState />;
 
   return (
-    <main className="min-h-screen bg-cream px-4 py-5 text-stoneDark">
+    <main className="min-h-screen bg-[#F7F7F5] px-4 py-5 text-[#111111]">
       <div className="mx-auto max-w-xl">
         <FieldProjectHeader project={project} />
-        <WorkerUploadForm project={project} />
+        <WorkerUploadForm project={project} token={params.token} />
       </div>
     </main>
   );
@@ -38,25 +48,21 @@ export default function FieldWorkerTrackingPage({ params }) {
 
 function FieldProjectHeader({ project }) {
   return (
-    <header className="rounded-[1.5rem] bg-stoneDark p-5 text-white">
-      <p className="text-sm uppercase tracking-[0.2em] text-white/35">
-        BLAGG Field
-      </p>
-      <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-        {project.title}
-      </h1>
-      <div className="mt-4 grid gap-3 text-sm text-white/70">
+    <header className="rounded-[2rem] border border-black/10 bg-black p-5 text-white">
+      <p className="text-xs uppercase tracking-[0.28em] text-white/42">BLAGG Field</p>
+      <h1 className="mt-4 text-[2.4rem] leading-tight">{project.title}</h1>
+      <div className="mt-4 grid gap-3 text-sm text-white/68">
         <InfoLine icon={MapPin} text={project.location} />
         <InfoLine icon={CalendarDays} text={formatDate(new Date().toISOString())} />
       </div>
-      <p className="mt-5 text-lg leading-7 text-white/70">
+      <p className="mt-5 text-sm leading-7 text-white/62">
         Bu ekrandan yalnızca kendi iş kaleminize ait fotoğraf, not ve durum gönderebilirsiniz.
       </p>
     </header>
   );
 }
 
-function WorkerUploadForm({ project }) {
+function WorkerUploadForm({ project, token }) {
   const [workItem, setWorkItem] = useState("");
   const [status, setStatus] = useState("");
   const [note, setNote] = useState("");
@@ -64,13 +70,24 @@ function WorkerUploadForm({ project }) {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      photos.forEach((photo) => {
+        if (photo.url) URL.revokeObjectURL(photo.url);
+      });
+    };
+  }, [photos]);
+
   function selectPhotos(fileList) {
     const selected = Array.from(fileList || []);
     const nextErrors = {};
     const accepted = [];
 
     if (photos.length + selected.length > maxPhotos) {
-      setErrors((current) => ({ ...current, photos: `En fazla ${maxPhotos} fotoğraf ekleyebilirsiniz.` }));
+      setErrors((current) => ({
+        ...current,
+        photos: `En fazla ${maxPhotos} fotoğraf ekleyebilirsiniz.`
+      }));
       return;
     }
 
@@ -93,7 +110,11 @@ function WorkerUploadForm({ project }) {
   }
 
   function removePhoto(id) {
-    setPhotos((current) => current.filter((photo) => photo.id !== id));
+    setPhotos((current) => {
+      const target = current.find((photo) => photo.id === id);
+      if (target?.url) URL.revokeObjectURL(target.url);
+      return current.filter((photo) => photo.id !== id);
+    });
   }
 
   function submitUpload(event) {
@@ -107,14 +128,23 @@ function WorkerUploadForm({ project }) {
     if (Object.keys(nextErrors).length) return;
 
     createWorkerUpload({
-      project: project.title,
-      worker: "Saha ekibi",
+      projectSlug: project.slug,
+      projectName: project.title,
+      token,
+      workerName: "Saha ekibi",
+      workerLabel: "Saha ekibi",
       area: workItem,
       workItem,
       workStatus: status,
       note: note.trim(),
-      photos,
+      photos: photos.map((photo) => ({
+        id: photo.id,
+        name: photo.name,
+        url: ""
+      })),
       status: "pending_review",
+      approvalStatus: "pending",
+      visibleToClient: false,
       visible_to_customer: false
     });
 
@@ -122,15 +152,22 @@ function WorkerUploadForm({ project }) {
     setWorkItem("");
     setStatus("");
     setNote("");
+    photos.forEach((photo) => {
+      if (photo.url) URL.revokeObjectURL(photo.url);
+    });
     setPhotos([]);
   }
 
   if (submitted) return <SubmitSuccessState onNewUpload={() => setSubmitted(false)} />;
 
   return (
-    <form onSubmit={submitUpload} className="mt-5 grid gap-5 rounded-[1.5rem] bg-surface p-4 shadow-card">
+    <form
+      onSubmit={submitUpload}
+      className="mt-5 grid gap-5 rounded-[2rem] border border-black/10 bg-white p-5"
+      noValidate
+    >
       <section>
-        <h2 className="text-2xl font-semibold">1. İş Kalemi Seç</h2>
+        <h2 className="text-2xl">1. İş Kalemi Seç</h2>
         <div className="mt-4 grid grid-cols-2 gap-3">
           {workItems.map((item) => (
             <button
@@ -140,119 +177,130 @@ function WorkerUploadForm({ project }) {
                 setWorkItem(item);
                 setErrors((current) => ({ ...current, workItem: "" }));
               }}
-              className={`min-h-14 rounded-2xl border px-4 py-3 text-left text-base font-semibold ${
+              className={`min-h-14 rounded-[1rem] border px-4 py-3 text-left text-base ${
                 workItem === item
-                  ? "border-stoneDark bg-stoneDark text-white"
-                  : "border-border bg-cream text-stoneDark"
+                  ? "border-black bg-black text-white"
+                  : "border-black/10 bg-[#F7F7F5] text-black"
               }`}
             >
               {item}
             </button>
           ))}
         </div>
-        {errors.workItem && <ErrorText>{errors.workItem}</ErrorText>}
+        {errors.workItem ? <ErrorText>{errors.workItem}</ErrorText> : null}
       </section>
 
-      <WorkStatusSelector value={status} onChange={setStatus} error={errors.status} />
-      <PhotoUploadBox photos={photos} onSelect={selectPhotos} onRemove={removePhoto} error={errors.photos} />
+      <section>
+        <h2 className="text-2xl">2. Durum Seç</h2>
+        <div className="mt-4 grid gap-3">
+          {statusOptions.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setStatus(item)}
+              className={`min-h-14 rounded-[1rem] border px-4 py-3 text-left text-base ${
+                status === item
+                  ? "border-black bg-black text-white"
+                  : "border-black/10 bg-[#F7F7F5] text-black"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+        {errors.status ? <ErrorText>{errors.status}</ErrorText> : null}
+      </section>
+
+      <section>
+        <h2 className="text-2xl">3. Fotoğraf Yükle</h2>
+        <label className="mt-4 flex min-h-28 cursor-pointer items-center justify-center gap-3 rounded-[1rem] bg-black px-5 py-4 text-lg text-white">
+          <Camera size={24} />
+          Fotoğraf Ekle
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            capture="environment"
+            multiple
+            onChange={(event) => selectPhotos(event.target.files)}
+            className="sr-only"
+          />
+        </label>
+        <p className="mt-2 text-sm text-black/54">
+          JPG, PNG, WEBP. Çoklu fotoğraf ekleyebilirsiniz.
+        </p>
+        <p className="mt-1 text-sm text-black/46">
+          {photos.length}/{maxPhotos} fotoğraf eklendi
+        </p>
+        {errors.photos ? <ErrorText>{errors.photos}</ErrorText> : null}
+
+        {photos.length ? (
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {photos.map((photo) => (
+              <div
+                key={photo.id}
+                className="overflow-hidden rounded-[1rem] border border-black/10 bg-[#F7F7F5]"
+              >
+                {photo.url ? (
+                  <img
+                    src={photo.url}
+                    alt={photo.name}
+                    className="aspect-square w-full object-cover"
+                  />
+                ) : null}
+                <div className="flex items-center justify-between gap-2 p-3">
+                  <p className="truncate text-sm text-black/54">{photo.name}</p>
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(photo.id)}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/54"
+                    aria-label={`${photo.name} fotoğrafını sil`}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </section>
 
       <label className="grid gap-2">
-        <span className="text-xl font-semibold">4. Açıklama / Not Yaz</span>
+        <span className="text-2xl">4. Açıklama / Not Yaz</span>
         <textarea
           value={note}
           onChange={(event) => setNote(event.target.value)}
-          className="min-h-28 rounded-2xl border border-border bg-cream px-4 py-3 text-lg outline-none"
+          className="min-h-28 rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-4 py-3 text-base outline-none"
           placeholder="Kısa not yazın"
+          maxLength={400}
         />
+        <p className="text-sm text-black/46">{note.length}/400 karakter</p>
       </label>
 
-      <button className="flex min-h-16 items-center justify-center gap-3 rounded-2xl bg-gold px-5 py-4 text-lg font-semibold text-stoneDark">
-        <Send size={22} />
+      <button
+        className="flex min-h-14 items-center justify-center gap-3 rounded-full bg-black px-5 py-4 text-white disabled:cursor-not-allowed disabled:opacity-40"
+        disabled={!workItem || !status || !photos.length}
+      >
+        <Send size={18} />
         5. Gönder
       </button>
     </form>
   );
 }
 
-function WorkStatusSelector({ value, onChange, error }) {
-  return (
-    <section>
-      <h2 className="text-2xl font-semibold">2. Durum Seç</h2>
-      <div className="mt-4 grid gap-3">
-        {statusOptions.map((item) => (
-          <button
-            key={item}
-            type="button"
-            onClick={() => onChange(item)}
-            className={`min-h-14 rounded-2xl border px-4 py-3 text-left text-base font-semibold ${
-              value === item
-                ? "border-stoneDark bg-stoneDark text-white"
-                : "border-border bg-cream text-stoneDark"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-      {error && <ErrorText>{error}</ErrorText>}
-    </section>
-  );
-}
-
-function PhotoUploadBox({ photos, onSelect, onRemove, error }) {
-  return (
-    <section>
-      <h2 className="text-2xl font-semibold">3. Fotoğraf Yükle</h2>
-      <label className="mt-4 flex min-h-28 cursor-pointer items-center justify-center gap-3 rounded-2xl bg-stoneDark px-5 py-4 text-lg font-semibold text-white">
-        <Camera size={26} />
-        Fotoğraf Ekle
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          capture="environment"
-          multiple
-          onChange={(event) => onSelect(event.target.files)}
-          className="sr-only"
-        />
-      </label>
-      <p className="mt-2 text-sm text-muted">JPG, PNG, WEBP. Çoklu fotoğraf ekleyebilirsiniz.</p>
-      {error && <ErrorText>{error}</ErrorText>}
-
-      {photos.length > 0 && (
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {photos.map((photo) => (
-            <div key={photo.id} className="overflow-hidden rounded-2xl border border-border bg-cream">
-              {photo.url && <img src={photo.url} alt={photo.name} className="aspect-square w-full object-cover" />}
-              <div className="flex items-center justify-between gap-2 p-3">
-                <p className="truncate text-sm text-muted">{photo.name}</p>
-                <button
-                  type="button"
-                  onClick={() => onRemove(photo.id)}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-muted"
-                  aria-label={`${photo.name} fotoğrafını sil`}
-                >
-                  <Trash2 size={17} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
 function SubmitSuccessState({ onNewUpload }) {
   return (
-    <section className="mt-5 rounded-[1.5rem] border border-[#BFD8C3] bg-[#E6F0E7] p-5 text-[#2D5A38]">
-      <CheckCircle2 size={32} />
-      <h2 className="mt-4 text-2xl font-semibold">
-        Fotoğrafınız BLAGG Studio ekibi tarafından incelendikten sonra proje kaydına eklenecektir.
+    <section className="mt-5 rounded-[2rem] border border-black/10 bg-white p-5">
+      <CheckCircle2 size={28} className="text-black/62" />
+      <h2 className="mt-4 text-2xl">
+        Kayıt şirket onayına gönderildi.
       </h2>
+      <p className="mt-3 text-sm leading-6 text-black/58">
+        BLAGG Studio ekibi kaydı inceleyip uygun bulursa müşteri proje akışında yayınlar.
+      </p>
       <button
         type="button"
         onClick={onNewUpload}
-        className="mt-5 min-h-14 rounded-2xl bg-white px-5 py-3 font-semibold text-[#2D5A38]"
+        className="mt-5 min-h-14 rounded-full bg-black px-5 py-3 text-white"
       >
         Yeni fotoğraf gönder
       </button>
@@ -262,14 +310,12 @@ function SubmitSuccessState({ onNewUpload }) {
 
 function InvalidWorkerLinkState() {
   return (
-    <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark">
+    <main className="min-h-screen bg-[#F7F7F5] px-4 py-8 text-[#111111]">
       <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-xl items-center">
-        <div className="w-full rounded-[2rem] border border-border bg-surface p-6 text-center shadow-card">
-          <AlertCircle className="mx-auto text-gold" size={42} />
-          <h1 className="mt-6 text-3xl font-semibold">
-            Geçersiz veya süresi dolmuş bağlantı
-          </h1>
-          <p className="mt-4 leading-7 text-muted">
+        <div className="w-full rounded-[2rem] border border-black/10 bg-white p-6 text-center">
+          <AlertCircle className="mx-auto text-black/62" size={42} />
+          <h1 className="mt-6 text-[2rem]">Geçersiz veya süresi dolmuş bağlantı</h1>
+          <p className="mt-4 leading-7 text-black/58">
             Lütfen BLAGG Studio ekibinden size gönderilen güncel bağlantıyı kullanın.
           </p>
         </div>
@@ -281,12 +327,12 @@ function InvalidWorkerLinkState() {
 function InfoLine({ icon: Icon, text }) {
   return (
     <div className="flex items-center gap-2">
-      <Icon size={17} />
+      <Icon size={16} />
       <span>{text}</span>
     </div>
   );
 }
 
 function ErrorText({ children }) {
-  return <p className="mt-3 text-sm font-semibold text-red-700">{children}</p>;
+  return <p className="mt-3 text-sm text-black/58">{children}</p>;
 }

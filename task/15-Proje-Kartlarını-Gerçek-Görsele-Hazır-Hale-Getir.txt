@@ -1,0 +1,35 @@
+Refactor the Selected Projects section so each project card supports both:
+1. A real image if available
+2. The premium placeholder if no image is available
+
+Requirements:
+- Use Next.js Image component when image path exists.
+- Use PhotoPlaceholder fallback when image path is null.
+- Keep aspect ratios consistent.
+- Do not cause layout shift.
+- Add alt text support.
+- Add project data from a central data file, not hardcoded inside the component.
+
+Create or update:
+- /data/projects.ts
+or
+- /lib/projects.ts
+
+Project data shape:
+{
+  slug: string
+  name: string
+  location: string
+  scope: string
+  status: string
+  year?: string
+  coverImage?: string | null
+  coverAlt?: string
+}
+
+Initial data:
+1. Villa K.
+2. Residence Dairesi
+
+Do not create detail pages yet unless needed.
+Focus on clean data-driven project cards.

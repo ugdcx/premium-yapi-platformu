@@ -1,149 +1,266 @@
 "use client";
 
-import { Info, Languages, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
-
-const remoteTooltip =
-  "Şehir dışında olsanız bile projenizi fotoğraflar, ödeme planı ve belgelerle tek bağlantı üzerinden takip edin.";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 const navItems = [
-  ["Studio Services", "/hizmetler", true],
-  ["Projects", "/projeler", false],
-  ["Süreç", "/surec", false],
-  ["BLAGG Remote", "/blagg-remote", false, remoteTooltip],
-  ["İletişim", "/iletisim", false]
+  ["Studio", "/"],
+  ["Hizmetler", "/hizmetler"],
+  ["Projeler", "/projeler"],
+  ["BLAGG Remote", "/blagg-remote"],
+  ["Süreç", "/surec"],
+  ["İletişim", "/iletisim"]
 ];
 
+const hiddenPrefixes = [
+  "/admin",
+  "/control",
+  "/login",
+  "/client",
+  "/field",
+  "/blaag-admin",
+  "/ahmet-sezer"
+];
+
+const homeSectionLabels = {
+  hero: "Hero",
+  "studio-definition": "Studio",
+  services: "Hizmetler",
+  remote: "BLAGG Remote",
+  projects: "Projeler",
+  "final-cta": "Başlat"
+};
+
+const homeSectionNavMap = {
+  hero: "/",
+  "studio-definition": "/",
+  services: "/hizmetler",
+  remote: "/blagg-remote",
+  projects: "/projeler",
+  "final-cta": "/teklif-al"
+};
+
+const homeSectionOrder = Object.keys(homeSectionLabels);
+
 export default function Header() {
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [remoteInfoOpen, setRemoteInfoOpen] = useState(false);
+  const [activeHomeSection, setActiveHomeSection] = useState("hero");
+
+  const shouldHide = useMemo(
+    () => hiddenPrefixes.some((prefix) => pathname?.startsWith(prefix)),
+    [pathname]
+  );
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    if (shouldHide) return undefined;
+
+    const onScroll = () => setScrolled(window.scrollY > 36);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [shouldHide]);
 
-  const closeMenu = () => setMenuOpen(false);
+  useEffect(() => {
+    if (pathname !== "/" || shouldHide) {
+      setActiveHomeSection("hero");
+      return undefined;
+    }
+
+    const sectionIds = Object.keys(homeSectionLabels);
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (!elements.length) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visibleEntries[0]?.target?.id) {
+          setActiveHomeSection(visibleEntries[0].target.id);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-38% 0px -44% 0px",
+        threshold: [0.2, 0.35, 0.5, 0.7]
+      }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [pathname, shouldHide]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  if (shouldHide) {
+    return null;
+  }
+
+  const isHome = pathname === "/";
+  const isRemotePage = pathname === "/blagg-remote";
+  const isProcessPage = pathname === "/surec";
+  const isHeroAtTop = isHome && activeHomeSection === "hero" && !scrolled;
+  const useLightHeader = isHeroAtTop || isRemotePage || (isProcessPage && !scrolled);
+
+  const shellClass = isRemotePage
+    ? "border-b border-white/10 bg-[rgba(5,5,5,0.72)] backdrop-blur-xl"
+    : scrolled
+    ? "border-b border-[#E5E5E5] bg-[rgba(247,247,245,0.82)] backdrop-blur-xl"
+    : "border-b border-transparent bg-transparent";
+  const logoClass = useLightHeader ? "text-white" : "text-black";
+  const progressTrackClass = useLightHeader ? "bg-white/10" : "bg-black/6";
+  const progressFillClass = useLightHeader ? "bg-white" : "bg-black";
+  const desktopCtaClass = useLightHeader
+    ? "premium-button inline-flex min-h-12 items-center rounded-full border border-white bg-white px-6 py-3 text-sm uppercase tracking-[0.14em] text-black"
+    : "premium-button inline-flex min-h-12 items-center rounded-full border border-black bg-black px-6 py-3 text-sm uppercase tracking-[0.14em] text-white";
+  const menuButtonClass = useLightHeader
+    ? "inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/14 bg-white text-black lg:hidden"
+    : "inline-flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-[rgba(255,255,255,0.88)] text-black lg:hidden";
+
+  const currentSectionIndex = homeSectionOrder.indexOf(activeHomeSection);
+  const currentSectionProgress =
+    pathname === "/" && currentSectionIndex >= 0
+      ? ((currentSectionIndex + 1) / homeSectionOrder.length) * 100
+      : 0;
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b transition-all duration-200 ${
-        scrolled
-          ? "border-border bg-white/95 shadow-sm shadow-black/5 backdrop-blur-xl"
-          : "border-black/5 bg-cream/95 backdrop-blur-md"
-      }`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 lg:py-3">
-        <a href="/" className="group flex min-w-0 flex-col justify-center leading-none" onClick={closeMenu}>
-          <span className="text-lg font-semibold tracking-[0.14em] text-stoneDark sm:text-2xl">
-            BLAGG
-          </span>
-          <span className="mt-1 max-w-[11rem] text-[0.62rem] font-medium uppercase tracking-[0.14em] text-muted sm:max-w-none sm:text-xs">
-            Studio
-          </span>
-        </a>
+    <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-black focus:px-4 focus:py-3 focus:text-white"
+      >
+        Ana içeriğe geç
+      </a>
 
-        <nav className="hidden items-center gap-5 text-sm font-medium text-muted lg:flex" aria-label="Ana menü">
-          {navItems.map(([label, href, prominent, tooltip]) => (
-            <a
-              key={href}
-              href={href}
-              className={`group relative inline-flex min-h-11 items-center px-1 hover:text-stoneDark ${
-                prominent ? "font-semibold text-stoneDark" : ""
-              } after:absolute after:bottom-2 after:left-1 after:h-px after:w-0 after:bg-stoneDark after:transition-all after:duration-200 hover:after:w-[calc(100%-0.5rem)]`}
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out ${shellClass}`}
+      >
+        {isHome ? (
+          <div className={`absolute inset-x-0 bottom-0 h-px ${progressTrackClass}`}>
+            <div
+              className={`h-px transition-[width] duration-500 ease-out ${progressFillClass}`}
+              style={{ width: `${currentSectionProgress}%` }}
+            />
+          </div>
+        ) : null}
+
+        <div className="mx-auto flex max-w-[90rem] items-center justify-between px-4 py-4 sm:px-6 lg:px-10">
+          <div className="flex min-w-0 items-center">
+            <Link
+              href="/"
+              onClick={() => setMenuOpen(false)}
+              className={`min-w-0 ${logoClass}`}
+              aria-label="BLAGG Studio ana sayfa"
             >
-              {label}
-              {tooltip && (
-                <span className="pointer-events-none absolute left-1/2 top-full z-50 mt-2 hidden w-72 -translate-x-1/2 rounded-2xl border border-white/10 bg-stoneDark p-4 text-xs leading-5 text-white/75 shadow-xl group-hover:block">
-                  {tooltip}
-                </span>
-              )}
-            </a>
-          ))}
-        </nav>
+              <span className="block font-serif text-[1.45rem] tracking-[0.18em] sm:text-[1.7rem]">
+                BLAGG Studio
+              </span>
+            </Link>
+          </div>
 
-        <div className="hidden items-center justify-end gap-4 lg:flex">
-          <LanguageSwitcher />
-          <a
-            href="/teklif-al"
-            className="inline-flex min-h-11 items-center rounded-full bg-stoneDark px-5 py-2.5 text-sm font-medium text-white shadow-sm shadow-black/10 hover:bg-graphite"
-          >
-            Projenizi Başlatın
-          </a>
-        </div>
+          <div className="hidden items-center gap-8 lg:flex">
+            <nav className="flex items-center gap-7" aria-label="Ana menü">
+              {navItems.map(([label, href]) => {
+                const active =
+                  pathname === "/"
+                    ? homeSectionNavMap[activeHomeSection] === href
+                    : href === "/"
+                      ? pathname === href
+                      : pathname === href || pathname?.startsWith(`${href}/`);
 
-        <button
-          type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-stoneDark lg:hidden"
-          aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          onClick={() => setMenuOpen((value) => !value)}
-        >
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      <div id="mobile-menu" className={`lg:hidden ${menuOpen ? "block" : "hidden"}`}>
-        <nav className="max-h-[calc(100vh-4.5rem)] overflow-y-auto border-t border-border bg-white px-4 py-4 shadow-sm shadow-black/5" aria-label="Mobil ana menü">
-          <div className="grid gap-1">
-            {navItems.map(([label, href, prominent, tooltip]) => (
-              <div key={href} className="border-b border-border/70">
-                <div className="flex items-center justify-between gap-2">
-                  <a
+                return (
+                  <Link
+                    key={href}
                     href={href}
-                    onClick={closeMenu}
-                    className={`flex min-h-12 flex-1 items-center px-1 text-base ${
-                      prominent ? "font-semibold text-stoneDark" : "font-medium text-muted"
+                    aria-current={active ? "page" : undefined}
+                    className={`group relative inline-flex min-h-12 items-center text-sm uppercase tracking-[0.16em] transition-colors duration-200 ${
+                      isHeroAtTop
+                        ? active
+                          ? "text-white"
+                          : "text-white/68 hover:text-white"
+                        : active
+                          ? "text-black"
+                          : "text-black/68 hover:text-black"
                     }`}
                   >
                     {label}
-                  </a>
-                  {tooltip && (
-                    <button
-                      type="button"
-                      aria-label="BLAGG Remote bilgisi"
-                      className="flex h-11 w-11 items-center justify-center rounded-full text-muted"
-                      onClick={() => setRemoteInfoOpen((value) => !value)}
-                    >
-                      <Info size={18} />
-                    </button>
-                  )}
-                </div>
-                {tooltip && remoteInfoOpen && (
-                  <p className="pb-4 pl-1 pr-3 text-sm leading-6 text-muted">{tooltip}</p>
-                )}
-              </div>
+                    <span
+                      className={`absolute bottom-[0.45rem] left-0 h-px transition-all duration-200 ${
+                        active ? "w-full" : "w-0 group-hover:w-full"
+                      } ${isHeroAtTop ? "bg-white" : "bg-black"}`}
+                    />
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <Link
+              href="/teklif-al"
+              className={desktopCtaClass}
+            >
+              Projenizi Başlatın
+            </Link>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setMenuOpen((value) => !value)}
+            className={menuButtonClass}
+            aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="mobile-menu"
+        className={`fixed inset-0 z-40 bg-[rgba(247,247,245,0.98)] px-4 pt-24 transition-all duration-300 ease-out lg:hidden ${
+          menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <nav className="flex h-full flex-col justify-between pb-8" aria-label="Mobil ana menü">
+          <div className="grid gap-2">
+            {navItems.map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="border-b border-black/8 py-5 text-[1.75rem] font-medium tracking-tight text-black"
+              >
+                {label}
+              </Link>
             ))}
           </div>
-          <a
+
+          <Link
             href="/teklif-al"
-            onClick={closeMenu}
-            className="mt-4 inline-flex min-h-14 w-full items-center justify-center rounded-full bg-stoneDark px-5 py-3 text-base font-semibold text-white hover:bg-graphite"
+            onClick={() => setMenuOpen(false)}
+            className="inline-flex min-h-14 w-full items-center justify-center rounded-full bg-black px-6 py-4 text-base font-medium text-white"
           >
             Projenizi Başlatın
-          </a>
-          <div className="mt-4">
-            <LanguageSwitcher />
-          </div>
+          </Link>
         </nav>
       </div>
-    </header>
-  );
-}
-
-function LanguageSwitcher() {
-  return (
-    <div className="inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white px-3 text-xs font-semibold text-muted">
-      <Languages size={15} />
-      {["TR", "EN", "DE"].map((lang) => (
-        <span key={lang} className={`px-1 py-1 ${lang === "TR" ? "text-stoneDark" : "text-muted"}`}>
-          {lang}
-        </span>
-      ))}
-    </div>
+    </>
   );
 }

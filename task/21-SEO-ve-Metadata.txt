@@ -1,0 +1,46 @@
+Implement SEO metadata for BLAGG Studio.
+
+Global metadata:
+Title:
+"BLAGG Studio | Private Architecture & Renovation Studio"
+
+Description:
+"BLAGG Studio; tasarım, uygulama ve proje takibini tek sorumluluk altında yöneten özel mimarlık ve renovasyon stüdyosudur."
+
+Keywords:
+- BLAGG Studio
+- mimarlık
+- renovasyon
+- tadilat
+- anahtar teslim inşaat
+- konut yenileme
+- proje takibi
+- Sakarya mimarlık
+- İstanbul renovasyon
+- peyzaj mimarisi
+
+Open Graph:
+- title
+- description
+- siteName
+- locale: tr_TR
+- type: website
+
+Twitter card:
+- summary_large_image if appropriate, but do not use fake image.
+- If no real image exists, do not add misleading image.
+
+Per-page metadata:
+- Home
+- Hizmetler
+- Projeler
+- BLAGG Remote
+- Süreç
+- Başvuru
+- İletişim
+
+Also:
+- Add proper semantic HTML.
+- Use h1 only once per page.
+- Use descriptive section labels.
+- Ensure buttons and links have accessible names.

@@ -1,7 +1,7 @@
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import FloatingWhatsApp from "../components/FloatingWhatsApp";
+import MobileCTA from "../components/MobileCTA";
 import { createSeoMetadata, siteConfig } from "../lib/seo";
 
 export const metadata = {
@@ -9,14 +9,21 @@ export const metadata = {
   ...createSeoMetadata({})
 };
 
+export const viewport = {
+  themeColor: "#050505",
+  colorScheme: "light"
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="tr">
-      <body>
+      <body className="bg-[#F7F7F5] text-[#111111]">
         <Header />
-        {children}
+        <div id="main-content" className="min-h-screen pb-24 md:pb-0">
+          {children}
+        </div>
         <Footer />
-        <FloatingWhatsApp />
+        <MobileCTA />
       </body>
     </html>
   );

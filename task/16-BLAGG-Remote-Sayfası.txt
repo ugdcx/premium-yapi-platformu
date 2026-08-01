@@ -1,0 +1,58 @@
+Create the BLAGG Remote page.
+
+Route:
+- /remote
+
+Positioning:
+BLAGG Remote is not a software product.
+It is a private project tracking experience for active BLAGG Studio clients.
+
+Hero:
+Eyebrow:
+"BLAGG REMOTE"
+
+Heading:
+"Projenizi uzaktan, sade ve güvenli şekilde takip edin."
+
+Body:
+"BLAGG Remote, aktif proje müşterilerine özel oluşturulan takip alanıdır. Size gönderilen özel bağlantı üzerinden projenizin aşamalarını, fotoğraflarını, belgelerini ve ödeme planını görebilirsiniz."
+
+Trust line:
+"Uygulama indirmeniz gerekmez. Üyelik oluşturmanız gerekmez. Size özel bağlantı yeterlidir."
+
+Sections:
+
+1. Ne Görebilirsiniz?
+Items:
+- Aşama Takibi
+- Fotoğraf Güncellemeleri
+- Belgeler
+- Ödeme Planı
+- Proje Notları
+
+2. Nasıl Erişirsiniz?
+Text:
+"Projeniz başladığında size özel bir bağlantı oluşturulur. Bu bağlantı telefon, tablet veya bilgisayardan açılır. Ekstra uygulama indirmenize gerek yoktur."
+
+3. Örnek Proje Ekranı
+Create a monochrome mockup, not a real dashboard.
+Mockup should include:
+- Project name
+- Stage
+- Progress
+- Latest photo updates
+- Document list
+- Payment plan summary
+
+Design:
+- Black/white/grey only.
+- Premium.
+- Calm.
+- No blue SaaS UI.
+- No colorful charts.
+- No generic dashboard cards.
+
+CTA:
+"Projenizi Başlatın"
+
+Use existing components where possible.

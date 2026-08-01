@@ -1,0 +1,156 @@
+We need to fix the BLAGG Studio homepage viewport behavior.
+
+There are two main issues:
+
+1. The homepage sections should progress with a clean single-scroll / section-by-section experience.
+2. The first screen currently fits well only at 90% browser zoom, but at 100% zoom some elements do not fit properly. The design must fit perfectly at 100% zoom on normal desktop screens.
+
+Do not redesign the visual identity.
+Do not change the BLAGG Studio brand style.
+Do not add colors.
+Do not add new sections.
+Only fix layout, viewport sizing, section flow, spacing, and responsive behavior.
+
+Brand rules remain:
+- Premium black and white architecture studio
+- Minimal, Apple-like, luxury feeling
+- No brown, beige, taupe, gold, bronze, warm stone
+- No colorful UI
+- No stock images
+
+Main objective:
+At 100% browser zoom, the intro / hero screen should fit fully inside the viewport without needing the user to zoom out.
+
+Technical goals:
+
+1. Use viewport-safe sizing
+- Avoid hardcoded oversized heights that cause overflow.
+- Use min-height: 100svh or min-height: 100dvh where appropriate.
+- Avoid using only 100vh if mobile browser bars cause issues.
+- Desktop sections can use min-h-screen, but content must be vertically balanced and not overflow.
+
+2. Fix hero / intro vertical layout
+- The first screen must fit inside the visible viewport at 100% zoom.
+- Reduce excessive top/bottom padding if needed.
+- Use clamp() for large typography.
+- Use responsive font sizes instead of fixed huge pixel values.
+- Example:
+  font-size: clamp(3.5rem, 8vw, 7rem)
+- Ensure subtitle, CTA, scroll indicator and header spacing do not push content outside the viewport.
+
+3. Section-by-section scroll behavior
+Implement a refined scroll snapping experience for the homepage sections.
+
+Requirements:
+- The main homepage wrapper should support vertical scroll snapping.
+- Each major section should snap into view.
+- Use:
+  scroll-snap-type: y proximity;
+  or mandatory only if it feels smooth and not aggressive.
+- Each main section should have:
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+- Do not trap the user.
+- Normal scrolling must still feel natural.
+- Avoid JavaScript-heavy scroll hijacking.
+- Do not use fullpage.js.
+- Prefer CSS scroll snap.
+
+Important:
+Use "proximity" first. If the experience is too loose, use "mandatory", but only after checking usability.
+
+4. Section height rules
+Not every section must be exactly 100vh.
+Use this logic:
+- Intro: exactly or minimum 100svh
+- Hero: minimum 100svh if the content fits, otherwise auto with strong spacing
+- Services: auto height, not forced 100vh if content is long
+- BLAGG Remote: min 100svh only if content fits
+- Projects: auto height
+- Process: auto height
+- Final CTA: min 70svh or 100svh depending on composition
+
+Do not force long sections into 100vh if it makes the content cramped or overflowing.
+
+5. Fix desktop 100% zoom issue
+Audit the homepage at:
+- 1440x900
+- 1366x768
+- 1536x864
+- 1920x1080
+
+At 100% zoom:
+- No vertical clipping on the first screen.
+- No horizontal scroll.
+- Header should not overlap important content.
+- Intro text should be centered and fully visible.
+- Hero heading should not exceed available height.
+- CTA buttons should remain visible.
+- Scroll indicator should remain visible but not force overflow.
+
+6. Fix typography scaling
+Replace oversized fixed font sizes with clamp().
+
+Suggested sizes:
+Intro wordmark:
+font-size: clamp(3.2rem, 8vw, 7.5rem);
+
+Hero heading:
+font-size: clamp(3rem, 7vw, 6.5rem);
+
+Section headings:
+font-size: clamp(2.2rem, 5vw, 4.5rem);
+
+Body large:
+font-size: clamp(1rem, 1.4vw, 1.25rem);
+
+Mobile:
+Make sure headings do not overflow on 360px and 430px widths.
+
+7. Fix spacing scaling
+Use clamp() for section padding.
+
+Example:
+padding-top: clamp(5rem, 8vh, 8rem);
+padding-bottom: clamp(5rem, 8vh, 8rem);
+
+For the intro section:
+Use flex layout:
+display: flex;
+align-items: center;
+justify-content: center;
+
+But keep the scroll indicator positioned safely at the bottom:
+position: absolute;
+bottom: clamp(1.5rem, 4vh, 3rem);
+
+8. Header offset
+If header is fixed, make sure content is not hidden behind it.
+For non-intro sections, add enough top padding or use scroll-margin-top.
+
+Example:
+section {
+  scroll-margin-top: 80px;
+}
+
+9. Implementation approach
+First inspect the existing homepage structure and identify:
+- the homepage wrapper
+- intro section
+- hero section
+- all main sections
+- global CSS
+- Tailwind classes controlling heights, padding, and typography
+
+Then implement the fix with minimal changes.
+
+10. After changes
+Run:
+npm run build
+
+Then summarize:
+- which files changed
+- what caused the 100% zoom overflow
+- what was fixed
+- whether scroll snapping is proximity or mandatory
+- any remaining issues

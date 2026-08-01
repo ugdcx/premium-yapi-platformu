@@ -7,9 +7,9 @@ const staticRoutes = [
   "/hizmetler",
   "/projeler",
   "/surec",
+  "/blagg-remote",
   "/teklif-al",
-  "/iletisim",
-  "/proje-takip"
+  "/iletisim"
 ];
 
 export default function sitemap() {
