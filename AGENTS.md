@@ -1,7 +1,7 @@
 # BLAGG Studio — Agent Guidelines
 
 ## Project Purpose
-This project is a premium construction, architecture, renovation, project tracking, field upload, and operations platform for BLAGG Studio. It is not only a marketing website. It must support lead generation, project tracking, admin workflows, customer transparency, and worker photo uploads.
+This project is a premium architecture, renovation, lead generation, project tracking, field upload, and operations platform for BLAGG Studio. It is not only a marketing website. It must support customer transparency, project applications, project tracking, admin workflows, and worker photo uploads.
 
 ## Brand Positioning
 BLAGG Studio is a premium but understandable architecture and renovation studio. The tone should be professional, clear, trustworthy, controlled, and customer-friendly.
@@ -9,7 +9,7 @@ BLAGG Studio is a premium but understandable architecture and renovation studio.
 Main positioning:
 “Renovasyon sürecinizi tasarımdan teslimata kadar görünür hale getiriyoruz.”
 
-Short brand language:
+Brand language:
 “Design. Build. Track.”
 
 Turkish equivalent:
@@ -20,7 +20,7 @@ Turkish equivalent:
 - BLAGG Remote: customer project tracking through a private link without login.
 - BLAGG Field: worker upload screen for photos, notes, and work status.
 - BLAGG Control: admin and operations panel for applications, quotes, projects, photos, finance, documents, and settings.
-- BLAGG Signature: refined model for selected premium projects.
+- BLAGG Signature: curated premium working model for selected projects.
 
 ## UX Rules
 - Mobile-first.
@@ -35,30 +35,30 @@ Turkish equivalent:
 - Avoid fake scale or exaggerated claims.
 
 ## Design Direction
-Use a high-end black, white, warm stone, and taupe architecture style:
-- Obsidian Black: #0A0A0A
-- Soft Ivory: #F6F1E8
-- Warm Stone: #D8CDBF
-- Champagne Taupe: #B9A58B
-- Deep Espresso: #2A211B
-- Muted Bronze: #8C7356
-- Line Sand: #E5DACC
-- Text Graphite: #2F2F2F
-- Soft Gray: #8B837A
+Use a refined monochrome architecture style:
+- Pure Black: #000000
+- Studio Black: #050505
+- Carbon: #0E0E0F
+- Graphite: #1C1C1E
+- Deep Gray: #2C2C2E
+- System Gray: #636366
+- Soft Gray: #A1A1A6
+- Line Gray: #D1D1D6
+- Cloud: #F5F5F7
+- Pure White: #FFFFFF
 
-Avoid gold-heavy, shiny, ornamental, or exaggerated luxury styling.
+Avoid brown, beige, taupe, bronze, champagne, sand, warm stone, espresso, gold, colorful cards, loud shadows, or decorative luxury styling.
 
 ## Technical Rules
 - Use Next.js App Router if the project already uses it.
-- Use TypeScript entity definitions where possible.
+- Use TypeScript where possible.
 - Use Tailwind CSS consistently.
 - Keep components reusable.
 - Do not hard-code duplicated UI.
 - Keep mock data isolated in data files.
-- Keep service-layer files ready for future Supabase/PostgreSQL queries.
 - Do not break existing routes.
 - Run build checks after significant changes.
-- Fix build errors before finishing.
+- Fix TypeScript and build errors before finishing.
 
 ## Required Main Routes
 - /
@@ -71,7 +71,6 @@ Avoid gold-heavy, shiny, ornamental, or exaggerated luxury styling.
 - /projeler
 - /surec
 - /blagg-remote
-- /deger-artirma
 - /teklif-al
 - /proje-takip
 - /iletisim
@@ -111,10 +110,15 @@ Reject:
 ## Content Rules
 Prefer clear Turkish. Avoid long corporate paragraphs. Use practical construction language. Focus on trust, process, transparency, material quality, controlled delivery, and visible progress.
 
-Do not use the old brand name or the old remote-tracking wording. Use:
+Public language is Turkish for now. Do not show EN/DE language switchers until a full i18n system exists.
+
+Use:
 - BLAGG Studio
 - BLAGG Remote
-- Uzaktan Proje Yönetimi
+- BLAGG Control
+- BLAGG Signature
+
+Do not use old brand names, fake phone numbers, public WhatsApp buttons, demo/placeholder labels on polished public UI, or incomplete-looking public content.
 
 ## Build Discipline
 Before completing any implementation:

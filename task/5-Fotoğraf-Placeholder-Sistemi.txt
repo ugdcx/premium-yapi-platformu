@@ -1,0 +1,61 @@
+Create a premium photo placeholder system for BLAGG Studio.
+
+The owner will add real project photos later. Until then, all image areas must look intentional, premium and architectural.
+
+Create reusable components:
+
+1. PhotoPlaceholder
+Props:
+- label: string
+- title?: string
+- ratio?: "wide" | "portrait" | "square" | "cinematic"
+- index?: string
+- className?: string
+
+Visual style:
+- Monochrome only.
+- Background can be #111111, #050505, #F7F7F5 or #FFFFFF depending on context.
+- Use a thin border #E5E5E5 or subtle dark border on black.
+- Use a fine architectural grid or diagonal line detail.
+- Show small uppercase label:
+  "FOTOĞRAF ALANI"
+- Show optional title:
+  e.g. "Villa K. / Şantiye Detayı"
+- Show helper text:
+  "Gerçek proje fotoğrafı eklenecek"
+- Do not use any image URL.
+- Do not use stock images.
+- Do not use colorful SVGs.
+
+Ratios:
+- wide: 16/10
+- cinematic: 21/9
+- square: 1/1
+- portrait: 4/5
+
+2. ProjectImageSlot
+For project cards.
+Should include:
+- placeholder visual area
+- project code/name
+- location
+- status
+
+3. DetailPhotoGrid
+For future project detail pages.
+Should create a grid of placeholders:
+- "Öncesi"
+- "Uygulama"
+- "Detay"
+- "Teslim"
+
+Design goal:
+The placeholders should look like part of an architecture studio website, not missing images.
+
+Add comments in the code showing where real images will be inserted later.
+
+Example comment:
+{/* Replace PhotoPlaceholder with next/image when real project photo is ready */}
+
+Do not implement actual project pages yet.
+Only create and export these reusable placeholder components.

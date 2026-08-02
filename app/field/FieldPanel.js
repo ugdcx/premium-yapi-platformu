@@ -22,12 +22,14 @@ export default function FieldPanel() {
   const [submitted, setSubmitted] = useState(false);
   const [recentUpdates, setRecentUpdates] = useState(demoProjectUpdates);
 
-  const currentTime = useMemo(() => {
-    return new Intl.DateTimeFormat("tr-TR", {
-      hour: "2-digit",
-      minute: "2-digit"
-    }).format(new Date());
-  }, []);
+  const currentTime = useMemo(
+    () =>
+      new Intl.DateTimeFormat("tr-TR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date()),
+    []
+  );
 
   function addDemoPhotos() {
     setPhotos((current) => {
@@ -50,7 +52,7 @@ export default function FieldPanel() {
         note: "Fotoğraflar admin açıklaması için yüklendi.",
         photoCount: photos.length,
         status: "Admin Onayında",
-        stage: "Fotoğraf"
+        stage: "Süreç"
       },
       ...current
     ]);
@@ -60,8 +62,8 @@ export default function FieldPanel() {
 
   if (!canView) {
     return (
-      <main className="min-h-screen bg-cream px-4 py-6 text-stoneDark">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-border bg-surface p-6">
+      <main className="min-h-screen bg-[#F7F7F5] px-4 py-6 text-[#111111]">
+        <div className="mx-auto max-w-3xl rounded-[2rem] border border-black/10 bg-white p-6">
           Oturum kontrol ediliyor...
         </div>
       </main>
@@ -69,21 +71,17 @@ export default function FieldPanel() {
   }
 
   return (
-    <main className="min-h-screen bg-cream px-4 py-4 text-stoneDark sm:px-6 sm:py-6">
+    <main className="min-h-screen bg-[#F7F7F5] px-4 py-4 text-[#111111] sm:px-6 sm:py-6">
       <div className="mx-auto grid max-w-3xl gap-4">
-        <header className="rounded-2xl bg-stoneDark p-5 text-white shadow-premium">
+        <header className="rounded-[2rem] border border-black/10 bg-black p-5 text-white sm:p-6">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="inline-flex items-center gap-2 text-sm text-white/65">
-                <HardHat size={17} />
+              <p className="inline-flex items-center gap-2 text-sm text-white/64">
+                <HardHat size={16} />
                 {workerName}
               </p>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-                Fotoğraf Yükleme
-              </h1>
-              <p className="mt-2 truncate text-sm font-medium text-gold sm:text-base">
-                {assignedProject}
-              </p>
+              <h1 className="mt-3 text-[2.4rem] leading-tight">Fotoğraf Yükleme</h1>
+              <p className="mt-2 text-sm text-white/58">{assignedProject}</p>
             </div>
             <DemoLogoutButton dark />
           </div>
@@ -91,86 +89,89 @@ export default function FieldPanel() {
 
         <form
           onSubmit={submitPhotos}
-          className="grid gap-4 rounded-2xl border border-border bg-surface p-4 shadow-premium sm:p-5"
+          className="grid gap-4 rounded-[2rem] border border-black/10 bg-white p-5 sm:p-6"
         >
-          <div className="rounded-2xl bg-cream p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Özel saha bağlantısı</p>
-            <p className="mt-2 leading-7 text-muted">
-              Usta yalnızca fotoğraf yükler. Açıklama yazımı ve müşteri yayını
-              BLAGG Control ekibi tarafından yapılır.
+          <div className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4">
+            <p className="text-xs uppercase tracking-[0.24em] text-black/42">
+              Özel saha bağlantısı
+            </p>
+            <p className="mt-2 text-sm leading-6 text-black/58">
+              Usta yalnızca fotoğraf yükler. Açıklama ve müşteri yayını admin onayından sonra yapılır.
             </p>
           </div>
 
           <button
             type="button"
             onClick={addDemoPhotos}
-            className="flex min-h-20 items-center justify-center gap-3 rounded-2xl bg-stoneDark px-5 py-4 text-lg font-semibold text-white"
+            className="flex min-h-20 items-center justify-center gap-3 rounded-[1.25rem] bg-black px-5 py-4 text-lg text-white"
           >
-            <Camera size={24} />
+            <Camera size={22} />
             Fotoğraf Seç / Çek
           </button>
 
-          <div className="grid gap-3 rounded-2xl border border-border bg-cream p-4">
+          <div className="grid gap-3 rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">
+              <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs text-black/54">
                 {photos.length} fotoğraf
               </span>
-              <span className={statusChipClass("Admin Onayında")}>Admin açıklaması bekliyor</span>
+              <span className={statusChipClass("Admin Onayında")}>
+                Admin incelemesi bekliyor
+              </span>
             </div>
 
-            {photos.length > 0 && (
+            {photos.length ? (
               <div className="grid gap-2">
                 {photos.map((photo) => (
                   <div
                     key={photo.id}
-                    className="flex items-center justify-between rounded-xl bg-surface px-3 py-2 text-sm"
+                    className="flex items-center justify-between rounded-[1rem] border border-black/10 bg-white px-3 py-3 text-sm"
                   >
-                    <span className="font-medium">{photo.name}</span>
-                    <span className="text-muted">{photo.tag}</span>
+                    <span>{photo.name}</span>
+                    <span className="text-black/48">{photo.tag}</span>
                   </div>
                 ))}
               </div>
-            )}
+            ) : null}
 
-            <p className="text-sm leading-6 text-muted">
-              Net, geniş açı ve iyi ışıklı fotoğraflar admin açıklamasının doğru
-              yazılmasını sağlar.
+            <p className="text-sm leading-6 text-black/58">
+              Net, geniş açı ve iyi ışıklı fotoğraflar açıklama akışını hızlandırır.
             </p>
           </div>
 
           <button
             disabled={!photos.length}
-            className="flex min-h-16 items-center justify-center gap-3 rounded-2xl bg-gold px-5 py-4 text-lg font-semibold text-stoneDark disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex min-h-14 items-center justify-center gap-3 rounded-full bg-black px-5 py-4 text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Send size={22} />
+            <Send size={18} />
             Fotoğrafları Gönder
           </button>
 
-          {submitted && (
-            <div className="rounded-2xl border border-[#2D5A38]/15 bg-[#E6F0E7] p-4">
-              <p className="font-semibold text-[#2D5A38]">Fotoğraflar gönderildi.</p>
-              <p className="mt-1 text-sm leading-6 text-[#2D5A38]/75">
-                Fotoğrafınız BLAGG Studio ekibi tarafından incelendikten sonra proje kaydına eklenecektir.
+          {submitted ? (
+            <div className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4">
+              <p className="font-medium text-black">Fotoğraflar gönderildi.</p>
+              <p className="mt-1 text-sm leading-6 text-black/58">
+                Kayıtlar admin incelemesinden sonra proje akışına eklenecektir.
               </p>
             </div>
-          )}
+          ) : null}
         </form>
 
-        <section className="rounded-2xl border border-border bg-surface p-4 shadow-premium sm:p-5">
-          <h2 className="text-xl font-semibold">Son yüklemeler</h2>
-          <div className="mt-3 grid gap-2">
+        <section className="rounded-[2rem] border border-black/10 bg-white p-5 sm:p-6">
+          <h2 className="text-2xl">Son yüklemeler</h2>
+          <div className="mt-4 grid gap-3">
             {recentUpdates.slice(0, 4).map((update, index) => (
-              <article key={`${update.id}-${index}`} className="relative rounded-2xl bg-cream p-3 pl-5">
-                <span className="absolute left-2 top-4 h-[calc(100%-2rem)] w-px bg-gold/45" />
-                <span className="absolute left-[5px] top-4 h-2.5 w-2.5 rounded-full bg-gold" />
+              <article
+                key={`${update.id}-${index}`}
+                className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="flex items-center gap-2 text-xs font-semibold text-muted">
+                    <p className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-black/38">
                       <Clock3 size={14} />
                       {update.date} · {update.time} · {update.area}
                     </p>
-                    <p className="mt-1 line-clamp-2 text-sm font-medium">{update.note}</p>
-                    <p className="mt-1 flex items-center gap-2 text-xs text-muted">
+                    <p className="mt-2 text-sm leading-6 text-black/64">{update.note}</p>
+                    <p className="mt-2 flex items-center gap-2 text-xs text-black/44">
                       <FileImage size={14} />
                       {update.photoCount} fotoğraf
                     </p>

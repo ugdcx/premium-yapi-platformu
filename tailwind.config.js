@@ -6,20 +6,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cream: "#F7F7F5",
+        cloud: "#F7F7F5",
         surface: "#FFFFFF",
-        stoneDark: "#0A0A0A",
-        dark: "#0A0A0A",
-        muted: "#6B7280",
-        gold: "#E5E7EB",
-        graphite: "#2F2F2F",
-        metal: "#D1D5DB",
-        soft: "#F1F2F3",
-        border: "rgb(10 10 10 / 0.10)"
+        stoneDark: "#050505",
+        dark: "#050505",
+        muted: "#6A6A6A",
+        line: "#E5E5E5",
+        graphite: "#1C1C1E",
+        metal: "#D1D1D6",
+        soft: "#F3F3F1",
+        border: "rgb(17 17 17 / 0.12)"
       },
       boxShadow: {
-        premium: "0 18px 50px rgb(10 10 10 / 0.08)",
-        card: "0 12px 34px rgb(10 10 10 / 0.06)"
+        premium: "0 18px 50px rgb(10 10 10 / 0.05)",
+        card: "0 10px 30px rgb(10 10 10 / 0.04)"
       }
     }
   },

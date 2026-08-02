@@ -2,25 +2,31 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  BriefcaseBusiness,
+  AlertTriangle,
   CalendarDays,
-  CheckCircle2,
   ClipboardList,
   Copy,
-  FileText,
   FolderKanban,
   ImageIcon,
+  Menu,
   MapPin,
-  Phone,
-  ReceiptText,
-  TrendingUp,
   Wallet,
   X
 } from "lucide-react";
 import { leadApplications, projects as baseProjects } from "../../lib/data/mockData";
 import { formatCurrency, formatDate } from "../../lib/helpers/format";
-import { getApplications, updateApplicationStatus as persistApplicationStatus } from "../../lib/localStorageRecords";
+import {
+  archiveApplication,
+  cancelApplication,
+  deleteApplication,
+  getApplications,
+  getWorkerUploads,
+  restoreApplication,
+  updateApplicationStatus as persistApplicationStatus,
+  updateWorkerUpload
+} from "../../lib/localStorageRecords";
 import { useDemoRoleGuard } from "../../lib/demoAuth";
+import { statusChipClass } from "../../lib/designSystem";
 import DemoLogoutButton from "../../components/DemoLogoutButton";
 
 const kanbanStatuses = [
@@ -33,50 +39,208 @@ const kanbanStatuses = [
   "İptal"
 ];
 
-const projectStatuses = ["Planlama", "Uygulamada", "Beklemede", "Teslime Hazırlanıyor", "Tamamlandı"];
+const projectStatuses = [
+  "Planlama",
+  "Uygulamada",
+  "Beklemede",
+  "Teslime Hazırlanıyor",
+  "Tamamlandı"
+];
 
-const statusClasses = {
-  Yeni: "bg-blue-50 text-blue-700 border-blue-100",
-  İnceleniyor: "bg-amber-50 text-amber-700 border-amber-100",
-  "Eksik Bilgi": "bg-orange-50 text-orange-700 border-orange-100",
-  "Teklif Hazırlanıyor": "bg-purple-50 text-purple-700 border-purple-100",
-  "Teklif Gönderildi": "bg-indigo-50 text-indigo-700 border-indigo-100",
-  Onaylandı: "bg-emerald-50 text-emerald-700 border-emerald-100",
-  İptal: "bg-red-50 text-red-700 border-red-100",
-  Planlama: "bg-blue-50 text-blue-700 border-blue-100",
-  Uygulamada: "bg-amber-50 text-amber-700 border-amber-100",
-  Beklemede: "bg-orange-50 text-orange-700 border-orange-100",
-  "Teslime Hazırlanıyor": "bg-purple-50 text-purple-700 border-purple-100",
-  Tamamlandı: "bg-emerald-50 text-emerald-700 border-emerald-100"
-};
+const applicationGroups = [
+  {
+    title: "Yeni",
+    statuses: ["Yeni", "Eksik Bilgi"]
+  },
+  {
+    title: "İnceleniyor",
+    statuses: ["İnceleniyor"]
+  },
+  {
+    title: "Teklif / Onay",
+    statuses: ["Teklif Hazırlanıyor", "Teklif Gönderildi", "Onaylandı", "İptal"]
+  }
+];
+
+const controlModules = [
+  {
+    id: "overview",
+    label: "Genel Bakış",
+    description: "Günlük karar ve risk merkezi",
+    icon: AlertTriangle
+  },
+  {
+    id: "applications",
+    label: "Başvurular",
+    description: "Teklif öncesi müşteri dosyaları",
+    icon: ClipboardList
+  },
+  {
+    id: "projects",
+    label: "Projeler",
+    description: "Aktif operasyon kayıtları",
+    icon: FolderKanban
+  },
+  {
+    id: "field",
+    label: "Saha Onayları",
+    description: "Field kayıt kontrolü",
+    icon: ImageIcon
+  },
+  {
+    id: "finance",
+    label: "Finans",
+    description: "Nakit ve tahmini durum",
+    icon: Wallet
+  },
+  {
+    id: "links",
+    label: "Bağlantılar",
+    description: "Müşteri ve saha linkleri",
+    icon: Copy
+  }
+];
 
 export default function AdminKanban() {
   const canView = useDemoRoleGuard("admin");
-  const [applications, setApplications] = useState(() => leadApplications.map(mapLeadApplication));
+  const [applications, setApplications] = useState(() =>
+    leadApplications.map(mapLeadApplication)
+  );
   const [projects, setProjects] = useState(() => baseProjects.map(mapProject));
+  const [workerUploads, setWorkerUploads] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [activeModule, setActiveModule] = useState("overview");
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   useEffect(() => {
     const storedApplications = getApplications().map(mapStoredApplication);
     if (storedApplications.length) {
       setApplications((current) => mergeApplications(storedApplications, current));
     }
+    setWorkerUploads(getWorkerUploads());
   }, []);
 
-  const stats = useMemo(() => buildDashboardStats(applications, projects), [applications, projects]);
+  const kpis = useMemo(
+    () => buildOperationalKpis(applications, projects, workerUploads),
+    [applications, projects, workerUploads]
+  );
+  const attentionItems = useMemo(
+    () => buildAttentionItems(applications, projects, workerUploads),
+    [applications, projects, workerUploads]
+  );
+  const finance = useMemo(() => buildFinanceSummary(projects), [projects]);
+
+  function selectApplication(application) {
+    setSelectedApplication(application);
+    setSelectedProject(null);
+    setActiveModule("applications");
+  }
+
+  function selectProject(project) {
+    setSelectedProject(project);
+    setSelectedApplication(null);
+    setActiveModule("projects");
+  }
+
+  function selectModule(moduleId) {
+    setActiveModule(moduleId);
+    setIsNavOpen(false);
+  }
+
+  function openAttentionItem(item) {
+    if (item.type === "application") {
+      const application = applications.find((entry) => entry.id === item.refId);
+      if (application) selectApplication(application);
+      return;
+    }
+
+    const project =
+      item.type === "upload"
+        ? projects.find((entry) => entry.slug === item.projectSlug)
+        : projects.find((entry) => entry.id === item.refId);
+    if (project) {
+      setActiveModule(item.type === "upload" ? "field" : "projects");
+      setSelectedProject(project);
+      setSelectedApplication(null);
+    }
+  }
 
   function updateApplicationStatus(id, status) {
     setApplications((current) =>
-      current.map((application) => (application.id === id ? { ...application, status, updatedAt: new Date().toISOString() } : application))
+      current.map((application) =>
+        application.id === id
+          ? { ...application, status, updatedAt: new Date().toISOString() }
+          : application
+      )
     );
-    setSelectedApplication((current) => (current?.id === id ? { ...current, status } : current));
+    setSelectedApplication((current) =>
+      current?.id === id ? { ...current, status } : current
+    );
     persistApplicationStatus(id, status);
+  }
+
+  function refreshApplicationsFromStorage(fallbackApplications = applications) {
+    const storedApplications = getApplications().map(mapStoredApplication);
+    setApplications(mergeApplications(storedApplications, fallbackApplications));
+  }
+
+  function cancelSelectedApplication(application, cancelReason) {
+    cancelApplication(application.id, cancelReason);
+    refreshApplicationsFromStorage();
+    setSelectedApplication((current) =>
+      current?.id === application.id
+        ? {
+            ...current,
+            status: "İptal",
+            cancelled: true,
+            archived: true,
+            cancelReason,
+            cancelledAt: new Date().toISOString()
+          }
+        : current
+    );
+  }
+
+  function archiveSelectedApplication(application) {
+    archiveApplication(application.id);
+    refreshApplicationsFromStorage();
+    setSelectedApplication((current) =>
+      current?.id === application.id
+        ? { ...current, archived: true, archivedAt: new Date().toISOString() }
+        : current
+    );
+  }
+
+  function restoreSelectedApplication(application) {
+    restoreApplication(application.id);
+    refreshApplicationsFromStorage();
+    setSelectedApplication((current) =>
+      current?.id === application.id
+        ? {
+            ...current,
+            status: "İnceleniyor",
+            archived: false,
+            cancelled: false,
+            deleted: false,
+            cancelReason: ""
+          }
+        : current
+    );
+  }
+
+  function deleteSelectedApplication(application) {
+    deleteApplication(application.id);
+    refreshApplicationsFromStorage();
+    setSelectedApplication(null);
   }
 
   function convertApplicationToProject(application) {
     const slug = slugify(`${application.fullName}-${application.serviceType}`);
-    const projectExists = projects.some((project) => project.sourceApplicationId === application.id);
+    const projectExists = projects.some(
+      (project) => project.sourceApplicationId === application.id
+    );
+
     if (projectExists) {
       setSelectedApplication(null);
       return;
@@ -112,85 +276,302 @@ export default function AdminKanban() {
     setSelectedApplication(null);
   }
 
+  function reviewWorkerUpload(id, approvalStatus) {
+    const now = new Date().toISOString();
+    const updates =
+      approvalStatus === "approved"
+        ? {
+            approvalStatus: "approved",
+            status: "approved",
+            visibleToClient: true,
+            visible_to_customer: true,
+            approvedAt: now,
+            rejectedAt: ""
+          }
+        : {
+            approvalStatus: "rejected",
+            status: "rejected",
+            visibleToClient: false,
+            visible_to_customer: false,
+            approvedAt: "",
+            rejectedAt: now
+          };
+
+    setWorkerUploads(updateWorkerUpload(id, updates));
+  }
+
   if (!canView) {
     return (
-      <main className="min-h-screen bg-cream px-6 py-10 text-stoneDark">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-surface p-8 shadow-card">
+      <main className="min-h-screen bg-[#F7F7F5] px-6 py-10 text-[#111111]">
+        <div className="mx-auto max-w-7xl rounded-[2rem] border border-black/10 bg-white p-8">
           Oturum kontrol ediliyor...
         </div>
       </main>
     );
   }
 
-  return (
-    <main className="min-h-screen bg-cream px-4 py-6 text-stoneDark sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-[1700px]">
-        <header className="rounded-[2rem] bg-stoneDark p-6 text-white md:p-10">
-          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-                BLAGG Control
-              </p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-                Operasyon, proje ve onay merkezi
-              </h1>
-              <p className="mt-4 max-w-3xl leading-8 text-white/65">
-                Başvurular, teklifler, projeler, fotoğraf onayları, finans ve saha ilerlemesi tek kontrol alanında izlenir.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-72 lg:grid-cols-1">
-              <a href="/teklif-al" className="inline-flex min-h-12 items-center justify-center rounded-full bg-gold px-6 py-3 font-medium text-stoneDark">
-                Projenizi Başlatın
-              </a>
-              <DemoLogoutButton dark />
-            </div>
-          </div>
-        </header>
+  const activeModuleConfig =
+    controlModules.find((module) => module.id === activeModule) || controlModules[0];
+  const detailPanel = (
+    <OperationalRecordPanel
+      selectedApplication={selectedApplication}
+      selectedProject={selectedProject}
+      workerUploads={workerUploads}
+      onApplicationStatusChange={updateApplicationStatus}
+      onConvertApplication={convertApplicationToProject}
+      onCancelApplication={cancelSelectedApplication}
+      onArchiveApplication={archiveSelectedApplication}
+      onRestoreApplication={restoreSelectedApplication}
+      onDeleteApplication={deleteSelectedApplication}
+      onClear={() => {
+        setSelectedApplication(null);
+        setSelectedProject(null);
+      }}
+    />
+  );
 
-        <div className="mt-6 grid gap-6">
-          <AdminDashboardStats stats={stats} />
-          <ControlModules />
-          <PhotoApprovalBoard projects={projects} />
-          <FinanceSnapshot projects={projects} />
-          <ApplicationKanban
-            applications={applications}
-            onSelect={setSelectedApplication}
-            onStatusChange={updateApplicationStatus}
-          />
-          <ProjectTable projects={projects} onSelect={setSelectedProject} />
+  return (
+    <main className="min-h-screen bg-[#F7F7F5] px-4 py-4 text-[#111111] sm:px-6 lg:px-5">
+      <div className="mx-auto max-w-[1900px]">
+        <div className="mb-4 flex items-center justify-between rounded-[1.25rem] border border-black/10 bg-white p-3 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setIsNavOpen(true)}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white"
+            aria-label="BLAGG Control menüsünü aç"
+          >
+            <Menu size={18} />
+          </button>
+          <div className="text-right">
+            <p className="text-sm font-medium">BLAGG Control</p>
+            <p className="text-xs text-black/46">{activeModuleConfig.label}</p>
+          </div>
         </div>
 
-        {selectedApplication && (
-          <ApplicationDetail
-            application={selectedApplication}
-            onClose={() => setSelectedApplication(null)}
-            onStatusChange={updateApplicationStatus}
-            onConvert={convertApplicationToProject}
-          />
-        )}
+        {isNavOpen ? (
+          <div className="fixed inset-0 z-50 bg-black/35 p-3 lg:hidden">
+            <ControlSidebar
+              activeModule={activeModule}
+              onSelect={selectModule}
+              onClose={() => setIsNavOpen(false)}
+              mobile
+            />
+          </div>
+        ) : null}
 
-        {selectedProject && (
-          <ProjectDetailPanel project={selectedProject} onClose={() => setSelectedProject(null)} />
-        )}
+        <div className="grid gap-5 lg:grid-cols-[18.5rem_minmax(0,1fr)]">
+          <ControlSidebar activeModule={activeModule} onSelect={selectModule} />
+
+          <section className="min-w-0">
+            <ModuleHeader module={activeModuleConfig} />
+
+            {activeModule === "overview" ? (
+              <div className="mt-5 grid gap-5">
+                <KpiStrip items={kpis} />
+                <section className="grid gap-5 xl:grid-cols-[minmax(20rem,0.82fr)_minmax(28rem,1.05fr)_minmax(24rem,0.82fr)]">
+                  <AttentionPanel items={attentionItems} onSelect={openAttentionItem} />
+                  <PhotoApprovalBoard
+                    projects={projects}
+                    workerUploads={workerUploads}
+                    onApprove={(id) => reviewWorkerUpload(id, "approved")}
+                    onReject={(id) => reviewWorkerUpload(id, "rejected")}
+                    compact
+                  />
+                  <FinanceSnapshot finance={finance} compact />
+                </section>
+              </div>
+            ) : null}
+
+            {activeModule === "applications" ? (
+              <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(25rem,0.75fr)]">
+                <ApplicationManagement
+                  applications={applications}
+                  selectedApplication={selectedApplication}
+                  onSelect={selectApplication}
+                  onStatusChange={updateApplicationStatus}
+                />
+                {detailPanel}
+              </section>
+            ) : null}
+
+            {activeModule === "projects" ? (
+              <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(25rem,0.65fr)]">
+                <ProjectOperationsTable
+                  projects={projects}
+                  workerUploads={workerUploads}
+                  selectedProject={selectedProject}
+                  onSelect={selectProject}
+                />
+                {detailPanel}
+              </section>
+            ) : null}
+
+            {activeModule === "field" ? (
+              <section className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(25rem,0.65fr)]">
+                <PhotoApprovalBoard
+                  projects={projects}
+                  workerUploads={workerUploads}
+                  onApprove={(id) => reviewWorkerUpload(id, "approved")}
+                  onReject={(id) => reviewWorkerUpload(id, "rejected")}
+                />
+                {detailPanel}
+              </section>
+            ) : null}
+
+            {activeModule === "finance" ? (
+              <div className="mt-5 max-w-5xl">
+                <FinanceSnapshot finance={finance} />
+              </div>
+            ) : null}
+
+            {activeModule === "links" ? (
+              <div className="mt-5">
+                <LinkManagement projects={projects} onSelect={selectProject} selectedProject={selectedProject} />
+              </div>
+            ) : null}
+          </section>
+        </div>
       </div>
     </main>
   );
 }
 
-function AdminDashboardStats({ stats }) {
+function ControlSidebar({ activeModule, onSelect, onClose, mobile = false }) {
   return (
-    <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
+    <aside
+      className={`${
+        mobile ? "h-full max-w-sm" : "sticky top-4 hidden h-[calc(100vh-2rem)] lg:flex"
+      } flex-col rounded-[2rem] border border-black/10 bg-black p-4 text-white`}
+    >
+      <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-5">
+        <div>
+          <p className="text-xs uppercase tracking-[0.28em] text-white/38">
+            Studio Operating System
+          </p>
+          <h1 className="mt-3 text-2xl">BLAGG Control</h1>
+        </div>
+        {mobile ? (
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/8"
+            aria-label="Menüyü kapat"
+          >
+            <X size={16} />
+          </button>
+        ) : null}
+      </div>
+
+      <nav className="mt-5 grid gap-2">
+        {controlModules.map((module) => {
+          const Icon = module.icon;
+          const active = activeModule === module.id;
+          return (
+            <button
+              key={module.id}
+              type="button"
+              onClick={() => onSelect(module.id)}
+              className={`grid grid-cols-[2.5rem_1fr] items-center gap-3 rounded-[1.1rem] border p-3 text-left ${
+                active
+                  ? "border-white bg-white text-black"
+                  : "border-white/10 bg-white/8 text-white/68 hover:bg-white/12"
+              }`}
+            >
+              <span
+                className={`flex h-10 w-10 items-center justify-center rounded-full ${
+                  active ? "bg-black text-white" : "bg-black/25 text-white"
+                }`}
+              >
+                <Icon size={17} />
+              </span>
+              <span>
+                <span className="block text-sm font-medium">{module.label}</span>
+                <span className={`mt-1 block text-xs ${active ? "text-black/54" : "text-white/42"}`}>
+                  {module.description}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
+      <div className="mt-auto border-t border-white/10 pt-4">
+        <DemoLogoutButton dark />
+      </div>
+    </aside>
+  );
+}
+
+function ModuleHeader({ module }) {
+  const today = new Intl.DateTimeFormat("tr-TR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  }).format(new Date());
+
+  return (
+    <header className="rounded-[2rem] border border-black/10 bg-black p-6 text-white sm:p-8 lg:p-10">
+      <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/42">
+            {module.description}
+          </p>
+          <h1 className="mt-4 text-[2.8rem] leading-[0.96] sm:text-[4.2rem]">
+            {module.label}
+          </h1>
+          <p className="mt-5 max-w-3xl text-base leading-8 text-white/62">
+            {moduleIntro(module.id)}
+          </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[22rem] lg:grid-cols-1">
+          <div className="rounded-[1.25rem] border border-white/10 bg-white/8 px-5 py-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-white/38">Bugün</p>
+            <p className="mt-2 text-sm text-white">{today}</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <a
+              href="/admin/finance"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-medium text-black"
+            >
+              Finans görünümü
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function moduleIntro(moduleId) {
+  const copy = {
+    overview: "Günün kararlarını, saha onaylarını, riskli işleri ve nakit görünümünü tek odakta okuyun.",
+    applications: "Yeni müşteri başvurularını hızlı tarayın, durum güncelleyin ve uygun kayıtları projeye dönüştürün.",
+    projects: "Aktif projelerde saha, finans, risk ve bağlantı bağlamını tek operasyon listesinde yönetin.",
+    field: "Field tarafından gönderilen kayıtları şirket kontrolünden geçirip yalnızca onaylananları müşteriye açın.",
+    finance: "Ana nakit göstergelerini izleyin; detaylı hakediş ve finans ayrımı için finans görünümüne geçin.",
+    links: "Müşteri ve saha bağlantılarını proje bazında kontrollü şekilde kopyalayın."
+  };
+  return copy[moduleId] || copy.overview;
+}
+
+function KpiStrip({ items }) {
+  return (
+    <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+      {items.map((item) => {
+        const Icon = item.icon;
         return (
-          <article key={stat.label} className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
-            <div className="flex items-start justify-between gap-3">
+          <article
+            key={item.label}
+            className="min-h-36 rounded-[1.5rem] border border-black/10 bg-white p-5"
+          >
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-muted">{stat.label}</p>
-                <p className="mt-2 text-3xl font-semibold">{stat.value}</p>
+                <p className="text-sm leading-5 text-black/48">{item.label}</p>
+                <p className="mt-3 text-[2rem] leading-none">{item.value}</p>
               </div>
-              <Icon className="text-gold" size={23} />
+              <Icon className="text-black/62" size={22} />
             </div>
+            <p className="mt-5 text-sm leading-6 text-black/50">{item.note}</p>
           </article>
         );
       })}
@@ -198,109 +579,249 @@ function AdminDashboardStats({ stats }) {
   );
 }
 
-function ControlModules() {
-  const modules = [
-    "Genel Bakış",
-    "Projeler",
-    "Başvurular",
-    "Teklifler",
-    "Müşteriler",
-    "Ustalar",
-    "Tedarikçiler",
-    "Onaylar",
-    "Finans",
-    "Belgeler",
-    "Ayarlar"
-  ];
+function AttentionPanel({ items, onSelect }) {
+  return (
+    <section className="rounded-[2rem] border border-black/10 bg-white p-5 lg:p-6">
+      <SectionHeader
+        eyebrow="Karar listesi"
+        title="Bugün dikkat isteyenler"
+        text="Operasyonda bekleyen karar, risk ve takip noktaları."
+      />
+      <div className="mt-6 grid gap-3">
+        {items.length ? (
+          items.map((item) => (
+            <button
+              type="button"
+              key={`${item.title}-${item.subject}`}
+              onClick={() => onSelect(item)}
+              className="grid gap-3 rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4 text-left transition-colors hover:border-black/28 hover:bg-white md:grid-cols-[1fr_auto] md:items-start"
+            >
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={priorityClass(item.priority)}>{item.priority}</span>
+                  <p className="text-xs uppercase tracking-[0.16em] text-black/38">
+                    {item.subject}
+                  </p>
+                </div>
+                <h3 className="mt-3 text-lg">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-black/58">{item.description}</p>
+              </div>
+              <span className={statusChipClass(item.status)}>{item.status}</span>
+            </button>
+          ))
+        ) : (
+          <EmptyState text="Bugün için kritik operasyon uyarısı yok." />
+        )}
+      </div>
+    </section>
+  );
+}
+
+function ProjectOperationsTable({ projects, workerUploads, selectedProject, onSelect }) {
+  return (
+    <section className="rounded-[2rem] border border-black/10 bg-white p-5 lg:p-6">
+      <SectionHeader
+        eyebrow="Aktif projeler"
+        title="Proje operasyon listesi"
+        text="Saha, ödeme, ilerleme ve bağlantı yönetimi tek satırda izlenir."
+      />
+      <div className="mt-6 overflow-x-auto">
+        <div className="min-w-[1180px]">
+          <div className="grid grid-cols-[1.35fr_0.9fr_0.9fr_0.72fr_0.7fr_1fr_0.9fr_0.65fr_1.15fr] gap-3 border-b border-black/10 px-3 pb-3 text-xs uppercase tracking-[0.14em] text-black/36">
+            <span>Proje</span>
+            <span>Müşteri</span>
+            <span>Konum</span>
+            <span>Aşama</span>
+            <span>İlerleme</span>
+            <span>Son saha kaydı</span>
+            <span>Tahsilat</span>
+            <span>Risk</span>
+            <span>Bağlantılar</span>
+          </div>
+          <div className="grid gap-2 pt-3">
+            {projects.map((project) => {
+              const latestUpload = findLatestProjectUpload(project.slug, workerUploads);
+              const risk = projectRisk(project, latestUpload);
+              return (
+                <article
+                  key={project.id}
+                  className={`grid grid-cols-[1.35fr_0.9fr_0.9fr_0.72fr_0.7fr_1fr_0.9fr_0.65fr_1.15fr] items-center gap-3 rounded-[1.25rem] border px-3 py-4 ${
+                    selectedProject?.id === project.id
+                      ? "border-black/35 bg-white"
+                      : "border-black/10 bg-[#F7F7F5]"
+                  }`}
+                >
+                  <button type="button" onClick={() => onSelect(project)} className="text-left">
+                    <p className="text-sm font-medium text-black">{project.title}</p>
+                    <p className="mt-1 text-xs text-black/46">{project.serviceType}</p>
+                  </button>
+                  <p className="text-sm text-black/64">{project.customerName}</p>
+                  <p className="text-sm text-black/54">{project.location}</p>
+                  <span className={statusChipClass(project.status)}>{project.status}</span>
+                  <ProgressMeter value={project.progress} />
+                  <div>
+                    <p className="text-sm text-black/64">
+                      {latestUpload ? latestUpload.workItem : "Kayıt yok"}
+                    </p>
+                    <p className="mt-1 text-xs text-black/42">
+                      {latestUpload ? formatDate(latestUpload.createdAt) : "Saha bekleniyor"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-black">{formatCurrency(project.remainingAmount)}</p>
+                    <p className="mt-1 text-xs text-black/42">kalan ödeme</p>
+                  </div>
+                  <span className={priorityClass(risk.priority)}>{risk.label}</span>
+                  <div className="grid gap-2">
+                    <CopyLinkButton
+                      label="Müşteri bağlantısını kopyala"
+                      value={`/client/${project.slug}/proje-takip/${project.clientToken}`}
+                    />
+                    <CopyLinkButton
+                      label="Saha bağlantısını kopyala"
+                      value={`/field/${project.slug}/usta-takip/${project.workerToken}`}
+                    />
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PhotoApprovalBoard({ projects, workerUploads, onApprove, onReject }) {
+  const photos = projects.flatMap((project) =>
+    (project.photos || []).map((photo) => ({
+      id: photo.id,
+      projectTitle: project.title,
+      workItem: photo.stage,
+      note: photo.caption,
+      photoCount: 1,
+      createdAt: photo.createdAt,
+      approvalStatus:
+        photo.status === "approved"
+          ? "approved"
+          : photo.status === "rejected"
+            ? "rejected"
+            : "pending",
+      visibleToClient: Boolean(photo.visible_to_customer),
+      source: "mock"
+    }))
+  );
+  const uploads = workerUploads.map((upload) => ({
+    ...upload,
+    projectTitle: upload.projectName,
+    photoCount: upload.photos?.length || 0,
+    source: "worker"
+  }));
+  const records = [...uploads, ...photos].sort(
+    (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+  );
+  const pending = records.filter((record) => record.approvalStatus === "pending");
+  const approved = records.filter(
+    (record) => record.approvalStatus === "approved" && record.visibleToClient
+  );
+  const rejected = records.filter((record) => record.approvalStatus === "rejected");
 
   return (
-    <section className="grid gap-4 rounded-[2rem] border border-border bg-surface p-4 shadow-card lg:grid-cols-[16rem_1fr]">
-      <aside className="rounded-[1.5rem] bg-stoneDark p-4 text-white">
-        <p className="text-sm uppercase tracking-[0.25em] text-white/35">BLAGG Control</p>
-        <nav className="mt-5 grid gap-1">
-          {modules.map((module, index) => (
-            <a
-              key={module}
-              href={module === "Finans" ? "/admin/finance" : "#"}
-              className={`flex min-h-11 items-center rounded-2xl px-4 text-sm font-medium ${
-                index === 0 ? "bg-gold text-stoneDark" : "text-white/70 hover:bg-white/8 hover:text-white"
+    <section className="rounded-[2rem] border border-black/10 bg-white p-5 lg:p-6">
+      <SectionHeader
+        eyebrow="Saha onay merkezi"
+        title="Field kayıtları şirket kontrolünden geçer"
+        text="Pending kayıtlar müşteri ekranına düşmez. Sadece onaylanan ve görünür işaretlenen kayıtlar BLAGG Remote tarafında yayınlanır."
+      />
+      <div className="mt-6 grid gap-4 xl:grid-cols-[1.15fr_0.95fr_0.8fr]">
+        <PhotoApprovalColumn
+          title="Onay bekliyor"
+          records={pending}
+          empty="Onay bekleyen saha kaydı yok."
+          onApprove={onApprove}
+          onReject={onReject}
+          primary
+        />
+        <PhotoApprovalColumn
+          title="Müşteriye görünür"
+          records={approved}
+          empty="Henüz yayınlanan kayıt yok."
+          onApprove={onApprove}
+          onReject={onReject}
+        />
+        <PhotoApprovalColumn
+          title="Reddedildi"
+          records={rejected}
+          empty="Reddedilen kayıt yok."
+          onApprove={onApprove}
+          onReject={onReject}
+        />
+      </div>
+    </section>
+  );
+}
+
+function PhotoApprovalColumn({ title, records, empty, onApprove, onReject, primary = false }) {
+  return (
+    <div className="rounded-[1.5rem] border border-black/10 bg-[#F7F7F5] p-4">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-2xl">{title}</h3>
+        <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs text-black/54">
+          {records.length}
+        </span>
+      </div>
+      <div className="mt-4 grid gap-3">
+        {records.length ? (
+          records.map((record) => (
+            <article
+              key={record.id}
+              className={`rounded-[1.25rem] border border-black/10 bg-white p-4 ${
+                primary ? "ring-1 ring-black/8" : ""
               }`}
             >
-              {module}
-            </a>
-          ))}
-        </nav>
-      </aside>
-      <div className="grid gap-4 md:grid-cols-3">
-        {[
-          ["Başvurudan projeye", "Başvuru açılır, teklif hazırlanır, onaylanınca proje kaydı oluşur."],
-          ["Fotoğraf onayı", "Usta yükler, admin inceler, müşteri yalnızca onaylananı görür."],
-          ["Finans görünümü", "Tahsilat, gider, usta ve tedarikçi ödemeleri proje bazında ayrılır."]
-        ].map(([title, text]) => (
-          <article key={title} className="rounded-[1.5rem] border border-border bg-cream p-5">
-            <h3 className="text-xl font-semibold">{title}</h3>
-            <p className="mt-3 text-sm leading-6 text-muted">{text}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function PhotoApprovalBoard({ projects }) {
-  const photos = projects.flatMap((project) =>
-    (project.photos || []).map((photo) => ({ ...photo, projectTitle: project.title }))
-  );
-  const pending = photos.filter((photo) => photo.status === "pending_review");
-  const approved = photos.filter((photo) => photo.status === "approved" && photo.visible_to_customer);
-
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-4 shadow-card md:p-6">
-      <SectionHeader
-        eyebrow="Fotoğraf Onay Sistemi"
-        title="Usta → Admin Onayı → Müşteri"
-        text="Fotoğraflar pending_review, approved veya rejected statüsüyle tutulur. Müşteri yalnızca approved ve visible_to_customer kayıtlarını görür."
-      />
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <PhotoApprovalColumn title="Onay bekliyor" photos={pending} empty="Onay bekleyen fotoğraf yok." />
-        <PhotoApprovalColumn title="Müşteriye görünür" photos={approved} empty="Yayınlanan fotoğraf yok." />
-      </div>
-    </section>
-  );
-}
-
-function PhotoApprovalColumn({ title, photos, empty }) {
-  return (
-    <div className="rounded-[1.5rem] bg-cream p-4">
-      <h3 className="text-xl font-semibold">{title}</h3>
-      <div className="mt-4 grid gap-3">
-        {photos.length ? (
-          photos.map((photo) => (
-            <article key={photo.id} className="rounded-2xl border border-border bg-surface p-4">
-              <div className="grid gap-4 sm:grid-cols-[8rem_1fr]">
-                <div className="flex aspect-square items-center justify-center rounded-2xl bg-soft">
-                  <ImageIcon className="text-graphite" size={28} />
+              <div className="grid gap-4 sm:grid-cols-[6rem_1fr]">
+                <div className="flex aspect-square items-center justify-center rounded-[1rem] border border-black/10 bg-[#F3F3F1]">
+                  <ImageIcon className="text-black/46" size={22} />
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-black/35">{photo.projectTitle}</p>
-                  <p className="mt-2 font-semibold">{photo.caption}</p>
-                  <textarea
-                    defaultValue={photo.caption}
-                    className="mt-3 min-h-20 w-full rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none"
-                    aria-label="Fotoğraf açıklaması"
-                  />
-                  <label className="mt-3 flex items-center gap-2 text-sm font-medium text-muted">
-                    <input type="checkbox" defaultChecked={photo.visible_to_customer} />
-                    Müşteriye göster
-                  </label>
+                  <p className="text-xs uppercase tracking-[0.18em] text-black/38">
+                    {record.projectTitle}
+                  </p>
+                  <h4 className="mt-2 text-base font-medium">
+                    {record.workItem || "Saha kaydı"}
+                  </h4>
+                  <p className="mt-2 text-sm leading-6 text-black/58">
+                    {record.adminNote || record.note || "Açıklama girilmedi."}
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <button type="button" className="rounded-full bg-stoneDark px-4 py-2 text-sm font-semibold text-white">
-                      Onayla
-                    </button>
-                    <button type="button" className="rounded-full border border-border px-4 py-2 text-sm font-semibold">
-                      Reddet
-                    </button>
+                    <span className={statusChipClass(approvalStatusLabel(record.approvalStatus))}>
+                      {approvalStatusLabel(record.approvalStatus)}
+                    </span>
+                    <span className="rounded-full border border-black/10 bg-[#F7F7F5] px-3 py-1 text-xs text-black/54">
+                      {record.photoCount} fotoğraf
+                    </span>
+                    <span className="rounded-full border border-black/10 bg-[#F7F7F5] px-3 py-1 text-xs text-black/54">
+                      {formatDate(record.createdAt)}
+                    </span>
                   </div>
+                  {record.source === "worker" ? (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => onApprove(record.id)}
+                        className="rounded-full bg-black px-4 py-2 text-sm text-white"
+                      >
+                        Onayla
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onReject(record.id)}
+                        className="rounded-full border border-black/12 px-4 py-2 text-sm text-black"
+                      >
+                        Reddet
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </article>
@@ -313,225 +834,445 @@ function PhotoApprovalColumn({ title, photos, empty }) {
   );
 }
 
-function FinanceSnapshot({ projects }) {
-  const totalRevenue = projects.reduce((sum, project) => sum + Number(project.paidAmount || 0), 0);
-  const pendingRevenue = projects.reduce((sum, project) => sum + Number(project.remainingAmount || 0), 0);
-  const totalOffer = projects.reduce((sum, project) => sum + Number(project.totalAmount || 0), 0);
-  const totalExpense = Math.round(totalOffer * 0.62);
-  const netProfit = totalRevenue - totalExpense;
-  const margin = totalOffer ? Math.round((netProfit / totalOffer) * 100) : 0;
-
-  const items = [
-    ["Toplam Tahsilat", formatCurrency(totalRevenue)],
-    ["Bekleyen Tahsilat", formatCurrency(pendingRevenue)],
-    ["Toplam Gider", formatCurrency(totalExpense)],
-    ["Usta Ödemeleri", formatCurrency(Math.round(totalExpense * 0.38))],
-    ["Tedarikçi Ödemeleri", formatCurrency(Math.round(totalExpense * 0.44))],
-    ["Genel Giderler", formatCurrency(Math.round(totalExpense * 0.18))],
-    ["Net Kâr", formatCurrency(netProfit)],
-    ["Kâr Marjı", `%${margin}`],
-    ["Kasa Durumu", formatCurrency(totalRevenue - Math.round(totalExpense * 0.4))]
-  ];
-
+function OperationalRecordPanel({
+  selectedApplication,
+  selectedProject,
+  workerUploads,
+  onApplicationStatusChange,
+  onConvertApplication,
+  onCancelApplication,
+  onArchiveApplication,
+  onRestoreApplication,
+  onDeleteApplication,
+  onClear
+}) {
   return (
-    <section className="rounded-[2rem] border border-border bg-surface p-4 shadow-card md:p-6">
-      <SectionHeader
-        eyebrow="Finans / Muhasebe"
-        title="Tahsilat, gider ve proje kârlılığı"
-        text="Bu alan Supabase bağlantısında müşteri tahsilatları, usta ödemeleri, tedarikçi ödemeleri ve genel gider kayıtlarına bağlanacak."
-      />
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map(([label, value]) => (
-          <article key={label} className="rounded-2xl border border-border bg-cream p-4">
-            <p className="text-sm text-muted">{label}</p>
-            <p className="mt-2 text-2xl font-semibold">{value}</p>
-          </article>
-        ))}
-      </div>
-      <a href="/admin/finance" className="mt-5 inline-flex min-h-12 items-center justify-center rounded-full bg-stoneDark px-5 py-3 font-semibold text-white">
-        Finans ekranını aç
-      </a>
-    </section>
-  );
-}
-
-function ApplicationKanban({ applications, onSelect, onStatusChange }) {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-4 shadow-card md:p-6">
-      <SectionHeader
-        eyebrow="Başvuru Kanban"
-        title="Teklif başvuruları"
-        text="Kartı açarak detayları görüntüleyin, durumu değiştirin veya projeye dönüştürün."
-      />
-      <div className="mt-6">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-7">
-          {kanbanStatuses.map((status) => {
-            const columnApplications = applications.filter((application) => application.status === status);
-            return (
-              <div key={status} className="rounded-[1.5rem] border border-border bg-cream p-3">
-                <div className="mb-3 flex items-center justify-between gap-2">
-                  <StatusBadge status={status} />
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-muted">
-                    {columnApplications.length}
-                  </span>
-                </div>
-                <div className="grid gap-3">
-                  {columnApplications.length ? (
-                    columnApplications.map((application) => (
-                      <ApplicationCard
-                        key={application.id}
-                        application={application}
-                        onSelect={onSelect}
-                        onStatusChange={onStatusChange}
-                      />
-                    ))
-                  ) : (
-                    <EmptyState text="Bu kolonda başvuru yok." />
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ApplicationCard({ application, onSelect, onStatusChange }) {
-  return (
-    <article className="rounded-2xl border border-border bg-surface p-4 shadow-card">
-      <button type="button" onClick={() => onSelect(application)} className="w-full text-left">
-        <div className="flex items-start justify-between gap-3">
+    <aside className="rounded-[2rem] border border-black/10 bg-black p-5 text-white xl:sticky xl:top-5 xl:max-h-[calc(100vh-2.5rem)] xl:overflow-y-auto">
+      {!selectedApplication && !selectedProject ? (
+        <div className="flex min-h-[34rem] flex-col justify-between">
           <div>
-            <h3 className="text-lg font-semibold">{application.fullName}</h3>
-            <p className="mt-1 text-sm text-muted">{application.serviceType}</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/38">
+              Operasyon Kaydı
+            </p>
+            <h2 className="mt-5 text-[2.35rem] leading-tight">
+              Operasyon kaydı açmak için bir başvuru veya proje seçin.
+            </h2>
+            <p className="mt-5 text-sm leading-7 text-white/58">
+              BLAGG Control, seçtiğiniz müşteri veya proje için karar bağlamını burada toplar: aksiyon, saha, finans, risk ve bağlantılar.
+            </p>
           </div>
-          <StatusBadge status={application.status} />
+          <div className="grid gap-3 border-t border-white/10 pt-5 text-sm text-white/56">
+            <p>Başvuru seçimi müşteri dosyasını açar.</p>
+            <p>Proje seçimi operasyon kaydını açar.</p>
+            <p>Saha onayı yalnızca şirket kontrolünden sonra müşteriye görünür.</p>
+          </div>
         </div>
-        <div className="mt-4 grid gap-2 text-sm text-muted">
-          <InfoRow icon={Phone} text={application.phone} />
-          <InfoRow icon={MapPin} text={`${application.city} / ${application.district}`} />
-          <InfoRow icon={CalendarDays} text={formatDate(application.createdAt)} />
+      ) : null}
+
+      {selectedApplication ? (
+        <ApplicationRecordDetail
+          application={selectedApplication}
+          onStatusChange={onApplicationStatusChange}
+          onConvert={onConvertApplication}
+          onCancel={onCancelApplication}
+          onArchive={onArchiveApplication}
+          onRestore={onRestoreApplication}
+          onDelete={onDeleteApplication}
+          onClear={onClear}
+        />
+      ) : null}
+
+      {selectedProject ? (
+        <ProjectRecordDetail
+          project={selectedProject}
+          workerUploads={workerUploads}
+          onClear={onClear}
+        />
+      ) : null}
+    </aside>
+  );
+}
+
+function ApplicationRecordDetail({
+  application,
+  onStatusChange,
+  onConvert,
+  onCancel,
+  onArchive,
+  onRestore,
+  onDelete,
+  onClear
+}) {
+  const [cancelReason, setCancelReason] = useState(application.cancelReason || "");
+  const nextAction = nextApplicationAction(application.status);
+  const archived = isApplicationArchived(application);
+
+  useEffect(() => {
+    setCancelReason(application.cancelReason || "");
+  }, [application.id, application.cancelReason]);
+
+  function handleCancel() {
+    const reason =
+      cancelReason.trim() ||
+      window.prompt("İptal sebebi")?.trim() ||
+      "Sebep belirtilmedi";
+    setCancelReason(reason);
+    onCancel(application, reason);
+  }
+
+  function handleDelete() {
+    if (window.confirm("Bu başvuru kalıcı olarak silinecek. Devam edilsin mi?")) {
+      onDelete(application);
+    }
+  }
+
+  return (
+    <div>
+      <RecordHeader
+        eyebrow="Başvuru Detayı"
+        title={application.fullName}
+        subtitle={application.applicationNo}
+        onClear={onClear}
+      />
+
+      <div className="mt-5 grid gap-3">
+        <DarkBlock title="Sonraki Aksiyon">
+          <p className="text-sm leading-7 text-white/68">{nextAction}</p>
+        </DarkBlock>
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+          <DarkFact title="Kim?" value={application.fullName} />
+          <DarkFact title="Ne istiyor?" value={application.serviceType} />
+          <DarkFact title="Nerede?" value={`${application.city} / ${application.district}`} />
+          <DarkFact title="Ne zaman geldi?" value={formatDate(application.createdAt)} />
+          <DarkFact title="Telefon" value={application.phone} />
+          <DarkFact title="Ne bekliyor?" value={applicationStateLabel(application)} />
         </div>
-        <p className="mt-4 line-clamp-3 text-sm leading-6 text-muted">{application.description}</p>
-        <div className="mt-4">
-          <span className="rounded-full bg-cream px-3 py-2 text-xs font-semibold text-muted">
-            {application.photos.length ? "Fotoğraf var" : "Fotoğraf yok"}
+
+        <DarkBlock title="Talep açıklaması">
+          <p className="text-sm leading-7 text-white/68">{application.description}</p>
+        </DarkBlock>
+
+        <DarkBlock title="Eksik bilgi / operasyon notu">
+          <p className="text-sm leading-7 text-white/68">
+            {application.adminNotes || "Bu başvuru için kayıtlı operasyon notu yok."}
+          </p>
+        </DarkBlock>
+
+        <div className="rounded-[1.25rem] border border-white/10 bg-white/8 p-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-white/38">
+            Durum yönetimi
+          </p>
+          <select
+            value={application.status}
+            onChange={(event) => onStatusChange(application.id, event.target.value)}
+            className="mt-3 w-full rounded-[1rem] border border-white/10 bg-black px-3 py-3 text-sm text-white outline-none"
+          >
+            {kanbanStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => onConvert(application)}
+            className="mt-3 min-h-12 w-full rounded-full bg-white px-5 py-3 text-sm text-black"
+          >
+            Projeye dönüştür
+          </button>
+        </div>
+
+        <DarkBlock title="Başvuru Aksiyonları">
+          <div className="grid gap-3">
+            {application.cancelled ? (
+              <div className="rounded-[1rem] border border-white/10 bg-black/20 p-3">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/34">
+                  İptal sebebi
+                </p>
+                <p className="mt-2 text-sm leading-6 text-white/68">
+                  {application.cancelReason || "Sebep belirtilmedi"}
+                </p>
+              </div>
+            ) : null}
+
+            {!application.cancelled ? (
+              <label className="grid gap-2 text-sm text-white/62">
+                İptal sebebi
+                <textarea
+                  value={cancelReason}
+                  onChange={(event) => setCancelReason(event.target.value)}
+                  rows={3}
+                  placeholder="Müşteri erteledi, bütçe uygun değil, kapsam değişti..."
+                  className="w-full rounded-[1rem] border border-white/10 bg-black px-3 py-3 text-sm text-white outline-none placeholder:text-white/28"
+                />
+              </label>
+            ) : null}
+
+            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+              {!application.cancelled ? (
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="min-h-11 rounded-full border border-white/14 bg-white px-4 py-2 text-sm text-black"
+                >
+                  İptal edildi olarak işaretle
+                </button>
+              ) : null}
+              {!archived ? (
+                <button
+                  type="button"
+                  onClick={() => onArchive(application)}
+                  className="min-h-11 rounded-full border border-white/14 bg-white/8 px-4 py-2 text-sm text-white"
+                >
+                  Arşivle
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onRestore(application)}
+                  className="min-h-11 rounded-full border border-white/14 bg-white/8 px-4 py-2 text-sm text-white"
+                >
+                  Aktife al
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="min-h-11 rounded-full border border-white/10 bg-transparent px-4 py-2 text-sm text-white/48"
+              >
+                Kalıcı sil
+              </button>
+            </div>
+          </div>
+        </DarkBlock>
+      </div>
+    </div>
+  );
+}
+
+function ProjectRecordDetail({ project, workerUploads, onClear }) {
+  const latestUpload = findLatestProjectUpload(project.slug, workerUploads);
+  const pendingUploads = workerUploads.filter(
+    (upload) => upload.projectSlug === project.slug && upload.approvalStatus === "pending"
+  );
+  const approvedUploads = workerUploads.filter(
+    (upload) => upload.projectSlug === project.slug && upload.approvalStatus === "approved"
+  );
+  const risk = projectRisk(project, latestUpload);
+
+  return (
+    <div>
+      <RecordHeader
+        eyebrow="Proje Operasyon Kaydı"
+        title={project.title}
+        subtitle={project.slug}
+        onClear={onClear}
+      />
+
+      <div className="mt-5 grid gap-3">
+        <DarkBlock title="Durum">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <DarkFact title="Müşteri" value={project.customerName} />
+            <DarkFact title="Konum" value={project.location} />
+            <DarkFact title="Aşama" value={project.status} />
+            <DarkFact title="İlerleme" value={`%${project.progress}`} />
+          </div>
+        </DarkBlock>
+
+        <DarkBlock title="Saha">
+          <div className="grid gap-3">
+            <DarkFact
+              title="Son saha kaydı"
+              value={
+                latestUpload
+                  ? `${latestUpload.workItem || "Saha"} / ${formatDate(latestUpload.createdAt)}`
+                  : "Kayıt yok"
+              }
+            />
+            <DarkFact title="Onay bekleyen" value={pendingUploads.length} />
+            <DarkFact title="Müşteriye görünür" value={approvedUploads.length} />
+          </div>
+        </DarkBlock>
+
+        <DarkBlock title="Finans">
+          <div className="grid gap-3">
+            <DarkFact title="Toplam teklif" value={formatCurrency(project.totalAmount)} />
+            <DarkFact title="Tahsil edilen" value={formatCurrency(project.paidAmount)} />
+            <DarkFact title="Kalan ödeme" value={formatCurrency(project.remainingAmount)} />
+          </div>
+        </DarkBlock>
+
+        <DarkBlock title="Risk / Sonraki adım">
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/14 bg-white px-3 py-1 text-xs text-black">
+              {risk.label}
+            </span>
+            <span className="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-xs text-white/66">
+              {project.status}
+            </span>
+          </div>
+          <p className="mt-3 text-sm leading-7 text-white/68">{risk.description}</p>
+        </DarkBlock>
+
+        <DarkBlock title="Belgeler">
+          {project.documents?.length ? (
+            <div className="grid gap-2">
+              {project.documents.slice(0, 3).map((document) => (
+                <div
+                  key={document.id}
+                  className="rounded-[1rem] border border-white/10 bg-white/8 p-3"
+                >
+                  <p className="text-sm text-white">{document.title}</p>
+                  <p className="mt-1 text-xs text-white/44">
+                    {document.type} / {formatDate(document.createdAt)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-white/58">Bu proje için kayıtlı belge yok.</p>
+          )}
+        </DarkBlock>
+
+        <DarkBlock title="Bağlantılar">
+          <div className="grid gap-2">
+            <CopyLinkButton
+              label="Müşteri bağlantısını kopyala"
+              value={`/client/${project.slug}/proje-takip/${project.clientToken}`}
+              dark
+            />
+            <CopyLinkButton
+              label="Saha bağlantısını kopyala"
+              value={`/field/${project.slug}/usta-takip/${project.workerToken}`}
+              dark
+            />
+          </div>
+        </DarkBlock>
+      </div>
+    </div>
+  );
+}
+
+function RecordHeader({ eyebrow, title, subtitle, onClear }) {
+  return (
+    <div className="border-b border-white/10 pb-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/38">{eyebrow}</p>
+          <h2 className="mt-4 text-[2.1rem] leading-tight">{title}</h2>
+          <p className="mt-2 break-all text-xs text-white/42">{subtitle}</p>
+        </div>
+        <button
+          type="button"
+          onClick={onClear}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/8"
+          aria-label="Operasyon kaydını kapat"
+        >
+          <X size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DarkBlock({ title, children }) {
+  return (
+    <section className="rounded-[1.25rem] border border-white/10 bg-white/8 p-4">
+      <p className="text-xs uppercase tracking-[0.18em] text-white/38">{title}</p>
+      <div className="mt-3">{children}</div>
+    </section>
+  );
+}
+
+function DarkFact({ title, value }) {
+  return (
+    <div className="rounded-[1rem] border border-white/10 bg-black/20 p-3">
+      <p className="text-xs uppercase tracking-[0.14em] text-white/34">{title}</p>
+      <p className="mt-2 text-sm leading-6 text-white">{value || "Belirtilmedi"}</p>
+    </div>
+  );
+}
+
+function ApplicationManagement({
+  applications,
+  selectedApplication,
+  onSelect,
+  onStatusChange
+}) {
+  const activeApplication = selectedApplication;
+  const activeApplications = applications.filter(isApplicationActive);
+  const archivedApplications = applications.filter(
+    (application) => !isApplicationDeleted(application) && isApplicationArchived(application)
+  );
+
+  return (
+    <section className="rounded-[2rem] border border-black/10 bg-white p-5 lg:p-6">
+      <SectionHeader
+        eyebrow="Başvuru yönetimi"
+        title="Teklif öncesi karar akışı"
+        text="Başvurular üç ana grupta izlenir. Durum değişikliği ve projeye dönüştürme korunur."
+      />
+      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        {applicationGroups.map((group) => {
+          const groupApplications = activeApplications.filter((application) =>
+            group.statuses.includes(application.status)
+          );
+          return (
+            <div
+              key={group.title}
+              className="rounded-[1.5rem] border border-black/10 bg-[#F7F7F5] p-4"
+            >
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h3 className="text-xl">{group.title}</h3>
+                <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs text-black/54">
+                  {groupApplications.length}
+                </span>
+              </div>
+              <div className="grid gap-3">
+                {groupApplications.length ? (
+                  groupApplications.map((application) => (
+                    <ApplicationCard
+                      key={application.id}
+                      application={application}
+                      selected={activeApplication?.id === application.id}
+                      onSelect={onSelect}
+                      onStatusChange={onStatusChange}
+                    />
+                  ))
+                ) : (
+                  <EmptyState text="Bu grupta kayıt yok." />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-6 rounded-[1.5rem] border border-black/10 bg-[#F7F7F5] p-4">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-xl">İptal / Arşiv</h3>
+            <p className="mt-1 text-sm text-black/48">
+              Aktif teklif akışından düşen başvurular burada izlenir.
+            </p>
+          </div>
+          <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs text-black/54">
+            {archivedApplications.length}
           </span>
         </div>
-      </button>
-      <select
-        value={application.status}
-        onChange={(event) => onStatusChange(application.id, event.target.value)}
-        className="mt-4 w-full rounded-2xl border border-border bg-white px-3 py-2 text-sm outline-none"
-      >
-        {kanbanStatuses.map((status) => (
-          <option key={status} value={status}>{status}</option>
-        ))}
-      </select>
-    </article>
-  );
-}
-
-function ApplicationDetail({ application, onClose, onStatusChange, onConvert }) {
-  return (
-    <DetailShell title={application.fullName} subtitle={application.applicationNo} onClose={onClose}>
-      <InfoBlock title="Müşteri bilgileri">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Cell label="Ad Soyad" value={application.fullName} />
-          <Cell label="Telefon" value={application.phone} />
-          <Cell label="Lokasyon" value={`${application.city} / ${application.district}`} />
-          <Cell label="Hizmet Tipi" value={application.serviceType} />
-          <Cell label="Başvuru Tarihi" value={formatDate(application.createdAt)} />
-          <Cell label="Yaklaşık Bütçe" value={application.budgetRange} />
-          <Cell label="Başlama Zamanı" value={application.startTime} />
-          <Cell label="Durum" value={application.status} />
-        </div>
-      </InfoBlock>
-
-      <InfoBlock title="Açıklama">
-        <p className="leading-7 text-muted">{application.description}</p>
-      </InfoBlock>
-
-      <InfoBlock title="Yüklenen fotoğraflar">
-        {application.photos.length ? (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {application.photos.map((photo) => (
-              <div key={photo} className="rounded-2xl border border-border bg-cream p-4 text-sm text-muted">
-                <ImageIcon className="mb-3 text-gold" size={22} />
-                {photo}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <EmptyState text="Bu başvuruda fotoğraf yok." />
-        )}
-      </InfoBlock>
-
-      <InfoBlock title="Admin notları">
-        <textarea
-          defaultValue={application.adminNotes}
-          className="min-h-28 w-full rounded-2xl border border-border bg-cream px-4 py-3 outline-none"
-          placeholder="Admin notu"
-        />
-      </InfoBlock>
-
-      <InfoBlock title="Durum değiştir">
-        <div className="flex flex-wrap gap-2">
-          {kanbanStatuses.map((status) => (
-            <button
-              key={status}
-              type="button"
-              onClick={() => onStatusChange(application.id, status)}
-              className="rounded-full border border-border bg-cream px-4 py-2 text-sm font-medium hover:border-gold hover:bg-white"
-            >
-              {status}
-            </button>
-          ))}
-        </div>
-      </InfoBlock>
-
-      <button
-        type="button"
-        onClick={() => onConvert(application)}
-        className="w-full rounded-2xl bg-gold px-5 py-4 font-semibold text-stoneDark"
-      >
-        Projeye Dönüştür
-      </button>
-    </DetailShell>
-  );
-}
-
-function ProjectTable({ projects, onSelect }) {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-4 shadow-card md:p-6">
-      <SectionHeader
-        eyebrow="Proje listesi"
-        title="Aktif ve dönüştürülen projeler"
-        text="Müşteri ve usta takip linkleri proje kaydı üzerinden oluşturulur."
-      />
-      <div className="mt-6">
-        <div className="grid gap-3">
-          {projects.length ? (
-            projects.map((project) => (
-              <article key={project.id} className="grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-card md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_0.7fr_0.7fr_0.8fr_0.8fr_0.8fr_0.9fr_0.8fr_0.8fr] xl:items-center">
-                <button type="button" onClick={() => onSelect(project)} className="text-left">
-                  <Cell label="Proje" value={project.title} />
-                </button>
-                <Cell label="Müşteri" value={project.customerName} />
-                <StatusBadge status={project.status} />
-                <Cell label="İlerleme" value={`${project.progress}%`} />
-                <Cell label="Toplam" value={formatCurrency(project.totalAmount)} />
-                <Cell label="Tahsil" value={formatCurrency(project.paidAmount)} />
-                <Cell label="Kalan" value={formatCurrency(project.remainingAmount)} />
-                <Cell label="Son güncelleme" value={formatDate(project.updatedAt)} />
-                <CopyLinkButton label="Müşteri Linki" value={`/client/${project.slug}/proje-takip/${project.clientToken}`} />
-                <CopyLinkButton label="Usta Linki" value={`/field/${project.slug}/usta-takip/${project.workerToken}`} />
-              </article>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {archivedApplications.length ? (
+            archivedApplications.map((application) => (
+              <ApplicationArchiveCard
+                key={application.id}
+                application={application}
+                selected={activeApplication?.id === application.id}
+                onSelect={onSelect}
+              />
             ))
           ) : (
-            <EmptyState text="Henüz proje yok." />
+            <EmptyState text="İptal edilen veya arşivlenen başvuru yok." />
           )}
         </div>
       </div>
@@ -539,117 +1280,192 @@ function ProjectTable({ projects, onSelect }) {
   );
 }
 
-function ProjectDetailPanel({ project, onClose }) {
+function ApplicationCard({ application, selected, onSelect, onStatusChange }) {
   return (
-    <DetailShell title={project.title} subtitle={project.slug} onClose={onClose}>
-      <InfoBlock title="Proje alanları">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Cell label="Proje adı" value={project.title} />
-          <Cell label="Müşteri" value={project.customerName} />
-          <Cell label="Slug" value={project.slug} />
-          <Cell label="Müşteri takip token" value={project.clientToken} />
-          <Cell label="Usta takip token" value={project.workerToken} />
-          <Cell label="Lokasyon" value={project.location} />
-          <Cell label="Başlangıç tarihi" value={project.startDate ? formatDate(project.startDate) : "Belirtilmedi"} />
-          <Cell label="Tahmini bitiş" value={project.estimatedEndDate ? formatDate(project.estimatedEndDate) : "Belirtilmedi"} />
-          <Cell label="Hizmet türü" value={project.serviceType} />
-          <Cell label="Proje durumu" value={project.status} />
-          <Cell label="Toplam teklif" value={formatCurrency(project.totalAmount)} />
-          <Cell label="Tahsil edilen" value={formatCurrency(project.paidAmount)} />
-          <Cell label="Kalan bakiye" value={formatCurrency(project.remainingAmount)} />
+    <article
+      className={`rounded-[1.25rem] border bg-white p-4 ${
+        selected ? "border-black/30" : "border-black/10"
+      }`}
+    >
+      <button type="button" onClick={() => onSelect(application)} className="w-full text-left">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-base font-medium">{application.fullName}</h3>
+            <p className="mt-1 text-sm text-black/54">{application.serviceType}</p>
+          </div>
+          <span className={statusChipClass(application.status)}>{application.status}</span>
         </div>
-      </InfoBlock>
-
-      <InfoBlock title="Ödeme planı">
-        <MiniList items={project.payments.map((payment) => `${payment.title} - ${formatCurrency(payment.amount)} - ${payment.status}`)} empty="Ödeme planı yok." />
-      </InfoBlock>
-      <InfoBlock title="Malzeme listesi">
-        <MiniList items={project.materials.map((material) => `${material.category}: ${material.brand} ${material.model} - ${material.status}`)} empty="Malzeme kaydı yok." />
-      </InfoBlock>
-      <InfoBlock title="Fotoğraf timeline">
-        <MiniList items={project.photos.map((photo) => `${formatDate(photo.createdAt)} - ${photo.caption}`)} empty="Fotoğraf kaydı yok." />
-      </InfoBlock>
-      <InfoBlock title="Belgeler">
-        <MiniList items={project.documents.map((document) => `${document.title} - ${document.type}`)} empty="Belge yok." />
-      </InfoBlock>
-    </DetailShell>
+        <div className="mt-4 grid gap-2 text-sm text-black/54">
+          <InfoLine icon={MapPin} text={`${application.city} / ${application.district}`} />
+          <InfoLine icon={CalendarDays} text={formatDate(application.createdAt)} />
+        </div>
+        <p className="mt-4 line-clamp-2 text-sm leading-6 text-black/56">
+          {application.description}
+        </p>
+      </button>
+      <select
+        value={application.status}
+        onChange={(event) => onStatusChange(application.id, event.target.value)}
+        className="mt-4 w-full rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-3 py-3 text-sm outline-none"
+      >
+        {kanbanStatuses.map((status) => (
+          <option key={status} value={status}>
+            {status}
+          </option>
+        ))}
+      </select>
+    </article>
   );
 }
 
-function CopyLinkButton({ label, value }) {
+function ApplicationArchiveCard({ application, selected, onSelect }) {
   return (
     <button
       type="button"
-      onClick={() => navigator.clipboard?.writeText(value)}
-      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold hover:border-gold"
-      title={value}
+      onClick={() => onSelect(application)}
+      className={`rounded-[1.25rem] border bg-white p-4 text-left ${
+        selected ? "border-black/30" : "border-black/10"
+      }`}
     >
-      <Copy size={15} />
-      {label}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-base font-medium">{application.fullName}</h3>
+          <p className="mt-1 text-sm text-black/54">{application.serviceType}</p>
+        </div>
+        <span className="rounded-full border border-black/10 bg-[#F3F3F1] px-3 py-1 text-xs text-black/62">
+          {applicationStateLabel(application)}
+        </span>
+      </div>
+      <p className="mt-4 text-sm text-black/54">
+        {application.cancelReason || application.adminNotes || "Operasyon arşivinde tutuluyor."}
+      </p>
+      <div className="mt-4 grid gap-2 text-sm text-black/54">
+        <InfoLine icon={MapPin} text={`${application.city} / ${application.district}`} />
+        <InfoLine
+          icon={CalendarDays}
+          text={formatDate(application.cancelledAt || application.archivedAt || application.updatedAt)}
+        />
+      </div>
     </button>
   );
 }
 
-function StatusBadge({ status }) {
+function FinanceSnapshot({ finance }) {
+  const items = [
+    ["Toplam sözleşme", formatCurrency(finance.totalOffer)],
+    ["Tahsil edilen", formatCurrency(finance.collected)],
+    ["Bekleyen tahsilat", formatCurrency(finance.pending)],
+    ["Tahmini gider", formatCurrency(finance.estimatedCost)],
+    ["Tahmini net durum", formatCurrency(finance.net)]
+  ];
+
   return (
-    <span className={`inline-flex w-fit rounded-full border px-3 py-1 text-xs font-semibold ${statusClasses[status] || "border-border bg-cream text-muted"}`}>
-      {status}
-    </span>
+    <section className="rounded-[2rem] border border-black/10 bg-white p-5 lg:p-6">
+      <SectionHeader
+        eyebrow="Finans özeti"
+        title="Nakit ve tahmini kârlılık"
+        text="Detaylı hakediş ve ödeme ayrımı finans modülünde izlenir."
+      />
+      <div className="mt-6 grid gap-3">
+        {items.map(([label, value]) => (
+          <article
+            key={label}
+            className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
+          >
+            <p className="text-sm text-black/48">{label}</p>
+            <p className="mt-2 text-2xl">{value}</p>
+          </article>
+        ))}
+      </div>
+      <a
+        href="/admin/finance"
+        className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-black px-5 py-3 text-sm text-white"
+      >
+        Finans görünümüne geç
+      </a>
+    </section>
+  );
+}
+
+function LinkManagement({ projects, selectedProject, onSelect }) {
+  return (
+    <section className="rounded-[2rem] border border-black/10 bg-white p-5 lg:p-6">
+      <SectionHeader
+        eyebrow="Bağlantılar"
+        title="Müşteri ve saha erişimleri"
+        text="Proje bazlı özel bağlantıları kaba URL göstermeden kopyalayın."
+      />
+      <div className="mt-6 grid gap-3">
+        {projects.map((project) => (
+          <article
+            key={project.id}
+            className={`grid gap-4 rounded-[1.25rem] border p-4 lg:grid-cols-[1fr_auto] lg:items-center ${
+              selectedProject?.id === project.id
+                ? "border-black/35 bg-white"
+                : "border-black/10 bg-[#F7F7F5]"
+            }`}
+          >
+            <button type="button" onClick={() => onSelect(project)} className="text-left">
+              <p className="text-lg text-black">{project.title}</p>
+              <p className="mt-1 text-sm text-black/54">
+                {project.customerName} / {project.location}
+              </p>
+            </button>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <CopyLinkButton
+                label="Müşteri bağlantısını kopyala"
+                value={`/client/${project.slug}/proje-takip/${project.clientToken}`}
+              />
+              <CopyLinkButton
+                label="Saha bağlantısını kopyala"
+                value={`/field/${project.slug}/usta-takip/${project.workerToken}`}
+              />
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CopyLinkButton({ label, value, dark = false }) {
+  return (
+    <button
+      type="button"
+      onClick={() => navigator.clipboard?.writeText(value)}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full border px-4 py-2 text-xs ${
+        dark
+          ? "border-white/12 bg-white text-black"
+          : "border-black/10 bg-white text-black"
+      }`}
+      title={value}
+    >
+      <Copy size={14} />
+      {label}
+    </button>
   );
 }
 
 function SectionHeader({ eyebrow, title, text }) {
   return (
     <div>
-      <p className="text-sm uppercase tracking-[0.25em] text-black/35">{eyebrow}</p>
-      <h2 className="mt-2 text-3xl font-semibold tracking-tight">{title}</h2>
-      {text && <p className="mt-3 max-w-3xl text-sm leading-6 text-muted">{text}</p>}
+      <p className="text-xs uppercase tracking-[0.28em] text-black/42">{eyebrow}</p>
+      <h2 className="mt-3 text-[2rem] leading-tight sm:text-[2.6rem]">{title}</h2>
+      {text ? <p className="mt-3 max-w-3xl text-sm leading-6 text-black/56">{text}</p> : null}
     </div>
-  );
-}
-
-function DetailShell({ title, subtitle, onClose, children }) {
-  return (
-    <aside className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto border-l border-border bg-cream p-4 shadow-2xl shadow-black/20 sm:max-w-3xl sm:p-5">
-      <div className="rounded-[2rem] bg-stoneDark p-6 text-white">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="break-all text-sm text-white/45">{subtitle}</p>
-            <h2 className="mt-1 text-3xl font-semibold">{title}</h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10"
-            aria-label="Paneli kapat"
-          >
-            <X size={18} />
-          </button>
-        </div>
-      </div>
-      <div className="mt-5 grid gap-5">{children}</div>
-    </aside>
-  );
-}
-
-function InfoBlock({ title, children }) {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-card">
-      <h3 className="text-xl font-semibold">{title}</h3>
-      <div className="mt-5">{children}</div>
-    </section>
   );
 }
 
 function Cell({ label, value }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.16em] text-black/35">{label}</p>
-      <p className="mt-1 text-sm font-medium text-stoneDark">{value || "Belirtilmedi"}</p>
+      <p className="text-xs uppercase tracking-[0.16em] text-black/38">{label}</p>
+      <p className="mt-1 text-sm text-black">{value || "Belirtilmedi"}</p>
     </div>
   );
 }
 
-function InfoRow({ icon: Icon, text }) {
+function InfoLine({ icon: Icon, text }) {
   return (
     <div className="flex items-center gap-2">
       <Icon size={15} />
@@ -658,50 +1474,239 @@ function InfoRow({ icon: Icon, text }) {
   );
 }
 
-function MiniList({ items, empty }) {
-  if (!items.length) return <EmptyState text={empty} />;
-  return (
-    <div className="grid gap-2">
-      {items.map((item) => (
-        <div key={item} className="rounded-2xl border border-border bg-cream p-4 text-sm text-muted">
-          {item}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function EmptyState({ text }) {
   return (
-    <div className="rounded-2xl border border-dashed border-border bg-white/70 p-4 text-sm text-muted">
+    <div className="rounded-[1.25rem] border border-dashed border-black/10 bg-white p-4 text-sm text-black/54">
       {text}
     </div>
   );
 }
 
-function buildDashboardStats(applications, projects) {
-  const totalRevenue = projects.reduce((sum, project) => sum + Number(project.paidAmount || 0), 0);
-  const totalOffer = projects.reduce((sum, project) => sum + Number(project.totalAmount || 0), 0);
-  const estimatedCost = Math.round(totalOffer * 0.62);
-  const netProfit = totalRevenue - estimatedCost;
+function ProgressMeter({ value }) {
+  const progress = Math.max(0, Math.min(100, Number(value || 0)));
+  return (
+    <div>
+      <div className="h-2 overflow-hidden rounded-full bg-black/10">
+        <div className="h-full rounded-full bg-black" style={{ width: `${progress}%` }} />
+      </div>
+      <p className="mt-2 text-xs text-black/48">%{progress}</p>
+    </div>
+  );
+}
+
+function buildOperationalKpis(applications, projects, workerUploads) {
+  const finance = buildFinanceSummary(projects);
+  const activeApplications = applications.filter(isApplicationActive);
+  const activeProjects = projects.filter((project) =>
+    ["Uygulamada", "Planlama", "Teslime Hazırlanıyor"].includes(project.status)
+  );
+  const pendingUploads = workerUploads.filter(
+    (upload) => upload.approvalStatus === "pending"
+  );
+  const pendingApplications = activeApplications.filter((application) =>
+    ["Yeni", "İnceleniyor", "Eksik Bilgi"].includes(application.status)
+  );
+  const upcomingDeliveries = projects.filter((project) =>
+    ["Uygulamada", "Teslime Hazırlanıyor"].includes(project.status)
+  );
+  const riskyProjects = projects.filter((project) => projectRisk(project).priority === "Yüksek");
 
   return [
-    { label: "Aktif Projeler", value: projects.filter((project) => project.status === "Uygulamada").length, icon: FolderKanban },
-    { label: "Yeni Başvurular", value: countByStatus(applications, "Yeni"), icon: ClipboardList },
-    { label: "Bekleyen Teklifler", value: countByStatus(applications, "Teklif Hazırlanıyor"), icon: ReceiptText },
-    { label: "Onay Bekleyen Fotoğraflar", value: projects.flatMap((project) => project.photos || []).filter((photo) => photo.status === "pending_review").length, icon: ImageIcon },
-    { label: "Bugünkü Tahsilatlar", value: formatCurrency(totalRevenue), icon: Wallet },
-    { label: "Yaklaşan Usta Ödemeleri", value: formatCurrency(Math.round(estimatedCost * 0.18)), icon: BriefcaseBusiness },
-    { label: "Yaklaşan Tedarikçi Ödemeleri", value: formatCurrency(Math.round(estimatedCost * 0.22)), icon: BriefcaseBusiness },
-    { label: "Toplam Gelir", value: formatCurrency(totalRevenue), icon: Wallet },
-    { label: "Toplam Gider", value: formatCurrency(estimatedCost), icon: BriefcaseBusiness },
-    { label: "Net Kâr", value: formatCurrency(netProfit), icon: TrendingUp },
-    { label: "Kasa Durumu", value: formatCurrency(totalRevenue - Math.round(estimatedCost * 0.4)), icon: Wallet }
+    {
+      label: "Aktif projeler",
+      value: activeProjects.length,
+      note: "Planlama ve uygulamadaki işler",
+      icon: FolderKanban
+    },
+    {
+      label: "Bekleyen başvurular",
+      value: pendingApplications.length,
+      note: "İnceleme veya eksik bilgi bekliyor",
+      icon: ClipboardList
+    },
+    {
+      label: "Onay bekleyen saha kayıtları",
+      value: pendingUploads.length,
+      note: "Müşteriye yayınlanmadan önce kontrol",
+      icon: ImageIcon
+    },
+    {
+      label: "Bekleyen tahsilat",
+      value: formatCurrency(finance.pending),
+      note: "Projeler toplam kalan bakiye",
+      icon: Wallet
+    },
+    {
+      label: "Yaklaşan teslimler",
+      value: upcomingDeliveries.length,
+      note: "Teslim takibi isteyen aktif işler",
+      icon: CalendarDays
+    },
+    {
+      label: "Riskli işler",
+      value: riskyProjects.length,
+      note: "Ödeme, durum veya saha kaydı riski",
+      icon: AlertTriangle
+    }
   ];
 }
 
-function countByStatus(applications, status) {
-  return applications.filter((application) => application.status === status).length;
+function buildAttentionItems(applications, projects, workerUploads) {
+  const activeApplications = applications.filter(isApplicationActive);
+  const uploadItems = workerUploads
+    .filter((upload) => upload.approvalStatus === "pending")
+    .slice(0, 4)
+    .map((upload) => ({
+      title: "Saha kaydı onay bekliyor",
+      subject: upload.projectName,
+      type: "upload",
+      projectSlug: upload.projectSlug,
+      priority: "Yüksek",
+      status: "Onay bekliyor",
+      description: `${upload.workItem || "Saha"} kaydı müşteri ekranına düşmeden önce kontrol edilmeli.`
+    }));
+
+  const applicationItems = activeApplications
+    .filter((application) =>
+      ["Yeni", "Eksik Bilgi", "Teklif Hazırlanıyor"].includes(application.status)
+    )
+    .slice(0, 4)
+    .map((application) => ({
+      title:
+        application.status === "Teklif Hazırlanıyor"
+          ? "Teklif hazırlığı takip edilmeli"
+          : "Başvuru değerlendirme bekliyor",
+      subject: application.fullName,
+      type: "application",
+      refId: application.id,
+      priority: application.status === "Eksik Bilgi" ? "Orta" : "Yüksek",
+      status: application.status,
+      description: `${application.serviceType} başvurusu için sonraki operasyon adımı netleştirilmeli.`
+    }));
+
+  const projectItems = projects
+    .filter((project) => projectRisk(project).priority !== "Düşük")
+    .slice(0, 4)
+    .map((project) => {
+      const risk = projectRisk(project);
+      return {
+        title: "Proje operasyon takibi gerekli",
+        subject: project.title,
+        type: "project",
+        refId: project.id,
+        priority: risk.priority,
+        status: project.status,
+        description: risk.description
+      };
+    });
+
+  return [...uploadItems, ...applicationItems, ...projectItems].slice(0, 8);
+}
+
+function buildFinanceSummary(projects) {
+  const totalOffer = projects.reduce(
+    (sum, project) => sum + Number(project.totalAmount || 0),
+    0
+  );
+  const collected = projects.reduce(
+    (sum, project) => sum + Number(project.paidAmount || 0),
+    0
+  );
+  const pending = projects.reduce(
+    (sum, project) => sum + Number(project.remainingAmount || 0),
+    0
+  );
+  const estimatedCost = Math.round(totalOffer * 0.62);
+
+  return {
+    totalOffer,
+    collected,
+    pending,
+    estimatedCost,
+    net: collected - estimatedCost
+  };
+}
+
+function findLatestProjectUpload(projectSlug, workerUploads) {
+  return workerUploads
+    .filter((upload) => upload.projectSlug === projectSlug)
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))[0];
+}
+
+function projectRisk(project, latestUpload) {
+  if (project.status === "Beklemede") {
+    return {
+      label: "Yüksek",
+      priority: "Yüksek",
+      description: "Proje beklemede. Operasyon nedeni ve sonraki karar netleşmeli."
+    };
+  }
+
+  if (Number(project.remainingAmount || 0) > Number(project.paidAmount || 0) * 2) {
+    return {
+      label: "Orta",
+      priority: "Orta",
+      description: "Kalan ödeme tahsil edilen tutarın belirgin üzerinde."
+    };
+  }
+
+  if (!latestUpload && project.status === "Uygulamada") {
+    return {
+      label: "Orta",
+      priority: "Orta",
+      description: "Aktif projede güncel saha kaydı görünmüyor."
+    };
+  }
+
+  return {
+    label: "Düşük",
+    priority: "Düşük",
+    description: "Operasyon riski düşük görünüyor."
+  };
+}
+
+function priorityClass(priority) {
+  const base =
+    "inline-flex w-fit items-center rounded-full border px-3 py-1 text-xs font-medium";
+  if (priority === "Yüksek") return `${base} border-black bg-black text-white`;
+  if (priority === "Orta") return `${base} border-black/16 bg-[#F3F3F1] text-black`;
+  return `${base} border-black/10 bg-white text-black/60`;
+}
+
+function approvalStatusLabel(status) {
+  if (status === "approved") return "Müşteriye görünür";
+  if (status === "rejected") return "Reddedildi";
+  return "Onay bekliyor";
+}
+
+function nextApplicationAction(status) {
+  if (status === "Yeni") return "Başvuruyu inceleyin, kapsam ve lokasyon bilgisini netleştirin.";
+  if (status === "İnceleniyor") return "Eksik bilgi varsa müşteriden isteyin veya teklif hazırlığına geçin.";
+  if (status === "Eksik Bilgi") return "Eksik bilgi başlığını kapatmadan teklif aşamasına geçmeyin.";
+  if (status === "Teklif Hazırlanıyor") return "Kapsam, metraj ve bütçe netleşince teklif gönderim durumuna alın.";
+  if (status === "Teklif Gönderildi") return "Müşteri dönüşünü takip edin; onay sonrası projeye dönüştürün.";
+  if (status === "Onaylandı") return "Projeye dönüştürerek müşteri ve saha bağlantılarını oluşturun.";
+  if (status === "İptal") return "İptal gerekçesini operasyon notlarında kayıt altında tutun.";
+  return "Sonraki operasyon adımını netleştirin.";
+}
+
+function isApplicationDeleted(application) {
+  return Boolean(application.deleted);
+}
+
+function isApplicationArchived(application) {
+  return Boolean(application.archived || application.cancelled);
+}
+
+function isApplicationActive(application) {
+  return !isApplicationDeleted(application) && !isApplicationArchived(application);
+}
+
+function applicationStateLabel(application) {
+  if (application.deleted) return "Kalıcı silindi";
+  if (application.cancelled) return "İptal edildi";
+  if (application.archived) return "Arşivlendi";
+  return application.status;
 }
 
 function mapLeadApplication(application, index) {
@@ -721,12 +1726,41 @@ function mapLeadApplication(application, index) {
     status: normalizeApplicationStatus(application.status),
     createdAt: application.createdAt,
     updatedAt: application.updatedAt,
-    adminNotes: application.adminNotes || ""
+    adminNotes: application.adminNotes || "",
+    archived: Boolean(application.archived),
+    archivedAt: application.archivedAt || "",
+    cancelled: Boolean(application.cancelled),
+    cancelledAt: application.cancelledAt || "",
+    cancelReason: application.cancelReason || "",
+    deleted: Boolean(application.deleted),
+    deletedAt: application.deletedAt || ""
   };
 }
 
 function mapStoredApplication(application) {
-  const [city = "", district = ""] = String(application.location || "").split("/").map((part) => part.trim());
+  if (application.lifecycleOnly) {
+    return {
+      id: application.id,
+      lifecycleOnly: true,
+      status: normalizeApplicationStatus(
+        application.status || application.statusLabel || "Yeni"
+      ),
+      updatedAt:
+        application.updatedAt || application.createdAt || new Date().toISOString(),
+      archived: Boolean(application.archived),
+      archivedAt: application.archivedAt || "",
+      cancelled: Boolean(application.cancelled),
+      cancelledAt: application.cancelledAt || "",
+      cancelReason: application.cancelReason || "",
+      deleted: Boolean(application.deleted),
+      deletedAt: application.deletedAt || ""
+    };
+  }
+
+  const [city = "", district = ""] = String(application.location || "")
+    .split("/")
+    .map((part) => part.trim());
+
   return {
     id: application.id,
     applicationNo: application.applicationNo || application.id,
@@ -736,14 +1770,28 @@ function mapStoredApplication(application) {
     city: application.city || city || "Belirtilmedi",
     district: application.district || district || "Belirtilmedi",
     serviceType: application.serviceType || application.service || "Belirtilmedi",
-    description: application.description || application.projectScale || application.note || "Açıklama yok.",
+    description:
+      application.description ||
+      application.projectScale ||
+      application.note ||
+      "Açıklama yok.",
     budgetRange: application.budgetRange || "Belirtilmedi",
     startTime: application.startTime || "Belirtilmedi",
     photos: application.photos || application.files || [],
-    status: normalizeApplicationStatus(application.status || application.statusLabel || "Yeni"),
+    status: normalizeApplicationStatus(
+      application.status || application.statusLabel || "Yeni"
+    ),
     createdAt: application.createdAt || new Date().toISOString(),
-    updatedAt: application.updatedAt || application.createdAt || new Date().toISOString(),
-    adminNotes: application.adminNotes || application.note || ""
+    updatedAt:
+      application.updatedAt || application.createdAt || new Date().toISOString(),
+    adminNotes: application.adminNotes || application.note || "",
+    archived: Boolean(application.archived),
+    archivedAt: application.archivedAt || "",
+    cancelled: Boolean(application.cancelled),
+    cancelledAt: application.cancelledAt || "",
+    cancelReason: application.cancelReason || "",
+    deleted: Boolean(application.deleted),
+    deletedAt: application.deletedAt || ""
   };
 }
 
@@ -770,13 +1818,22 @@ function mapProject(project) {
     materials: project.materials || [],
     photos: project.photos || [],
     documents: project.documents || [],
-    updatedAt: project.updatedAt || project.estimatedEndDate || new Date().toISOString()
+    updatedAt:
+      project.updatedAt || project.estimatedEndDate || new Date().toISOString()
   };
 }
 
 function mergeApplications(primary, fallback) {
+  const fallbackById = new Map(fallback.map((application) => [application.id, application]));
+  const mergedPrimary = primary.map((application) => ({
+    ...(fallbackById.get(application.id) || {}),
+    ...application
+  }));
   const seen = new Set(primary.map((application) => application.id));
-  return [...primary, ...fallback.filter((application) => !seen.has(application.id))];
+  return [
+    ...mergedPrimary,
+    ...fallback.filter((application) => !seen.has(application.id))
+  ];
 }
 
 function normalizeApplicationStatus(status) {

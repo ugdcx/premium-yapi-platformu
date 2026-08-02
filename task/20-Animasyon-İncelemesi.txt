@@ -1,0 +1,32 @@
+Audit and refine all animations.
+
+Allowed animations:
+- fade in
+- slight translateY
+- subtle hover opacity
+- subtle line movement
+- header blur transition
+- mobile menu fade/slide
+- calm section reveal
+
+Forbidden animations:
+- parallax
+- typing effect
+- bounce
+- spinning loaders
+- colorful animated gradients
+- excessive page transitions
+- infinite marquee
+- dramatic zooms
+
+Tasks:
+1. Make all animations consistent.
+2. Use short durations:
+   - 0.2s for hover
+   - 0.4s to 0.7s for reveal
+3. Use easing that feels premium.
+4. Respect prefers-reduced-motion.
+5. Disable or simplify animations for users who prefer reduced motion.
+6. Ensure animations do not hurt mobile performance.
+
+Keep the site calm and premium.

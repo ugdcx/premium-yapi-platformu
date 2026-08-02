@@ -1,324 +1,375 @@
-﻿import {
-  ArrowDown,
-  ArrowRight,
-  BadgeCheck,
-  Building2,
-  Camera,
-  CheckCircle2,
-  ClipboardCheck,
-  FileText,
-  Layers3,
-  PackageCheck,
-  ShieldCheck,
-  Smartphone,
-  WalletCards
-} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import SectionContainer from "../components/SectionContainer";
+import { ProjectImageSlot } from "../components/PhotoPlaceholder";
+import { featuredProjects } from "../lib/data/projects";
 import {
-  heroTrustItems,
-  homePortfolioPreview,
+  heroServiceBand,
+  heroStudioIndex,
   homeServices,
-  materialCategories,
-  trackingFeatures,
-  workSteps
+  remoteFeatures,
+  studioPrinciples
 } from "../lib/data/homePage";
 import { createSeoMetadata } from "../lib/seo";
 
 export const metadata = createSeoMetadata({
-  title: "BLAGG Studio | Design. Build. Track.",
+  title: "BLAGG Studio | Tasarla. Uygula. Takip Et.",
   description:
-    "Renovasyon sürecinizi tasarımdan teslimata kadar görünür hale getiren premium yapı stüdyosu.",
+    "BLAGG Studio; tasarım, uygulama ve proje takibini tek sorumluluk altında birleştiren özel mimarlık ve renovasyon stüdyosudur.",
   path: "/"
 });
 
-const serviceIcons = [Building2, Layers3, BadgeCheck, PackageCheck, ShieldCheck, Smartphone];
-const trackingIcons = [Camera, WalletCards, ClipboardCheck];
-
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-cream text-stoneDark">
-      <IntroSection />
+    <main className="home-snap overflow-x-hidden bg-[#F7F7F5] text-[#111111]">
       <HeroSection />
-      <SignatureStatement />
-      <BlaggRemoteSection />
+      <StudioDefinitionSection />
       <ServicesSection />
-      <ProjectFlowSection />
-      <PortfolioPreviewSection />
-      <ControlSignalSection />
+      <RemoteTeaserSection />
+      <SelectedProjectsSection />
       <FinalCtaSection />
     </main>
   );
 }
 
-function IntroSection() {
-  return (
-    <section className="flex min-h-[100svh] items-center justify-center bg-stoneDark px-4 text-white">
-      <div className="text-center">
-        <h1 className="text-5xl font-semibold tracking-[0.12em] sm:text-6xl md:text-7xl">
-          BLAGG Studio
-        </h1>
-        <p className="mt-5 text-sm uppercase tracking-[0.24em] text-white/50">
-          Private Architecture & Renovation Studio
-        </p>
-        <p className="mt-10 text-xl tracking-[0.18em] text-white/75">
-          Design. Build. Track.
-        </p>
-        <a href="#hero" aria-label="Ana içeriğe geç" className="mx-auto mt-16 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white/70">
-          <ArrowDown size={20} />
-        </a>
-      </div>
-    </section>
-  );
-}
-
 function HeroSection() {
   return (
-    <section id="hero" className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-muted">BLAGG Studio</p>
-          <h2 className="mt-5 max-w-5xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-            Renovasyon sürecinizi tasarımdan teslimata kadar görünür hale getiriyoruz.
-          </h2>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-muted">
-            BLAGG Studio; seçilmiş yapı ve renovasyon projelerini tasarım, uygulama ve takip sistemiyle yöneten premium proje stüdyosudur.
-          </p>
-          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
-            <PrimaryLink href="/teklif-al">Projenizi Başlatın</PrimaryLink>
-            <SecondaryLink href="/blagg-remote">BLAGG Remote'u Görün</SecondaryLink>
+    <SectionContainer
+      id="hero"
+      className="home-snap-section relative flex min-h-[100svh] items-stretch overflow-hidden bg-[#050505] text-white"
+    >
+      <div className="grid min-h-[100svh] w-full gap-7 pb-[clamp(1.5rem,4vh,3.2rem)] pt-[clamp(6.25rem,10vh,8rem)] lg:grid-cols-[minmax(0,0.88fr)_minmax(24rem,0.82fr)] lg:grid-rows-[minmax(0,1fr)_auto] lg:items-stretch">
+        <div className="flex flex-col justify-between lg:min-h-0">
+          <div className="max-w-5xl">
+            <div className="reveal flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.28em] text-white/42">
+              <span>Butik renovasyon stüdyosu</span>
+              <span className="hidden h-px w-12 bg-white/16 sm:block" />
+              <span>Tasarla. Uygula. Takip Et.</span>
+            </div>
+            <h1 className="reveal reveal-delay-1 mt-6 max-w-[8.6ch] font-serif text-[clamp(3.65rem,8.8vw,8.4rem)] font-semibold leading-[0.86] tracking-[-0.04em]">
+              BLAGG Studio
+            </h1>
+            <p className="reveal reveal-delay-2 mt-6 max-w-2xl text-[clamp(1.22rem,2vw,1.85rem)] leading-[1.32] text-white/84">
+              Design-led renovation. Visible execution.
+            </p>
+            <p className="reveal reveal-delay-2 mt-7 max-w-2xl text-[clamp(1rem,1.35vw,1.22rem)] leading-[1.75] text-white/62">
+              Tasarım, uygulama ve takip tek sistemde.
+            </p>
+            <div className="reveal reveal-delay-2 mt-8 flex flex-wrap items-center gap-5">
+              <PrimaryLink href="/teklif-al" className="bg-white text-black hover:bg-white">
+                Projenizi Başlatın
+              </PrimaryLink>
+              <p className="max-w-xs text-sm leading-6 text-white/42">
+                İlk adım: kapsamı netleştirmek.
+              </p>
+            </div>
           </div>
-          <div className="mt-10 grid gap-3 sm:grid-cols-3">
-            {heroTrustItems.map((item) => (
-              <div key={item.title} className="border-t border-border pt-4">
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-muted">{item.text}</p>
+
+          <div className="reveal reveal-delay-3 mt-12 grid gap-6 lg:mt-8">
+            <div className="grid gap-5 border-l border-white/16 pl-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <p className="max-w-2xl text-base leading-7 text-white/64 sm:text-lg">
+                Renovasyonu tasarım, saha disiplini ve görünür kayıtla yönetiyoruz.
+              </p>
+            </div>
+
+            <div className="grid gap-0 border-y border-white/10">
+              {heroStudioIndex.map((item) => (
+                <div
+                  key={item.number}
+                  className="grid grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-4 border-b border-white/10 py-4 last:border-b-0 sm:grid-cols-[5rem_minmax(0,1fr)_10rem]"
+                >
+                  <p className="text-xs uppercase tracking-[0.24em] text-white/32">
+                    {item.number}
+                  </p>
+                  <p className="text-lg text-white/82">{item.title}</p>
+                  <p className="text-right text-sm text-white/38">{item.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-5 text-xs uppercase tracking-[0.22em] text-white/36">
+              <span>Studio sistemini keşfedin</span>
+              <span className="hidden h-px flex-1 bg-white/12 sm:block" />
+              <span>Aşağı</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="reveal reveal-delay-3 relative min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/10 bg-[#111111] sm:min-h-[28rem] lg:min-h-0">
+          <Image
+            src="/images/blagg/hero-architecture-01.jpg"
+            alt="BLAGG Studio mimari renovasyon görseli"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 42vw"
+            className="object-cover grayscale contrast-125 brightness-90"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/86 via-black/20 to-black/24" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.46),transparent_42%,rgba(0,0,0,0.34))]" />
+          <div className="absolute inset-x-5 top-5 grid grid-cols-[1fr_auto] items-start gap-4 text-xs uppercase tracking-[0.24em] text-white/38 sm:inset-x-8 sm:top-8">
+            <span>Mimari renovasyon</span>
+            <span className="rounded-full border border-white/12 bg-black/28 px-3 py-2 text-white/52">
+              Kontrollü süreç
+            </span>
+          </div>
+          <div className="absolute inset-x-5 bottom-5 sm:inset-x-8 sm:bottom-8">
+            <div className="mb-6 h-px w-full bg-white/14" />
+            <p className="text-xs uppercase tracking-[0.28em] text-white/38">
+              Mimari karar + saha disiplini
+            </p>
+            <p className="mt-4 max-w-md text-[clamp(1.65rem,2.6vw,2.85rem)] leading-[1.02] text-white/88">
+              Tek sorumluluk. Net kayıt. Kontrollü teslim.
+            </p>
+          </div>
+        </div>
+
+        <div className="lg:col-span-2">
+          <div className="grid gap-0 border-t border-white/10 text-sm text-white/50 sm:grid-cols-4">
+            {heroServiceBand.map((item) => (
+              <div
+                key={item}
+                className="border-b border-white/10 py-3.5 sm:border-b-0 sm:border-r sm:px-5 first:sm:pl-0 last:sm:border-r-0"
+              >
+                {item}
               </div>
             ))}
           </div>
         </div>
+      </div>
+    </SectionContainer>
+  );
+}
 
-        <div className="rounded-[2rem] border border-border bg-surface p-4 shadow-card">
-          <div className="aspect-[4/5] rounded-[1.5rem] bg-stoneDark p-5 text-white">
-            <div className="flex h-full flex-col justify-between">
-              <div>
-                <p className="text-sm uppercase tracking-[0.22em] text-white/40">Private Project Access</p>
-                <h3 className="mt-4 text-4xl font-semibold">BLAGG Remote</h3>
-              </div>
-              <div className="grid gap-3">
-                {["Onaylı fotoğraflar", "Ödeme planı", "Belgeler"].map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                    <p className="font-medium">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+function StudioDefinitionSection() {
+  return (
+    <SectionContainer
+      id="studio-definition"
+      className="home-snap-section border-t border-black/8 py-16 sm:py-20"
+    >
+      <div className="grid gap-8 lg:grid-cols-[minmax(18rem,0.54fr)_minmax(0,1.46fr)] lg:items-start">
+        <div className="lg:sticky lg:top-28">
+          <p className="text-xs uppercase tracking-[0.3em] text-black/45">
+            Studio Modeli
+          </p>
+          <h2 className="mt-5 max-w-[10ch] text-[2.25rem] leading-[0.98] sm:text-[3.25rem] lg:text-[4rem]">
+            Az proje. Daha fazla kontrol.
+          </h2>
+          <p className="mt-6 max-w-sm text-base leading-7 text-black/52">
+            Kapsam, saha ve takip aynı stüdyo disiplini içinde tutulur.
+          </p>
+        </div>
+
+        <div>
+          <div className="relative mb-7 aspect-[16/8.4] overflow-hidden rounded-[2rem] bg-[#111111]">
+            <Image
+              src="/images/blagg/studio-detail-01.jpg"
+              alt="BLAGG Studio malzeme ve iç mekan detay görseli"
+              fill
+              sizes="(max-width: 1024px) 100vw, 58vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/42 via-transparent to-transparent" />
+          </div>
+          <p className="max-w-3xl text-[clamp(1.08rem,1.45vw,1.32rem)] leading-[1.65] text-black/72">
+            Mimari karar ve saha uygulaması aynı çizgide ilerler. Süreç kısa,
+            okunur ve kayıtlı kalır.
+          </p>
+
+          <div className="mt-7 grid gap-0 border-t border-black/10">
+            {studioPrinciples.map((item) => (
+              <article
+                key={item.title}
+                className="grid gap-4 border-b border-black/10 py-5 sm:grid-cols-[9rem_minmax(0,1fr)]"
+              >
+                <h3 className="text-2xl leading-tight">{item.title}</h3>
+                <p className="max-w-2xl text-base leading-7 text-black/56">
+                  {item.text}
+                </p>
+              </article>
+            ))}
           </div>
         </div>
       </div>
-    </section>
-  );
-}
-
-function SignatureStatement() {
-  return (
-    <section className="bg-stoneDark px-4 py-16 text-white sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <div className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-          <p>Selected projects.</p>
-          <p>Controlled execution.</p>
-          <p>Visible progress.</p>
-        </div>
-        <p className="mt-8 max-w-2xl text-lg leading-8 text-white/60">
-          Seçilmiş projeler. Kontrollü uygulama. Görünür ilerleme.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-function BlaggRemoteSection() {
-  return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <SectionIntro
-          eyebrow="BLAGG Remote"
-          title="Projenize özel bağlantı ile ilerlemeyi tek ekrandan izleyin."
-          text="Fotoğraflar, ödemeler, belgeler ve ilerleme notları kayıt olmadan görüntülenir."
-        />
-        <div className="grid gap-3 sm:grid-cols-3">
-          {trackingFeatures.map((feature, index) => {
-            const Icon = trackingIcons[index] || ShieldCheck;
-            return <FeatureCard key={feature} icon={Icon} title={feature} />;
-          })}
-        </div>
-      </div>
-    </section>
+    </SectionContainer>
   );
 }
 
 function ServicesSection() {
   return (
-    <section className="bg-soft px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Studio Services"
-          title="Tasarım, renovasyon ve uygulama yönetimi."
-          text="Her hizmet kısa kapsam, net aksiyon ve takip edilebilir teslim mantığıyla ele alınır."
-        />
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {homeServices.map((service, index) => {
-            const Icon = serviceIcons[index] || Building2;
-            return (
-              <article key={service.title} className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
-                <Icon className="text-graphite" size={25} />
-                <h3 className="mt-5 text-2xl font-semibold">{service.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted">{service.text}</p>
-                <a href={service.href} className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-stoneDark">
-                  Detay
-                  <ArrowRight size={16} />
-                </a>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ProjectFlowSection() {
-  return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Three-step project flow."
-          title="Karmaşık renovasyon sürecini üç net aşamada yönetiyoruz."
-        />
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {workSteps.map((step, index) => (
-            <article key={step.title} className="rounded-[1.5rem] border border-border bg-surface p-6 shadow-card">
-              <p className="text-sm font-semibold text-graphite">{String(index + 1).padStart(2, "0")}</p>
-              <h3 className="mt-5 text-3xl font-semibold">{step.title}</h3>
-              <p className="mt-3 leading-7 text-muted">{step.text}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PortfolioPreviewSection() {
-  return (
-    <section className="bg-soft px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-          <SectionIntro
-            eyebrow="Selected Projects"
-            title="Gerçek uygulamalar ve süreç kayıtları burada yer alır."
-          />
-          <a href="/projeler" className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 font-medium">
-            Projeleri Gör
-            <ArrowRight size={17} />
-          </a>
-        </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {homePortfolioPreview.map((project) => (
-            <article key={project.title} className="rounded-[1.5rem] border border-border bg-surface p-4 shadow-card">
-              <div className="aspect-[4/3] rounded-2xl bg-[linear-gradient(135deg,#0A0A0A_0%,#1F2937_55%,#E5E7EB_100%)] p-4">
-                <span className="rounded-full bg-white/90 px-3 py-2 text-xs font-medium text-stoneDark">
-                  {project.stage}
-                </span>
-              </div>
-              <h3 className="mt-5 text-xl font-semibold">{project.title}</h3>
-              <p className="mt-2 text-sm text-muted">{project.category}</p>
-              <p className="mt-1 text-sm text-muted">{project.location}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ControlSignalSection() {
-  return (
-    <section className="px-4 py-16 sm:px-6 md:py-24">
-      <div className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] bg-stoneDark p-7 text-white md:p-12 lg:grid-cols-[1fr_0.9fr] lg:items-center">
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-white/35">BLAGG Control</p>
-          <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight md:text-6xl">
-            Behind every project, a controlled operating system.
+    <SectionContainer
+      id="services"
+      className="home-snap-section border-t border-black/8 py-16 sm:py-20"
+    >
+      <div className="grid gap-8 lg:grid-cols-[minmax(16rem,0.34fr)_minmax(0,0.66fr)] lg:items-start">
+        <div className="lg:sticky lg:top-28">
+          <p className="text-xs uppercase tracking-[0.3em] text-black/45">
+            Hizmetler
+          </p>
+          <h2 className="mt-5 text-[2.2rem] leading-[0.98] sm:text-[3.1rem]">
+            Studio disiplinleri.
           </h2>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/60">
-            Başvurular, teklifler, fotoğraflar, ödemeler ve saha ilerlemesi BLAGG Control üzerinden yönetilir.
+        </div>
+
+        <div className="border-t border-black/10">
+          {homeServices.map((service) => (
+            <article
+              key={service.number}
+              className="group grid gap-5 border-b border-black/10 py-6 sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:items-start"
+            >
+              <p className="text-2xl text-black/28">{service.number}</p>
+              <div className="max-w-2xl">
+                {service.image ? (
+                    <div className="relative mb-4 aspect-[16/7] overflow-hidden rounded-[1.5rem] bg-[#111111]">
+                    <Image
+                      src={service.image}
+                      alt={service.imageAlt}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 42vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-transparent" />
+                  </div>
+                ) : null}
+                <h3 className="text-2xl leading-tight sm:text-[2.15rem]">
+                  {service.title}
+                </h3>
+                <p className="mt-3 text-base leading-7 text-black/54">
+                  {service.text}
+                </p>
+              </div>
+              <Link
+                href={service.href}
+                className="inline-flex items-center gap-2 self-start text-sm uppercase tracking-[0.18em] text-black/46 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-black"
+              >
+                İncele
+                <ArrowRight size={16} />
+              </Link>
+            </article>
+          ))}
+        </div>
+      </div>
+    </SectionContainer>
+  );
+}
+
+function RemoteTeaserSection() {
+  return (
+    <SectionContainer
+      id="remote"
+      className="home-snap-section bg-[#050505] py-16 text-white sm:py-20"
+    >
+      <div className="grid min-h-[min(74svh,42rem)] gap-9 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:items-center">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/42">
+            BLAGG Remote
+          </p>
+          <h2 className="home-section-title mt-5 max-w-[10ch]">
+            Projenize ait sessiz takip alanı.
+          </h2>
+          <p className="mt-6 max-w-2xl text-[clamp(1.05rem,1.35vw,1.25rem)] leading-[1.8] text-white/62">
+            Üyelik yok. Uygulama yok. Size özel bağlantı.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {materialCategories.slice(0, 6).map((item) => (
-            <div key={item} className="rounded-2xl border border-white/10 bg-white/8 p-4 font-medium text-white/75">
-              {item}
+
+        <div className="rounded-[2rem] border border-white/10 bg-[#101010] p-5 sm:p-7">
+          <div className="flex flex-wrap items-start justify-between gap-5 border-b border-white/10 pb-6">
+            <div>
+              <p className="text-xs uppercase tracking-[0.28em] text-white/38">
+                Özel proje bağlantısı
+              </p>
+              <h3 className="mt-3 text-3xl leading-tight text-white">
+                Özel proje kaydı
+              </h3>
             </div>
-          ))}
+            <span className="rounded-full border border-white/12 bg-white px-4 py-2 text-sm text-black">
+              Onaylı
+            </span>
+          </div>
+
+          <div className="mt-8 grid gap-0 border-y border-white/10">
+            {remoteFeatures.map((item) => (
+              <div key={item} className="border-b border-white/10 py-5 last:border-b-0">
+                <p className="text-lg leading-7 text-white/72">{item}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </section>
+    </SectionContainer>
+  );
+}
+
+function SelectedProjectsSection() {
+  const selectedProjects = featuredProjects.slice(0, 2);
+
+  return (
+    <SectionContainer id="projects" className="home-snap-section py-16 sm:py-20">
+      <div className="flex flex-col gap-5 border-b border-black/8 pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-black/45">
+            Projeler
+          </p>
+          <h2 className="home-section-title mt-5">Seçili iki çalışma.</h2>
+        </div>
+        <SecondaryLink href="/projeler">Projeleri İnceleyin</SecondaryLink>
+      </div>
+
+      <div className="mt-10 grid gap-7 lg:grid-cols-2">
+        {selectedProjects.map((project) => (
+          <article key={project.slug} className="space-y-5">
+            <ProjectImageSlot project={project} />
+            <p className="max-w-2xl text-base leading-7 text-black/56">
+              {project.summary}
+            </p>
+          </article>
+        ))}
+      </div>
+    </SectionContainer>
   );
 }
 
 function FinalCtaSection() {
   return (
-    <section className="px-4 pb-16 sm:px-6 md:pb-24">
-      <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-surface p-7 shadow-card md:p-12">
-        <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-          <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-muted">Start</p>
-            <h2 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
-              Projenizi görünür hale getirelim.
-            </h2>
-          </div>
-          <PrimaryLink href="/teklif-al">Projenizi Başlatın</PrimaryLink>
-        </div>
+    <SectionContainer
+      id="final-cta"
+      className="home-snap-section home-section-space flex min-h-[56svh] items-center bg-[#050505] text-white"
+    >
+      <div className="max-w-4xl">
+        <p className="text-xs uppercase tracking-[0.3em] text-white/42">
+          İlk adım
+        </p>
+        <h2 className="home-section-title mt-5 max-w-[11ch]">
+          Projenizi görünür şekilde başlatın.
+        </h2>
+        <PrimaryLink href="/teklif-al" className="mt-9 bg-white text-black hover:bg-white">
+          Projenizi Başlatın
+        </PrimaryLink>
       </div>
-    </section>
+    </SectionContainer>
   );
 }
 
-function SectionIntro({ eyebrow, title, text }) {
+function PrimaryLink({ href, children, className = "" }) {
   return (
-    <div>
-      <p className="text-sm uppercase tracking-[0.25em] text-muted">{eyebrow}</p>
-      <h2 className="mt-4 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-        {title}
-      </h2>
-      {text && <p className="mt-5 max-w-3xl text-lg leading-8 text-muted">{text}</p>}
-    </div>
-  );
-}
-
-function FeatureCard({ icon: Icon, title }) {
-  return (
-    <div className="rounded-[1.5rem] border border-border bg-surface p-5 shadow-card">
-      <Icon className="text-graphite" size={24} />
-      <h3 className="mt-4 text-xl font-semibold">{title}</h3>
-    </div>
-  );
-}
-
-function PrimaryLink({ href, children }) {
-  return (
-    <a href={href} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-stoneDark px-7 py-4 font-semibold text-white">
+    <Link
+      href={href}
+      className={`premium-button inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-black px-7 py-4 text-base font-medium text-white ${className}`}
+    >
       {children}
       <ArrowRight size={18} />
-    </a>
+    </Link>
   );
 }
 
-function SecondaryLink({ href, children }) {
+function SecondaryLink({ href, children, className = "" }) {
   return (
-    <a href={href} className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-border bg-white px-7 py-4 font-semibold text-stoneDark">
+    <Link
+      href={href}
+      className={`premium-outline-button inline-flex min-h-14 items-center justify-center gap-2 rounded-full border border-black/12 bg-white px-7 py-4 text-base font-medium text-black ${className}`}
+    >
       {children}
       <ArrowRight size={18} />
-    </a>
+    </Link>
   );
 }
-

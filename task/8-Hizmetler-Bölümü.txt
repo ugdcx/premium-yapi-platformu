@@ -1,0 +1,54 @@
+Create the Services section for the BLAGG Studio homepage.
+
+Section title:
+"Hizmetler"
+
+Eyebrow:
+"STUDIO SCOPE"
+
+Intro text:
+"BLAGG Studio, seçilmiş projelerde tasarım, uygulama ve takip süreçlerini tek sorumluluk altında yönetir."
+
+Services:
+1. Anahtar Teslim İnşaat
+Description:
+"Tasarım kararından saha uygulamasına kadar tam kapsamlı proje yönetimi."
+
+2. Konut Yenileme & Tadilat
+Description:
+"Mevcut yaşam alanlarını mimari bütünlük, malzeme disiplini ve kontrollü uygulamayla yeniden ele alıyoruz."
+
+3. Gayrimenkul Değer Artışı & Danışmanlığı
+Description:
+"Mülkün algısını, kullanım kalitesini ve satış potansiyelini yükselten tasarım ve uygulama kararları."
+
+4. Peyzaj Mimarisi
+Description:
+"Dış mekânı yapının doğal devamı olarak tasarlıyor; bahçe, giriş, teras ve açık alanları bütüncül ele alıyoruz."
+
+Design direction:
+- Do not use colorful cards.
+- Prefer a refined list with large numbers:
+  01
+  02
+  03
+  04
+- Use thin horizontal lines between services.
+- On hover, line or text can subtly shift.
+- Keep it very premium and minimal.
+- No icons unless extremely minimal line icons.
+- Avoid generic construction icons.
+
+Layout:
+- Desktop:
+  left side: title and intro
+  right side: service list
+- Mobile:
+  stacked.
+
+CTA:
+At the bottom:
+"Projenizi Başlatın"
+
+Do not add service detail pages yet.
+Only homepage section.

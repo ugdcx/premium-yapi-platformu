@@ -5,7 +5,17 @@ export default function robots() {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/control", "/login"]
+      disallow: [
+        "/client",
+        "/field",
+        "/ahmet-sezer",
+        "/proje-takip",
+        "/blaag-admin",
+        "/admin",
+        "/admin/finance",
+        "/control",
+        "/login"
+      ]
     },
     sitemap: `${siteConfig.url}/sitemap.xml`
   };

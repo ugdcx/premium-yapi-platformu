@@ -1,0 +1,53 @@
+Build the main Hero section after the Intro.
+
+Section id:
+hero
+
+Background:
+- #F7F7F5
+
+Content:
+Eyebrow:
+"BLAGG STUDIO"
+
+Main heading:
+"Design-led renovation.
+Visible execution."
+
+Turkish subline:
+"Tasarım, uygulama ve takip tek sistemde."
+
+Supporting text:
+"Seçilmiş projelerde tasarım kararından uygulama sürecine kadar tüm adımları görünür, belgeli ve kontrollü şekilde yönetiyoruz."
+
+Primary CTA:
+"Projenizi Başlatın"
+
+Secondary CTA:
+"Süreci Görün"
+
+Layout:
+- Desktop: large left-aligned editorial composition.
+- Text column max width around 780px.
+- Add a large photo placeholder area on the right or below depending on screen width.
+- The photo placeholder should use the existing PhotoPlaceholder component.
+- Placeholder label:
+  "MİMARİ DETAY FOTOĞRAFI"
+- Placeholder title:
+  "Malzeme / Mekân / Uygulama Detayı"
+- Helper text:
+  "Gerçek proje görseli eklenecek"
+
+Design:
+- Use large typography.
+- Very generous vertical spacing.
+- No card-heavy SaaS look.
+- No colorful accents.
+- CTA should be black/white only.
+
+Mobile:
+- Text first, placeholder below.
+- Buttons full width or clean stacked layout.
+- Preserve whitespace.
+
+Do not create other sections yet.

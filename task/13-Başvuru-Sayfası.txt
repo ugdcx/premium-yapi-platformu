@@ -1,0 +1,75 @@
+Create a dedicated application page for BLAGG Studio.
+
+Route:
+- /basvuru
+or if current routing uses Turkish slugs:
+- /projenizi-baslatin
+
+Page purpose:
+A premium, short, low-friction project application form.
+
+Page heading:
+"Projenizi Başlatın"
+
+Subheading:
+"Projenizi kısaca anlatın. Size uygun çalışma modelini netleştirmek için sizinle iletişime geçelim."
+
+Form fields:
+1. Ad Soyad
+   type: text
+   required
+
+2. Telefon
+   type: tel
+   required
+
+3. Proje Lokasyonu
+   type: text
+   placeholder: "İl / İlçe"
+
+4. Proje Türü
+   type: select
+   options:
+   - Anahtar Teslim İnşaat
+   - Konut Yenileme & Tadilat
+   - Peyzaj Mimarisi
+   - Değer Artışı / Satış Öncesi Hazırlık
+   - Diğer
+
+5. Kısa Açıklama
+   type: textarea
+   placeholder:
+   "Projenizden kısaca bahsedin..."
+
+Submit button:
+"Başvuruyu Gönder"
+
+After submit:
+For now, if backend is not connected, show a local success state:
+"Başvurunuz alındı. Projenizi inceleyip sizinle iletişime geçeceğiz."
+
+Important:
+- Do not add budget field yet.
+- Do not ask too many questions.
+- Do not add file upload yet.
+- Do not add email unless necessary.
+- Keep the form visually premium.
+- Large input fields.
+- Minimum input height 56px.
+- Font size readable.
+- Mobile-first usability.
+
+Layout:
+Desktop:
+- Left side: text and trust notes
+- Right side: form
+
+Trust notes:
+- "Ön görüşme projenizi anlamak içindir."
+- "Süreç, kapsam netleştikten sonra planlanır."
+- "Aktif projelerde BLAGG Remote takip alanı oluşturulur."
+
+Design:
+- No colorful form validation.
+- Error messages calm and clear.
+- Use monochrome styling.

@@ -1,0 +1,55 @@
+Create the BLAGG Remote teaser section for the homepage.
+
+Important positioning:
+BLAGG Remote must NOT be presented like software, SaaS, dashboard or a tech product.
+It must be presented as a private project tracking experience for active BLAGG clients.
+
+Section background:
+- #111111
+
+Text color:
+- white and muted grey
+
+Eyebrow:
+"BLAGG REMOTE"
+
+Heading:
+"Projeniz uzakta olsa da kontrol sizde kalır."
+
+Body:
+"Aktif projelerde size özel bir takip bağlantısı oluşturulur. Fotoğraflar, aşamalar, belgeler ve önemli kararlar tek ekranda görünür. Uygulama indirmeniz gerekmez."
+
+Key trust line:
+"Üyelik gerekmez. Uygulama gerekmez. Size özel bağlantı yeterlidir."
+
+Mini feature list:
+- Aşama takibi
+- Fotoğraf güncellemeleri
+- Belge alanı
+- Ödeme planı
+- Proje notları
+
+Visual:
+Create a dark UI mockup placeholder using simple divs.
+It should look like a private project screen, not a SaaS dashboard.
+
+Mockup content:
+- Project: Villa K.
+- Current stage: Uygulama & Denetim
+- Progress: 68%
+- Last update: Fotoğraf güncellemesi eklendi
+- Small placeholder thumbnails using PhotoPlaceholder or small blocks
+
+Design:
+- Very minimal.
+- No blue SaaS colors.
+- No charts unless extremely subtle.
+- No colorful status badges.
+- Use grey, white, black only.
+
+CTA:
+"BLAGG Remote’u Görün"
+
+Mobile:
+- Text first, mockup second.
+- Mockup should not overflow.

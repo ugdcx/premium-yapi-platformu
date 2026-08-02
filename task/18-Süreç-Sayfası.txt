@@ -1,0 +1,72 @@
+Create the Process page.
+
+Route:
+- /surec
+
+Page title:
+"Süreç"
+
+Hero:
+"Projeniz adım adım görünür hale gelir."
+
+Subline:
+"Tasarım, uygulama, saha takibi ve belge yönetimi tek akışta ilerler."
+
+Sections:
+
+1. Keşif & Değerlendirme
+Explain:
+- İlk görüşme
+- Proje türü
+- Lokasyon
+- Mevcut durum
+- Beklenti
+- Uygun çalışma modeli
+
+2. Tasarım & Planlama
+Explain:
+- Mimari kararlar
+- Malzeme dili
+- Zaman planı
+- Ön bütçe yaklaşımı
+- Uygulama stratejisi
+
+3. Onaylar & Hazırlık
+Explain:
+- Net kapsam
+- Malzeme tercihleri
+- Usta / tedarik organizasyonu
+- Şantiye hazırlığı
+
+4. Uygulama & Denetim
+Explain:
+- Saha ilerleyişi
+- Fotoğraf güncellemeleri
+- Kritik kararların belgelenmesi
+- Kalite kontrol
+
+5. Teslim & Kayıt
+Explain:
+- Son kontroller
+- Teslim notları
+- Belgeler
+- Bakım / takip önerileri
+
+Visual:
+Use a vertical architectural timeline.
+Add photo placeholder areas for:
+- Keşif fotoğrafı
+- Malzeme detayı
+- Şantiye süreci
+- Teslim detayı
+
+Design:
+- Premium.
+- White/off-white background.
+- Black text.
+- Thin lines.
+- Large step numbers.
+- No construction cliché.
+
+CTA:
+"Projenizi Başlatın"

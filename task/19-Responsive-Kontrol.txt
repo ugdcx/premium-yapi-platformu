@@ -1,0 +1,39 @@
+Audit and improve the responsive design across the entire BLAGG Studio website.
+
+Check these breakpoints:
+- Mobile: 360px
+- Mobile large: 430px
+- Tablet: 768px
+- Laptop: 1024px
+- Desktop: 1440px
+- Large desktop: 1680px
+
+Fix:
+1. Text overflow
+2. Heading sizes
+3. Button wrapping
+4. Mobile menu usability
+5. Sticky mobile CTA overlap
+6. Section spacing
+7. Placeholder image ratios
+8. Header behavior
+9. Footer spacing
+10. Form input usability
+
+Mobile rules:
+- Body text minimum 16px.
+- Buttons minimum 44px height, preferably 52–56px.
+- Form inputs minimum 56px height.
+- No horizontal scrolling.
+- Sticky bottom CTA must not block important content.
+- Intro wordmark must scale properly.
+- Hero heading must remain elegant and readable.
+
+Desktop rules:
+- Do not stretch text too wide.
+- Keep max content width controlled.
+- Preserve luxury whitespace.
+- Avoid clutter.
+
+After changes:
+- Give a concise list of responsive fixes.

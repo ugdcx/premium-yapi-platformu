@@ -1,0 +1,21 @@
+Inspect the current project structure first.
+
+I want you to understand the existing Next.js application before making changes.
+
+Tasks:
+1. List the relevant files and folders.
+2. Identify whether the project uses:
+   - App Router or Pages Router
+   - Tailwind CSS
+   - TypeScript or JavaScript
+   - existing layout files
+   - existing global CSS
+   - existing components
+3. Do not modify anything yet.
+4. After inspection, propose the cleanest implementation plan for turning this project into the BLAGG Studio website.
+
+Important:
+- Do not delete files.
+- Do not overwrite the whole project.
+- Do not start coding yet.
+- Only inspect and give a plan.

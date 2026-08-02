@@ -1,97 +1,41 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { CheckCircle2, FileImage, MessageCircle, Send, Trash2, Upload } from "lucide-react";
-import { homeServices } from "../../lib/data/homePage";
+import { useState } from "react";
+import Link from "next/link";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { validateOfferPhone } from "../../lib/helpers/phone";
-import { createWhatsAppLink } from "../../lib/helpers/whatsapp";
 import { createApplication } from "../../lib/localStorageRecords";
 
-const MAX_FILE_SIZE_MB = 8;
-const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
-const acceptedTypes = ["image/jpeg", "image/png", "image/webp"];
-
-const serviceOptions = [...homeServices.map((service) => service.title), "Diğer"];
-
-const budgetOptions = [
-  "Belirtmek istemiyorum",
-  "100.000 TL altı",
-  "100.000 - 250.000 TL",
-  "250.000 - 500.000 TL",
-  "500.000 - 1.000.000 TL",
-  "1.000.000 TL üzeri"
+const projectTypeOptions = [
+  "Anahtar Teslim İnşaat",
+  "Konut Yenileme & Tadilat",
+  "Peyzaj Mimarisi",
+  "Gayrimenkul Değer Artışı & Danışmanlığı",
+  "Diğer"
 ];
-
-const startOptions = ["Hemen", "1 ay içinde", "1-3 ay içinde", "3 ay sonrası", "Sadece fiyat araştırıyorum"];
 
 const initialForm = {
   fullName: "",
   phone: "",
-  city: "",
-  district: "",
-  serviceType: "",
-  description: "",
-  budgetRange: "Belirtmek istemiyorum",
-  startTime: "",
-  notes: "",
-  photos: []
+  location: "",
+  projectType: "",
+  description: ""
 };
+
+const trustNotes = [
+  "Ön görüşme projenizi anlamak içindir.",
+  "Süreç, kapsam netleştikten sonra planlanır.",
+  "Aktif projelerde BLAGG Remote takip alanı oluşturulur."
+];
 
 export default function IntakeFlow() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submittedApplication, setSubmittedApplication] = useState(null);
-  const [dragActive, setDragActive] = useState(false);
-
-  const photoNames = useMemo(() => form.photos.map((photo) => photo.name), [form.photos]);
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: "" }));
-  }
-
-  function addPhotos(fileList) {
-    const files = Array.from(fileList || []);
-    const nextErrors = {};
-    const validFiles = [];
-
-    files.forEach((file) => {
-      if (!acceptedTypes.includes(file.type)) {
-        nextErrors.photos = "JPG, PNG veya WEBP formatında fotoğraf ekleyin.";
-        return;
-      }
-
-      if (file.size > MAX_FILE_SIZE) {
-        nextErrors.photos = `Her fotoğraf en fazla ${MAX_FILE_SIZE_MB} MB olmalıdır.`;
-        return;
-      }
-
-      validFiles.push({
-        id: `${file.name}-${file.lastModified}-${file.size}`,
-        name: file.name,
-        size: file.size,
-        url: typeof URL !== "undefined" ? URL.createObjectURL(file) : ""
-      });
-    });
-
-    if (validFiles.length) {
-      setForm((current) => ({ ...current, photos: [...current.photos, ...validFiles] }));
-    }
-
-    setErrors((current) => ({ ...current, photos: nextErrors.photos || "" }));
-  }
-
-  function removePhoto(id) {
-    setForm((current) => ({
-      ...current,
-      photos: current.photos.filter((photo) => photo.id !== id)
-    }));
-  }
-
-  function handleDrop(event) {
-    event.preventDefault();
-    setDragActive(false);
-    addPhotos(event.dataTransfer.files);
   }
 
   function validateForm() {
@@ -100,76 +44,84 @@ export default function IntakeFlow() {
 
     if (!form.fullName.trim()) nextErrors.fullName = "Ad soyad zorunludur.";
     if (!phoneResult.valid) nextErrors.phone = phoneResult.error;
-    if (!form.city.trim()) nextErrors.city = "İl zorunludur.";
-    if (!form.district.trim()) nextErrors.district = "İlçe zorunludur.";
-    if (!form.serviceType) nextErrors.serviceType = "Lütfen hizmet tipi seçin.";
-    if (!form.description.trim()) nextErrors.description = "Proje açıklaması zorunludur.";
-    if (!form.startTime) nextErrors.startTime = "Lütfen başlama zamanı seçin.";
+    if (!form.projectType) nextErrors.projectType = "Lütfen proje türü seçin.";
+    if (!form.description.trim()) {
+      nextErrors.description = "Projenizi kısaca anlatın.";
+    }
 
     return { nextErrors, phoneResult };
   }
 
-  function submitApplication(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     const { nextErrors, phoneResult } = validateForm();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
 
-    const now = new Date().toISOString();
     const application = createApplication({
       fullName: form.fullName.trim(),
       customer: form.fullName.trim(),
       phone: form.phone.trim(),
       normalizedPhone: phoneResult.normalizedPhone,
-      city: form.city.trim(),
-      district: form.district.trim(),
-      location: `${form.city.trim()} / ${form.district.trim()}`,
-      serviceType: form.serviceType,
-      service: form.serviceType,
+      location: form.location.trim(),
+      city: form.location.trim(),
+      district: "",
+      serviceType: form.projectType,
+      service: form.projectType,
       description: form.description.trim(),
       projectScale: form.description.trim(),
-      budgetRange: form.budgetRange,
-      startTime: form.startTime,
-      photos: photoNames,
-      files: photoNames,
       status: "Yeni",
-      createdAt: now,
-      updatedAt: now,
-      adminNotes: form.notes.trim(),
-      note: form.notes.trim(),
+      source: "Kısa Başvuru Formu",
       date: new Date().toLocaleDateString("tr-TR"),
-      source: "Ön Başvuru Formu"
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     });
 
     setSubmittedApplication(application);
-  }
-
-  function resetForm() {
     setForm(initialForm);
     setErrors({});
-    setSubmittedApplication(null);
   }
 
   if (submittedApplication) {
     return (
-      <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6">
-        <section className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-3xl items-center">
-          <div className="w-full rounded-[1.75rem] border border-border bg-surface p-6 text-center shadow-card sm:p-10">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-stoneDark text-white">
-              <CheckCircle2 size={32} />
+      <main className="bg-[#F7F7F5] pt-24 text-[#111111]">
+        <section className="mx-auto flex min-h-[calc(100vh-12rem)] max-w-3xl items-center px-4 py-8 sm:px-6">
+          <div className="w-full rounded-[2rem] border border-black/10 bg-white p-8 text-center sm:p-10">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-black text-white">
+              <CheckCircle2 size={30} />
             </div>
-            <h1 className="mt-7 text-4xl font-semibold tracking-tight sm:text-5xl">
+            <h1 className="mt-6 text-[2.7rem] leading-tight sm:text-[3.5rem]">
               Başvurunuz alındı.
             </h1>
-            <p className="mx-auto mt-5 max-w-xl text-lg leading-8 text-muted">
-              BLAGG Studio ekibi kapsamı inceleyip sizinle iletişime geçecektir.
+            <p className="mx-auto mt-5 max-w-xl text-base leading-8 text-black/58 sm:text-lg">
+              Projenizi inceleyip sizinle iletişime geçeceğiz.
             </p>
-            <div className="mx-auto mt-6 w-fit rounded-full bg-soft px-5 py-2 text-sm font-medium">
-              Talep No: {submittedApplication.applicationNo}
+            <p className="mt-5 text-sm uppercase tracking-[0.2em] text-black/42">
+              Kayıt No: {submittedApplication.applicationNo}
+            </p>
+            <div className="mx-auto mt-6 max-w-lg rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4 text-left">
+              <p className="text-sm font-medium text-black">Sonraki adım</p>
+              <ul className="mt-3 grid gap-2 text-sm leading-6 text-black/58">
+                <li>Ekibimiz kapsamı inceleyecek.</li>
+                <li>Uygun görülürse sizinle telefon üzerinden iletişime geçilecek.</li>
+                <li>Aktif projelerde takip alanı daha sonra ayrıca paylaşılacak.</li>
+              </ul>
             </div>
-            <button type="button" onClick={resetForm} className="mt-8 rounded-full border border-border px-7 py-4 font-medium">
-              Yeni başvuru oluştur
-            </button>
+            <div className="mt-8 grid gap-3 sm:flex sm:justify-center">
+              <Link
+                href="/"
+                className="inline-flex min-h-14 items-center justify-center rounded-full border border-black/12 px-6 py-4 text-base text-black"
+              >
+                Ana Sayfaya Dön
+              </Link>
+              <button
+                type="button"
+                onClick={() => setSubmittedApplication(null)}
+                className="inline-flex min-h-14 items-center justify-center rounded-full bg-black px-6 py-4 text-base text-white"
+              >
+                Yeni Başvuru Oluştur
+              </button>
+            </div>
           </div>
         </section>
       </main>
@@ -177,220 +129,198 @@ export default function IntakeFlow() {
   }
 
   return (
-    <main className="min-h-screen bg-cream px-4 py-8 text-stoneDark sm:px-6">
-      <div className="mx-auto max-w-6xl">
-        <header className="mb-6 rounded-[1.75rem] bg-stoneDark p-7 text-white md:p-10">
-          <p className="text-sm uppercase tracking-[0.24em] text-white/40">Project Intake</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl">
-            Projenizi Başlatın
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/65">
-            Proje bilgilerinizi paylaşın. BLAGG Studio ekibi kapsamı inceleyip sizinle iletişime geçsin.
-          </p>
-        </header>
+    <main className="bg-[#F7F7F5] pt-24 text-[#111111]">
+      <section className="mx-auto max-w-[90rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
+        <div className="grid gap-10 lg:grid-cols-[minmax(18rem,0.78fr)_minmax(22rem,0.92fr)]">
+          <div className="lg:pt-8">
+            <p className="text-xs uppercase tracking-[0.3em] text-black/45">
+              Başvuru
+            </p>
+            <h1 className="mt-5 text-[3rem] leading-[0.98] sm:text-[4.4rem]">
+              Projenizi Başlatın
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-8 text-black/58 sm:text-lg">
+              Projenizi kısaca anlatın. Size uygun çalışma modelini netleştirmek için sizinle iletişime geçelim.
+            </p>
 
-        <form id="teklif-formu" onSubmit={submitApplication} className="grid gap-5">
-          <FormSection number="1" title="İletişim">
-            <div className="grid gap-4 md:grid-cols-2">
-              <TextField label="Ad Soyad" value={form.fullName} onChange={(value) => updateField("fullName", value)} error={errors.fullName} />
-              <TextField label="Telefon" value={form.phone} onChange={(value) => updateField("phone", value)} error={errors.phone} inputMode="tel" helper="05 veya +90 cep telefonu formatı." />
-              <TextField label="İl" value={form.city} onChange={(value) => updateField("city", value)} error={errors.city} />
-              <TextField label="İlçe" value={form.district} onChange={(value) => updateField("district", value)} error={errors.district} />
-            </div>
-          </FormSection>
-
-          <FormSection number="2" title="Proje Bilgileri">
-            <div className="grid gap-5">
-              <ChoiceGrid label="Hizmet Tipi" options={serviceOptions} value={form.serviceType} onChange={(value) => updateField("serviceType", value)} error={errors.serviceType} />
-              <TextAreaField label="Proje Açıklaması" value={form.description} onChange={(value) => updateField("description", value)} error={errors.description} />
-            </div>
-          </FormSection>
-
-          <FormSection number="3" title="Fotoğraflar">
-            <PhotoDropzone
-              dragActive={dragActive}
-              setDragActive={setDragActive}
-              onDrop={handleDrop}
-              onSelect={addPhotos}
-              error={errors.photos}
-            />
-            <PhotoPreviewGrid photos={form.photos} onRemove={removePhoto} />
-          </FormSection>
-
-          <FormSection number="4" title="Zamanlama ve Notlar">
-            <div className="grid gap-4 lg:grid-cols-2">
-              <SelectField label="Yaklaşık Bütçe" value={form.budgetRange} options={budgetOptions} onChange={(value) => updateField("budgetRange", value)} />
-              <SelectField label="Başlama Zamanı" value={form.startTime} options={["", ...startOptions]} onChange={(value) => updateField("startTime", value)} error={errors.startTime} />
-            </div>
-            <div className="mt-4">
-              <TextAreaField label="Notlar" value={form.notes} onChange={(value) => updateField("notes", value)} optional />
-            </div>
-          </FormSection>
-
-          <div className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <button className="inline-flex min-h-16 items-center justify-center gap-2 rounded-full bg-stoneDark px-7 py-4 text-lg font-semibold text-white">
-                Ön Başvuru Oluştur
-                <Send size={20} />
-              </button>
-              <a
-                href={createWhatsAppLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-16 items-center justify-center gap-2 rounded-full border border-border px-7 py-4 text-lg font-semibold text-stoneDark"
-              >
-                <MessageCircle size={20} />
-                WhatsApp ile İletişim
-              </a>
+            <div className="mt-10 grid gap-4">
+              {trustNotes.map((note) => (
+                <div key={note} className="border-t border-black/10 py-4">
+                  <p className="text-base leading-7 text-black/66">{note}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </form>
-      </div>
+
+          <form
+            id="teklif-formu"
+            onSubmit={handleSubmit}
+            className="rounded-[2rem] border border-black/10 bg-white p-5 sm:p-7"
+            noValidate
+          >
+            <div className="grid gap-5">
+              <Field
+                id="full-name"
+                label="Ad Soyad"
+                value={form.fullName}
+                error={errors.fullName}
+                autoComplete="name"
+                maxLength={80}
+                onChange={(value) => updateField("fullName", value)}
+              />
+              <Field
+                id="phone"
+                label="Telefon"
+                value={form.phone}
+                error={errors.phone}
+                helper="05 ile başlayan veya +90 formatındaki cep telefonu numaranızı yazın."
+                inputMode="tel"
+                autoComplete="tel"
+                maxLength={16}
+                onChange={(value) => updateField("phone", value)}
+              />
+              <Field
+                id="location"
+                label="Proje Lokasyonu"
+                value={form.location}
+                placeholder="İl / İlçe"
+                autoComplete="address-level2"
+                maxLength={80}
+                onChange={(value) => updateField("location", value)}
+              />
+              <SelectField
+                id="project-type"
+                label="Proje Türü"
+                value={form.projectType}
+                error={errors.projectType}
+                options={projectTypeOptions}
+                onChange={(value) => updateField("projectType", value)}
+              />
+              <TextAreaField
+                id="description"
+                label="Kısa Açıklama"
+                value={form.description}
+                error={errors.description}
+                placeholder="Projenizden kısaca bahsedin..."
+                maxLength={600}
+                onChange={(value) => updateField("description", value)}
+              />
+              <p className="text-sm leading-6 text-black/46">
+                Zorunlu alanlar yalnızca ilk değerlendirme için kullanılır.
+              </p>
+              <button
+                type="submit"
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-black px-6 py-4 text-base font-medium text-white"
+              >
+                Başvuruyu Gönder
+                <ArrowRight size={18} />
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
     </main>
   );
 }
 
-function FormSection({ number, title, children }) {
+function Field({
+  id,
+  label,
+  value,
+  onChange,
+  error,
+  helper,
+  placeholder,
+  inputMode = "text",
+  autoComplete,
+  maxLength
+}) {
   return (
-    <section className="rounded-[1.75rem] border border-border bg-surface p-5 shadow-card sm:p-6">
-      <div className="mb-5 flex items-center gap-3">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stoneDark text-sm font-semibold text-white">{number}</span>
-        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
-      </div>
-      {children}
-    </section>
-  );
-}
-
-function TextField({ label, value, onChange, error, helper, inputMode }) {
-  return (
-    <label className="grid gap-2">
-      <span className="text-sm font-semibold text-graphite">{label}</span>
+    <label htmlFor={id} className="grid gap-2">
+      <span className="text-sm uppercase tracking-[0.16em] text-black/56">{label}</span>
       <input
+        id={id}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
         inputMode={inputMode}
-        className={`h-14 rounded-2xl border bg-white px-5 text-base outline-none placeholder:text-black/35 ${error ? "border-red-500" : "border-border"}`}
+        autoComplete={autoComplete}
+        maxLength={maxLength}
+        aria-invalid={Boolean(error)}
+        aria-describedby={[
+          helper ? `${id}-helper` : null,
+          error ? `${id}-error` : null
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        onChange={(event) => onChange(event.target.value)}
+        className={`w-full rounded-[1.2rem] border bg-[#F7F7F5] px-5 py-4 text-base outline-none ${
+          error ? "border-black" : "border-black/10"
+        }`}
       />
-      {helper && <span className="text-sm leading-6 text-muted">{helper}</span>}
-      {error && <ErrorText>{error}</ErrorText>}
+      {helper ? (
+        <p id={`${id}-helper`} className="text-sm leading-6 text-black/46">
+          {helper}
+        </p>
+      ) : null}
+      {error ? <ErrorText id={`${id}-error`}>{error}</ErrorText> : null}
     </label>
   );
 }
 
-function TextAreaField({ label, value, onChange, error, optional = false }) {
+function SelectField({ id, label, value, onChange, options, error }) {
   return (
-    <label className="grid gap-2">
-      <span className="text-sm font-semibold text-graphite">{label}</span>
-      <textarea
+    <label htmlFor={id} className="grid gap-2">
+      <span className="text-sm uppercase tracking-[0.16em] text-black/56">{label}</span>
+      <select
+        id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className={`min-h-36 rounded-2xl border bg-white px-5 py-4 text-base outline-none placeholder:text-black/35 ${error ? "border-red-500" : "border-border"}`}
-      />
-      {optional && <span className="text-sm text-muted">İsteğe bağlı.</span>}
-      {error && <ErrorText>{error}</ErrorText>}
-    </label>
-  );
-}
-
-function ChoiceGrid({ label, options, value, onChange, error }) {
-  return (
-    <div>
-      <p className="mb-3 text-sm font-semibold text-graphite">{label}</p>
-      <div className="grid auto-rows-fr gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => onChange(option)}
-            className={`flex min-h-14 items-center rounded-2xl border px-4 py-3 text-left text-sm font-semibold ${
-              value === option ? "border-stoneDark bg-stoneDark text-white" : "border-border bg-soft text-stoneDark hover:border-stoneDark"
-            }`}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-      {error && <ErrorText>{error}</ErrorText>}
-    </div>
-  );
-}
-
-function PhotoDropzone({ dragActive, setDragActive, onDrop, onSelect, error }) {
-  return (
-    <div>
-      <label
-        onDragOver={(event) => {
-          event.preventDefault();
-          setDragActive(true);
-        }}
-        onDragLeave={() => setDragActive(false)}
-        onDrop={onDrop}
-        className={`flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-[1.5rem] border border-dashed p-6 text-center ${
-          dragActive ? "border-stoneDark bg-white" : "border-black/20 bg-soft"
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={`w-full rounded-[1.2rem] border bg-[#F7F7F5] px-5 py-4 text-base outline-none ${
+          error ? "border-black" : "border-black/10"
         }`}
       >
-        <Upload className="text-graphite" size={34} />
-        <span className="mt-4 text-2xl font-semibold">Fotoğraf ekleyin</span>
-        <span className="mt-2 max-w-xl text-sm text-muted">Dosya seçin veya buraya sürükleyin. JPG, PNG, WEBP.</span>
-        <input type="file" multiple accept="image/jpeg,image/png,image/webp" capture="environment" onChange={(event) => onSelect(event.target.files)} className="sr-only" />
-      </label>
-      {error && <ErrorText>{error}</ErrorText>}
-    </div>
-  );
-}
-
-function PhotoPreviewGrid({ photos, onRemove }) {
-  if (!photos.length) return null;
-
-  return (
-    <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-      {photos.map((photo) => (
-        <div key={photo.id} className="overflow-hidden rounded-2xl border border-border bg-surface">
-          {photo.url ? (
-            <img src={photo.url} alt={photo.name} className="aspect-square w-full object-cover" />
-          ) : (
-            <div className="flex aspect-square items-center justify-center bg-soft">
-              <FileImage className="text-graphite" size={24} />
-            </div>
-          )}
-          <div className="flex items-center justify-between gap-2 p-3">
-            <span className="truncate text-sm text-muted">{photo.name}</span>
-            <button
-              type="button"
-              onClick={() => onRemove(photo.id)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-soft text-muted"
-              aria-label={`${photo.name} fotoğrafını sil`}
-            >
-              <Trash2 size={17} />
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function SelectField({ label, value, options, onChange, error }) {
-  return (
-    <label className="grid gap-2">
-      <span className="text-sm font-semibold text-graphite">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className={`h-14 rounded-2xl border bg-white px-5 text-base outline-none ${error ? "border-red-500" : "border-border"}`}
-      >
+        <option value="">Seçiniz</option>
         {options.map((option) => (
-          <option key={option || "empty"} value={option}>
-            {option || "Seçiniz"}
+          <option key={option} value={option}>
+            {option}
           </option>
         ))}
       </select>
-      {error && <ErrorText>{error}</ErrorText>}
+      {error ? <ErrorText id={`${id}-error`}>{error}</ErrorText> : null}
     </label>
   );
 }
 
-function ErrorText({ children }) {
-  return <p className="mt-2 text-sm font-semibold text-red-700">{children}</p>;
+function TextAreaField({ id, label, value, onChange, error, placeholder, maxLength }) {
+  return (
+    <label htmlFor={id} className="grid gap-2">
+      <span className="text-sm uppercase tracking-[0.16em] text-black/56">{label}</span>
+      <textarea
+        id={id}
+        value={value}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        aria-invalid={Boolean(error)}
+        aria-describedby={`${id}-meta${error ? ` ${id}-error` : ""}`}
+        onChange={(event) => onChange(event.target.value)}
+        className={`min-h-40 w-full rounded-[1.2rem] border bg-[#F7F7F5] px-5 py-4 text-base outline-none ${
+          error ? "border-black" : "border-black/10"
+        }`}
+      />
+      <p id={`${id}-meta`} className="text-sm leading-6 text-black/46">
+        {value.length}/{maxLength} karakter
+      </p>
+      {error ? <ErrorText id={`${id}-error`}>{error}</ErrorText> : null}
+    </label>
+  );
+}
+
+function ErrorText({ children, id }) {
+  return (
+    <p id={id} className="text-sm leading-6 text-black/58" aria-live="polite">
+      {children}
+    </p>
+  );
 }

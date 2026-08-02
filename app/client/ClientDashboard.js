@@ -2,24 +2,31 @@
 
 import { useMemo, useState } from "react";
 import {
+  CalendarDays,
+  Camera,
   CheckCircle2,
-  Clock3,
+  ClipboardList,
   CreditCard,
+  FileImage,
   FileText,
-  MessageCircle,
+  MapPin,
   Phone,
+  RotateCcw,
   Send,
   ShieldCheck
 } from "lucide-react";
 import { statusChipClass } from "../../lib/designSystem";
 import { useDemoRoleGuard } from "../../lib/demoAuth";
-import { demoProjectUpdates, updateAreas, updateStages } from "../../lib/projectUpdates";
+import {
+  demoProjectUpdates,
+  updateAreas,
+  updateStages
+} from "../../lib/projectUpdates";
 import DemoLogoutButton from "../../components/DemoLogoutButton";
 
 const customer = {
   name: "Ali Atmaca",
   phone: "+90 5XX XXX XX XX",
-  phoneHref: "+905XXXXXXXXX",
   location: "Sakarya / Akyazı"
 };
 
@@ -30,23 +37,18 @@ const project = {
   serviceType: "Tadilat & Değer Artırma Çalışmaları",
   submittedDate: "25 Nisan 2026",
   status: "İnceleniyor",
-  nextStep: "Ekibimiz başvuruyu değerlendiriyor ve teklif kapsamını netleştiriyor.",
-  primaryCta: "Danışmanla Görüş",
-  offer: "₺1.250.000",
-  paid: "₺350.000",
-  remaining: "₺900.000",
-  nextPayment: "Malzeme başlangıcı - 03 Mayıs 2026",
-  progress: 42,
-  areas: updateAreas
+  nextStep:
+    "Ekibimiz başvuruyu değerlendiriyor ve teklif kapsamını netleştiriyor.",
+  progress: 42
 };
 
 const tabs = [
-  ["application", "Başvuru Takibi"],
-  ["project", "Proje Takibi"],
+  ["application", "Başvuru"],
+  ["project", "Proje"],
   ["offer", "Teklif & Ödeme"],
   ["documents", "Belgeler"],
   ["requests", "Talepler"],
-  ["warranty", "Teslim ve Garanti"]
+  ["warranty", "Teslim & Garanti"]
 ];
 
 const applicationSteps = [
@@ -56,139 +58,36 @@ const applicationSteps = [
   ["Onay sonrası proje başlatılacak", "Bekliyor"]
 ];
 
-const timeline = [
-  {
-    id: "tl-1",
-    date: "Bugün 14:30",
-    area: "Mutfak",
-    description: "Mutfak söküm işlemleri tamamlandı.",
-    status: "Tamamlandı"
-  },
-  {
-    id: "tl-2",
-    date: "Bugün 11:10",
-    area: "Mutfak",
-    description: "Elektrik altyapı kontrolü yapıldı.",
-    status: "İncelendi"
-  },
-  {
-    id: "tl-3",
-    date: "Dün 16:45",
-    area: "Banyo",
-    description: "Banyo seramik teslimatı sahaya alındı.",
-    status: "Malzeme"
-  },
-  {
-    id: "tl-4",
-    date: "Dün 09:20",
-    area: "Dış Cephe",
-    description: "Dış cephe keşfi tamamlandı.",
-    status: "Kontrol"
-  }
-];
-
-const gallery = [
-  { id: "ph-1", area: "Mutfak", stage: "Süreç", note: "Söküm tamamlandı", date: "Bugün" },
-  { id: "ph-2", area: "Banyo", stage: "Malzeme", note: "Seramikler sahaya alındı", date: "Dün" },
-  { id: "ph-3", area: "Salon", stage: "Kontrol", note: "Zemin ve boya yüzeyi incelendi", date: "Dün" },
-  { id: "ph-4", area: "Dış Cephe", stage: "Öncesi", note: "Keşif fotoğrafları eklendi", date: "Dün" }
-];
-
-const offer = {
-  scope:
-    "Mutfak, banyo, salon ve dış cephe alanlarında değer artırma odaklı renovasyon; malzeme koordinasyonu ve teslim öncesi kalite kontrol dahil.",
-  included: [
-    "Mevcut durum analizi ve uygulama planı",
-    "Mutfak ve banyo yenileme uygulaması",
-    "Elektrik ve tesisat kontrol işleri",
-    "Malzeme tedarik ve saha koordinasyonu",
-    "Fotoğraflı günlük ilerleme raporu"
-  ],
-  excluded: [
-    "Ruhsat ve resmi harç bedelleri",
-    "Mobilya dışı özel dekorasyon ürünleri",
-    "Kapsam dışı ek metraj ve revizyonlar"
-  ]
-};
-
-const closingOffer = {
-  status: "Teklif Hazır",
-  validity: "Geçerlilik: 7 gün",
-  price: "₺1.250.000",
-  scope:
-    "Mutfak, banyo, salon ve dış cephe alanlarında değer artırma odaklı renovasyon; malzeme koordinasyonu ve teslim öncesi kalite kontrol dahil.",
-  included: [
-    "Mutfak ve banyo yenileme",
-    "Elektrik ve tesisat kontrolü",
-    "Seramik, boya ve zemin uygulamaları",
-    "Günlük görsel ilerleme takibi"
-  ],
-  excluded: [
-    "Ruhsat ve belediye harçları",
-    "Müşteri tarafından sonradan talep edilen ek işler",
-    "Marka değişiminden doğan fiyat farkları"
-  ],
-  startPlan: [
-    "Onay sonrası sözleşme taslağı paylaşılır.",
-    "İlk saha planı ve ekip takvimi netleştirilir.",
-    "Malzeme başlangıcı için ödeme adımı açılır."
-  ]
-};
-const documents = [
-  ["Teklif PDF", "Hazır"],
-  ["Sözleşme Taslağı", "İnceleniyor"],
-  ["Faturalar", "Bekliyor"],
-  ["Garanti Belgeleri", "Bekleniyor"],
-  ["Teslim Tutanağı", "Bekleniyor"]
+const documentCards = [
+  { name: "Teklif PDF", type: "PDF", status: "Hazır" },
+  { name: "Sözleşme Taslağı", type: "DOC", status: "İnceleniyor" },
+  { name: "Faturalar", type: "PDF", status: "Bekleniyor" },
+  { name: "Garanti Belgeleri", type: "PDF", status: "Bekleniyor" }
 ];
 
 const paymentMilestones = [
   { title: "Ön ödeme", amount: "₺350.000", dueDate: "Onay sonrası", status: "Ödendi" },
   { title: "Malzeme başlangıcı", amount: "₺300.000", dueDate: "03 Mayıs 2026", status: "Yaklaşan" },
-  { title: "Ara ödeme", amount: "₺350.000", dueDate: "15 Mayıs 2026", status: "Bekliyor" },
-  { title: "Teslim ödemesi", amount: "₺250.000", dueDate: "Teslim günü", status: "Bekliyor" }
+  { title: "Ara ödeme", amount: "₺350.000", dueDate: "15 Mayıs 2026", status: "Bekliyor" }
 ];
 
-const documentCards = [
-  { name: "Teklif PDF", type: "PDF", status: "Hazır" },
-  { name: "Sözleşme Taslağı", type: "DOC", status: "İnceleniyor" },
-  { name: "Faturalar", type: "PDF", status: "Bekleniyor" },
-  { name: "Garanti Belgeleri", type: "PDF", status: "Bekleniyor" },
-  { name: "Teslim Tutanağı", type: "PDF", status: "Bekleniyor" }
-];
-
-const warrantyInfo = {
-  completionStatus: "Teslime Hazırlanıyor",
-  deliveryDate: "30 Mayıs 2026",
-  warrantyStart: "01 Haziran 2026",
-  warrantyEnd: "01 Haziran 2028",
-  responsible: "Proje Danışmanı: Ayşe Demir",
-  checklist: [
-    { label: "İş kapsamı tamamlandı", status: "Bekliyor" },
-    { label: "Alan temizliği yapıldı", status: "Bekliyor" },
-    { label: "Malzeme ve uygulama kontrol edildi", status: "Tamamlandı" },
-    { label: "Belgeler teslim edildi", status: "Bekliyor" },
-    { label: "Garanti süreci başlatıldı", status: "Bekliyor" }
-  ]
-};
-
-const initialRequests = [
+const requestsSeed = [
   {
     id: "req-1",
     date: "Bugün 10:15",
     type: "Revize Talebi",
     area: "Mutfak",
-    message: "Mutfak dolabı kulp modelini daha sade bir alternatifle değerlendirebilir miyiz?",
+    message:
+      "Mutfak dolabı kulp modelini daha sade bir alternatifle değerlendirebilir miyiz?",
     status: "İnceleniyor"
-  },
-  {
-    id: "req-2",
-    date: "Dün 18:20",
-    type: "Soru",
-    area: "Ödeme",
-    message: "Malzeme başlangıcı ödemesi için tarih netleşti mi?",
-    status: "Açık"
   }
+];
+
+const warrantyChecklist = [
+  { label: "İş kapsamı tamamlandı", status: "Bekliyor" },
+  { label: "Alan temizliği yapıldı", status: "Bekliyor" },
+  { label: "Malzeme ve uygulama kontrol edildi", status: "Tamamlandı" },
+  { label: "Belgeler teslim edildi", status: "Bekliyor" }
 ];
 
 export default function ClientDashboard() {
@@ -196,19 +95,11 @@ export default function ClientDashboard() {
   const [activeTab, setActiveTab] = useState("application");
   const [areaFilter, setAreaFilter] = useState("Tümü");
   const [stageFilter, setStageFilter] = useState("Tümü");
-  const [approved, setApproved] = useState(false);
-  const [revisionOpen, setRevisionOpen] = useState(false);
-  const [revisionNote, setRevisionNote] = useState("");
-  const [revisionSent, setRevisionSent] = useState(false);
-  const [requests, setRequests] = useState(initialRequests);
+  const [requests, setRequests] = useState(requestsSeed);
   const [requestType, setRequestType] = useState("Revize Talebi");
   const [requestArea, setRequestArea] = useState("Genel");
   const [requestMessage, setRequestMessage] = useState("");
   const [requestSent, setRequestSent] = useState(false);
-  const [serviceArea, setServiceArea] = useState("Mutfak");
-  const [serviceSubject, setServiceSubject] = useState("");
-  const [serviceDescription, setServiceDescription] = useState("");
-  const [serviceSent, setServiceSent] = useState(false);
 
   const filteredProofUpdates = useMemo(() => {
     return demoProjectUpdates.filter((item) => {
@@ -220,8 +111,8 @@ export default function ClientDashboard() {
 
   if (!canView) {
     return (
-      <main className="min-h-screen bg-cream px-6 py-10 text-stoneDark">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-surface p-8">
+      <main className="min-h-screen bg-[#F7F7F5] px-6 py-10 text-[#111111]">
+        <div className="mx-auto max-w-7xl rounded-[2rem] border border-black/10 bg-white p-8">
           Oturum kontrol ediliyor...
         </div>
       </main>
@@ -229,18 +120,52 @@ export default function ClientDashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-cream px-4 py-6 text-stoneDark sm:px-6 lg:py-8">
+    <main className="min-h-screen bg-[#F7F7F5] px-4 py-6 text-[#111111] sm:px-6 lg:py-8">
       <div className="mx-auto max-w-7xl">
-        <TopStatusHero activeTab={activeTab} setActiveTab={setActiveTab} />
+        <header className="rounded-[2rem] border border-black/10 bg-black p-6 text-white sm:p-8 lg:p-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/42">
+                BLAGG Remote
+              </p>
+              <h1 className="mt-4 text-[2.8rem] leading-[0.98] sm:text-[4rem]">
+                Merhaba {customer.name}
+              </h1>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <span className="rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm text-white/70">
+                  Başvuru No: {project.applicationNo}
+                </span>
+                <span className="rounded-full border border-white/12 bg-white px-4 py-2 text-sm text-black">
+                  Proje No: {project.projectNo}
+                </span>
+              </div>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-white/62">
+                Durum, ilerleme, teklif ve belge adımları sadeleştirilmiş görünümle burada tutulur.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:min-w-80 lg:grid-cols-1">
+              <a
+                href={`tel:${customer.phone}`}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm text-black"
+              >
+                <Phone size={16} />
+                Telefon
+              </a>
+              <DemoLogoutButton dark />
+            </div>
+          </div>
+        </header>
 
-        <div className="my-5 rounded-[1.5rem] border border-border bg-surface p-2">
+        <div className="my-5 rounded-[1.5rem] border border-black/10 bg-white p-2">
           <div className="mobile-scroll">
             {tabs.map(([id, label]) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
-                className={`rounded-full px-4 py-3 text-sm font-medium transition ${
-                  activeTab === id ? "bg-stoneDark text-white" : "bg-cream text-muted"
+                className={`rounded-full px-4 py-3 text-sm ${
+                  activeTab === id
+                    ? "bg-black text-white"
+                    : "bg-[#F7F7F5] text-black/64"
                 }`}
               >
                 {label}
@@ -249,42 +174,25 @@ export default function ClientDashboard() {
           </div>
         </div>
 
-        {activeTab === "application" && <ApplicationMode />}
-        {activeTab === "project" && (
+        {activeTab === "application" ? (
+          <ApplicationMode />
+        ) : null}
+        {activeTab === "project" ? (
           <ProjectMode
             areaFilter={areaFilter}
             setAreaFilter={setAreaFilter}
             stageFilter={stageFilter}
             setStageFilter={setStageFilter}
             filteredProofUpdates={filteredProofUpdates}
+            onResetFilters={() => {
+              setAreaFilter("Tümü");
+              setStageFilter("Tümü");
+            }}
           />
-        )}
-        {activeTab === "offer" && (
-          <OfferPaymentMode
-            approved={approved}
-            setApproved={setApproved}
-            revisionOpen={revisionOpen}
-            setRevisionOpen={setRevisionOpen}
-            revisionNote={revisionNote}
-            setRevisionNote={setRevisionNote}
-            revisionSent={revisionSent}
-            setRevisionSent={setRevisionSent}
-          />
-        )}
-        {activeTab === "documents" && <DocumentsMode />}
-        {activeTab === "warranty" && (
-          <WarrantyMode
-            serviceArea={serviceArea}
-            setServiceArea={setServiceArea}
-            serviceSubject={serviceSubject}
-            setServiceSubject={setServiceSubject}
-            serviceDescription={serviceDescription}
-            setServiceDescription={setServiceDescription}
-            serviceSent={serviceSent}
-            setServiceSent={setServiceSent}
-          />
-        )}
-        {activeTab === "requests" && (
+        ) : null}
+        {activeTab === "offer" ? <OfferMode /> : null}
+        {activeTab === "documents" ? <DocumentsMode /> : null}
+        {activeTab === "requests" ? (
           <RequestsMode
             requests={requests}
             requestType={requestType}
@@ -295,13 +203,14 @@ export default function ClientDashboard() {
             setRequestMessage={setRequestMessage}
             requestSent={requestSent}
             onSubmit={() => {
+              if (!requestMessage.trim()) return;
               setRequests((current) => [
                 {
                   id: `req-${current.length + 1}`,
                   date: "Bugün",
                   type: requestType,
                   area: requestArea,
-                  message: requestMessage || "Müşteri yeni talep oluşturdu.",
+                  message: requestMessage.trim(),
                   status: "Açık"
                 },
                 ...current
@@ -310,125 +219,51 @@ export default function ClientDashboard() {
               setRequestMessage("");
             }}
           />
-        )}
+        ) : null}
+        {activeTab === "warranty" ? <WarrantyMode /> : null}
       </div>
     </main>
-  );
-}
-
-function TopStatusHero({ activeTab, setActiveTab }) {
-  const activeProject = activeTab === "project";
-
-  return (
-    <header className="rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 lg:p-10">
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.28em] text-white/35">
-            Müşteri Paneli
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-            Merhaba {customer.name}
-          </h1>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <span className="rounded-full bg-white/10 px-4 py-2 text-sm text-white/70">
-              {activeProject ? `Proje No: ${project.projectNo}` : `Başvuru No: ${project.applicationNo}`}
-            </span>
-            <span className="rounded-full bg-gold px-4 py-2 text-sm font-medium text-stoneDark">
-              {project.status}
-            </span>
-          </div>
-          <div className="mt-6 grid gap-3 text-white/65 sm:grid-cols-2">
-            <StatusLine label="Mevcut durum" value={project.status} />
-            <StatusLine label="Sıradaki adım" value={project.nextStep} />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-          <button
-            onClick={() => setActiveTab("offer")}
-            className="inline-flex items-center justify-center rounded-full bg-gold px-6 py-4 text-sm font-medium text-stoneDark"
-          >
-            {project.primaryCta}
-          </button>
-          <DemoLogoutButton dark />
-        </div>
-      </div>
-    </header>
-  );
-}
-
-function StatusLine({ label, value }) {
-  return (
-    <div className="rounded-2xl bg-white/10 p-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-white/35">{label}</p>
-      <p className="mt-2 leading-6 text-white/80">{value}</p>
-    </div>
   );
 }
 
 function ApplicationMode() {
   return (
     <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-      <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm uppercase tracking-[0.25em] text-black/35">Başvuru Takibi</p>
-        <h2 className="mt-3 text-3xl font-semibold">Başvurunuz güvenle kayıtta.</h2>
-        <p className="mt-4 leading-7 text-muted">
-          Şu anda ekibimiz ihtiyaçları ve kapsamı inceliyor. Teklif hazırlığı öncesi
-          eksik bilgi olursa sizinle iletişime geçilecek.
-        </p>
-
-        <div className="mt-6 grid gap-3">
+      <Panel
+        eyebrow="Başvuru Takibi"
+        title="Başvurunuz güvenle kayıtta."
+        text="İlk değerlendirme ve teklif hazırlık adımları bu alanda görünür kalır."
+      >
+        <div className="grid gap-3">
           <InfoRow label="Başvuru No" value={project.applicationNo} />
           <InfoRow label="Hizmet tipi" value={project.serviceType} />
           <InfoRow label="Gönderim tarihi" value={project.submittedDate} />
           <InfoRow label="Durum" value={project.status} chip />
         </div>
+      </Panel>
 
-        <div className="mt-6 rounded-2xl bg-cream p-4">
-          <p className="text-sm font-medium">Sıradaki adım</p>
-          <p className="mt-2 text-sm leading-6 text-muted">{project.nextStep}</p>
-        </div>
-
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <a
-            href={`https://wa.me/${customer.phoneHref.replace(/\D/g, "")}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gold px-5 py-4 font-medium text-stoneDark"
-          >
-            <MessageCircle size={19} />
-            WhatsApp
-          </a>
-          <a
-            href={`tel:${customer.phoneHref}`}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border px-5 py-4 font-medium"
-          >
-            <Phone size={19} />
-            Telefon
-          </a>
-        </div>
-      </div>
-
-      <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm uppercase tracking-[0.25em] text-black/35">Süreç</p>
-        <h2 className="mt-3 text-3xl font-semibold">Başvuru zaman çizgisi</h2>
-        <div className="mt-6 grid gap-3">
+      <Panel
+        eyebrow="Süreç"
+        title="Başvuru zaman çizgisi"
+        text="Her adım kapalı ve okunur bir sırayla gösterilir."
+      >
+        <div className="grid gap-3">
           {applicationSteps.map(([label, status], index) => (
-            <div key={label} className="flex items-center gap-4 rounded-2xl bg-cream p-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold">
+            <div
+              key={label}
+              className="flex items-center gap-4 rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-sm">
                 {index + 1}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-medium">{label}</p>
-                <p className="mt-1 text-sm text-muted">
-                  {index < 2 ? "Bu adım aktif takip ediliyor." : "Sonraki aşamada güncellenecek."}
-                </p>
+                <p className="text-sm font-medium">{label}</p>
               </div>
               <span className={statusChipClass(status)}>{status}</span>
             </div>
           ))}
         </div>
-      </div>
+      </Panel>
     </section>
   );
 }
@@ -438,362 +273,188 @@ function ProjectMode({
   setAreaFilter,
   stageFilter,
   setStageFilter,
-  filteredProofUpdates
+  filteredProofUpdates,
+  onResetFilters
 }) {
-  const areaFilters = ["Tümü", ...project.areas];
+  const areaFilters = ["Tümü", ...updateAreas];
   const stageFilters = ["Tümü", ...updateStages];
 
   return (
     <section className="grid gap-6">
-      <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-black/35">Proje Takibi</p>
-            <h2 className="mt-2 text-3xl font-semibold">{project.title}</h2>
-            <p className="mt-3 max-w-2xl leading-7 text-muted">
-              Yüklenen görseller, sahadaki ilerlemeyi tarih ve alan bazlı takip etmenizi sağlar.
-            </p>
-          </div>
-          <div className="rounded-2xl bg-cream p-5">
-            <p className="text-sm text-muted">İlerleme</p>
-            <p className="mt-1 text-4xl font-semibold">%{project.progress}</p>
-          </div>
+      <Panel
+        eyebrow="Proje Takibi"
+        title={project.title}
+        text="Onaylanmış ilerleme kayıtları alan ve aşama bazında filtrelenebilir."
+      >
+        <div className="grid gap-3 sm:grid-cols-4">
+          <MetricCard label="İlerleme" value={`%${project.progress}`} icon={ShieldCheck} />
+          <MetricCard label="Müşteri" value={customer.name} icon={ClipboardList} />
+          <MetricCard label="Lokasyon" value={customer.location} icon={MapPin} />
+          <MetricCard label="Durum" value={project.status} icon={CalendarDays} />
         </div>
-        <div className="mt-6 h-3 rounded-full bg-cream">
-          <div className="h-3 rounded-full bg-gold" style={{ width: `${project.progress}%` }} />
-        </div>
-      </div>
+      </Panel>
 
-      <ProofProgress
-        areaFilters={areaFilters}
-        areaFilter={areaFilter}
-        setAreaFilter={setAreaFilter}
-        stageFilters={stageFilters}
-        stageFilter={stageFilter}
-        setStageFilter={setStageFilter}
-        items={filteredProofUpdates}
-      />
-    </section>
-  );
-}
-
-function ProofProgress({
-  areaFilters,
-  areaFilter,
-  setAreaFilter,
-  stageFilters,
-  stageFilter,
-  setStageFilter,
-  items
-}) {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-premium sm:p-6 lg:p-8">
-      <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Kanıtlı İlerleme</p>
-          <h2 className="mt-2 text-3xl font-semibold">Zaman çizgisi ve fotoğraf kanıtları</h2>
-          <p className="mt-3 max-w-3xl leading-7 text-muted">
-            Yüklenen görseller, sahadaki ilerlemeyi tarih ve alan bazlı takip etmenizi sağlar.
+      <Panel
+        eyebrow="Kanıtlı İlerleme"
+        title="Zaman çizgisi ve fotoğraf kayıtları"
+        text="Filtreler yalnızca görünür kayıtlarda çalışır."
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-black/54">
+            Görünen kayıt: {filteredProofUpdates.length}
           </p>
-        </div>
-        <div className="rounded-2xl bg-cream p-4 text-sm text-muted">
-          <strong className="block text-2xl text-stoneDark">{items.length}</strong>
-          filtrelenmiş kayıt
-        </div>
-      </div>
-
-      <FilterGroup label="Alan" filters={areaFilters} value={areaFilter} onChange={setAreaFilter} />
-      <FilterGroup label="Aşama" filters={stageFilters} value={stageFilter} onChange={setStageFilter} />
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <TimelineProof items={items} />
-        <PhotoProofGallery items={items} />
-      </div>
-    </section>
-  );
-}
-
-function FilterGroup({ label, filters, value, onChange }) {
-  return (
-    <div className="mt-5">
-      <p className="mb-2 text-sm font-semibold text-muted">{label}</p>
-      <div className="mobile-scroll">
-        {filters.map((filter) => (
           <button
-            key={filter}
-            onClick={() => onChange(filter)}
-            className={`rounded-full px-4 py-2 text-sm font-medium ${
-              value === filter ? "bg-stoneDark text-white" : "bg-cream text-muted"
-            }`}
+            type="button"
+            onClick={onResetFilters}
+            className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-[#F7F7F5] px-4 py-2 text-sm text-black/64"
           >
-            {filter}
+            <RotateCcw size={14} />
+            Filtreleri Sıfırla
           </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function TimelineProof({ items }) {
-  return (
-    <div>
-      <div className="mb-4 flex items-center gap-3">
-        <Clock3 className="text-muted" size={20} />
-        <h3 className="text-2xl font-semibold">Timeline</h3>
-      </div>
-      <div className="grid gap-3">
-        {items.map((item) => (
-          <article key={item.id} className="relative rounded-2xl bg-cream p-4 pl-6">
-            <span className="absolute left-2 top-5 h-[calc(100%-2.5rem)] w-px bg-gold/45" />
-            <span className="absolute left-[5px] top-5 h-2.5 w-2.5 rounded-full bg-gold" />
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-black/35">
-                {item.date} · {item.time} · {item.area}
-              </p>
-              <FileImage className="shrink-0 text-muted" size={16} />
-            </div>
-            <p className="mt-2 text-sm font-medium leading-6">{item.note}</p>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">
-                {item.photoCount} fotoğraf
-              </span>
-              <span className={statusChipClass(item.stage)}>{item.stage}</span>
-              <span className={statusChipClass(item.status)}>{item.status}</span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PhotoProofGallery({ items }) {
-  return (
-    <div>
-      <div className="mb-4 flex items-center gap-3">
-        <FileImage className="text-muted" size={20} />
-        <h3 className="text-2xl font-semibold">Galeri önizleme</h3>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        {items.map((item) => (
-          <article key={`${item.id}-photo`} className="overflow-hidden rounded-[1.5rem] bg-stoneDark text-white">
-            <div className="flex aspect-[4/3] items-center justify-center bg-[linear-gradient(135deg,#2a2926,#5f4a16)]">
-              <div className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm text-white/70">
-                {item.photoCount} fotoğraf
-              </div>
-            </div>
-            <div className="p-4">
-              <div className="flex items-center justify-between gap-2">
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/65">
-                  {item.area}
-                </span>
-                <span className="rounded-full bg-gold px-3 py-1 text-xs font-semibold text-stoneDark">
-                  {item.stage}
-                </span>
-              </div>
-              <p className="mt-4 text-xs text-white/45">
-                {item.date} · {item.time}
-              </p>
-              <p className="mt-1 line-clamp-2 text-sm font-medium leading-6">{item.note}</p>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function OfferPaymentMode(props) {
-  return (
-    <section className="grid gap-6">
-      <OfferSection {...props} />
-    </section>
-  );
-}
-
-function OfferSection({
-  approved,
-  setApproved,
-  revisionOpen,
-  setRevisionOpen,
-  revisionNote,
-  setRevisionNote,
-  revisionSent,
-  setRevisionSent
-}) {
-  return (
-    <div className="grid gap-6">
-      <section className="rounded-[2rem] bg-stoneDark p-6 text-white sm:p-8 lg:p-10">
-        <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <p className="text-sm uppercase tracking-[0.25em] text-white/35">
-                Teklif & Ödeme
-              </p>
-              <span className={statusChipClass(closingOffer.status)}>
-                {closingOffer.status}
-              </span>
-            </div>
-            <h2 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-              Teklifiniz Hazır
-            </h2>
-            <p className="mt-5 text-5xl font-semibold tracking-tight text-gold sm:text-6xl">
-              {closingOffer.price}
-            </p>
-            <p className="mt-4 text-sm text-white/55">{closingOffer.validity}</p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:min-w-72 lg:grid-cols-1">
-            <button
-              onClick={() => setApproved(true)}
-              disabled={approved || revisionSent}
-              className="rounded-2xl bg-gold px-5 py-4 font-medium text-stoneDark disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              Teklifi Onayla
-            </button>
-            <button
-              onClick={() => setRevisionOpen(true)}
-              disabled={approved || revisionSent}
-              className="rounded-2xl border border-white/15 px-5 py-4 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              Revize Talebi Gönder
-            </button>
-          </div>
         </div>
-      </section>
+        <FilterGroup label="Alan" filters={areaFilters} value={areaFilter} onChange={setAreaFilter} />
+        <FilterGroup label="Aşama" filters={stageFilters} value={stageFilter} onChange={setStageFilter} />
 
-      <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Kapsam Özeti</p>
-          <p className="mt-4 leading-7 text-muted">{closingOffer.scope}</p>
-          <OfferList title="Dahil olan işler" items={closingOffer.included} />
-          <OfferList title="Hariç olan işler" items={closingOffer.excluded} muted />
-        </div>
+        {filteredProofUpdates.length ? (
+          <div className="mt-6 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+            <div className="grid gap-3">
+              {filteredProofUpdates.map((item) => (
+                <article
+                  key={item.id}
+                  className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.16em] text-black/38">
+                        {item.date} · {item.time} · {item.area}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-black/64">{item.note}</p>
+                    </div>
+                    <span className={statusChipClass(item.status)}>{item.status}</span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className={statusChipClass(item.stage)}>{item.stage}</span>
+                    <span className="rounded-full border border-black/10 bg-white px-3 py-1 text-xs text-black/54">
+                      {item.photoCount} fotoğraf
+                    </span>
+                  </div>
+                </article>
+              ))}
+            </div>
 
-        <div className="grid gap-6">
-          <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-            <p className="text-sm uppercase tracking-[0.25em] text-black/35">
-              Tahmini Başlangıç Planı
-            </p>
-            <div className="mt-5 grid gap-3">
-              {closingOffer.startPlan.map((item, index) => (
-                <div key={item} className="flex gap-3 rounded-2xl bg-cream p-4">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold">
-                    {index + 1}
-                  </span>
-                  <p className="text-sm leading-6 text-muted">{item}</p>
-                </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {filteredProofUpdates.map((item) => (
+                <article
+                  key={`${item.id}-visual`}
+                  className="overflow-hidden rounded-[1.5rem] border border-black/10 bg-white"
+                >
+                  <div className="flex aspect-[4/3] items-center justify-center border-b border-black/10 bg-[#F3F3F1]">
+                    <div className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-black/58">
+                      {item.photoCount} fotoğraf
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <div className="flex flex-wrap gap-2">
+                      <span className={statusChipClass(item.area)}>{item.area}</span>
+                      <span className={statusChipClass(item.stage)}>{item.stage}</span>
+                    </div>
+                    <p className="mt-4 text-xs uppercase tracking-[0.16em] text-black/38">
+                      {item.date} · {item.time}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-black/64">{item.note}</p>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
-          <PaymentSummary />
-        </div>
-      </section>
-
-      {approved && <Notice text="Teklif onaylandı. Ekibimiz sözleşme ve başlangıç planı için sizinle iletişime geçecek." />}
-      {revisionSent && <Notice text="Revize talebiniz alındı." />}
-
-      {!approved && !revisionSent && revisionOpen && (
-        <div className="rounded-[2rem] border border-border bg-surface p-5">
-          <textarea
-            value={revisionNote}
-            onChange={(event) => setRevisionNote(event.target.value)}
-            className="min-h-28 w-full rounded-2xl border border-border bg-cream px-4 py-3 outline-none"
-            placeholder="Revize talebinizi yazın"
-          />
-          <button
-            onClick={() => setRevisionSent(true)}
-            className="mt-3 rounded-2xl bg-stoneDark px-5 py-3 text-sm font-medium text-white"
-          >
-            Revize Talebini İlet
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
-function OfferList({ title, items, muted = false }) {
-  return (
-    <div className="mt-6">
-      <h3 className="font-semibold">{title}</h3>
-      <div className="mt-3 grid gap-2">
-        {items.map((item) => (
-          <div key={item} className="flex items-center gap-3">
-            <CheckCircle2 className={muted ? "text-black/30" : "text-gold"} size={18} />
-            <span className="text-sm text-muted">{item}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function PaymentSummary() {
-  return (
-    <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-      <div className="mb-6 flex items-center gap-3">
-        <CreditCard />
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Ödemeler</p>
-          <h2 className="mt-1 text-2xl font-semibold">Ödeme Özeti</h2>
-        </div>
-      </div>
-      <div className="grid gap-3">
-        <InfoRow label="Toplam teklif" value={closingOffer.price} />
-        <InfoRow label="Ödenen" value="₺350.000" />
-        <InfoRow label="Kalan" value="₺900.000" />
-        <InfoRow label="Sıradaki ödeme" value="Malzeme başlangıcı - 03 Mayıs 2026" />
-      </div>
-      <div className="mt-6 grid gap-3">
-        {paymentMilestones.map((payment, index) => (
-          <article key={payment.title} className="rounded-2xl bg-cream p-4">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold">
-                  {index + 1}
-                </span>
-                <div>
-                  <h3 className="font-semibold">{payment.title}</h3>
-                  <p className="mt-1 text-sm text-muted">{payment.amount} - {payment.dueDate}</p>
-                </div>
-              </div>
-              <span className={statusChipClass(payment.status)}>{payment.status}</span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-function DocumentsMode() {
-  return (
-    <section className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-      <div className="mb-6 flex items-center gap-3">
-        <FileText />
-        <div>
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Belgeler</p>
-          <h2 className="mt-1 text-3xl font-semibold">Dosya merkezi</h2>
-        </div>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {documentCards.map((doc) => (
-          <article key={doc.name} className="rounded-2xl bg-cream p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <FileText size={22} className="text-muted" />
-                <h3 className="mt-4 font-semibold">{doc.name}</h3>
-                <p className="mt-1 text-sm text-muted">{doc.type}</p>
-              </div>
-              <span className={statusChipClass(doc.status)}>{doc.status}</span>
-            </div>
-            <button className="mt-5 rounded-full bg-white px-4 py-2 text-sm font-medium text-muted hover:text-stoneDark">
-              Görüntüle
-            </button>
-          </article>
-        ))}
-      </div>
+        ) : (
+          <Notice text="Bu filtrelerde görünür kayıt bulunamadı." className="mt-6" />
+        )}
+      </Panel>
     </section>
   );
 }
+
+function OfferMode() {
+  return (
+    <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+      <Panel
+        eyebrow="Teklif & Ödeme"
+        title="Teklifiniz hazır"
+        text="Teklif, ödeme adımları ve başlangıç planı aynı ekranda görünür."
+      >
+        <div className="grid gap-3 sm:grid-cols-3">
+          <MetricCard label="Toplam teklif" value="₺1.250.000" icon={CreditCard} />
+          <MetricCard label="Ödenen" value="₺350.000" icon={CheckCircle2} />
+          <MetricCard label="Kalan" value="₺900.000" icon={CalendarDays} />
+        </div>
+        <div className="mt-6 grid gap-3">
+          {paymentMilestones.map((payment) => (
+            <article
+              key={payment.title}
+              className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-medium">{payment.title}</h3>
+                  <p className="mt-1 text-sm text-black/54">
+                    {payment.amount} · {payment.dueDate}
+                  </p>
+                </div>
+                <span className={statusChipClass(payment.status)}>{payment.status}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel
+        eyebrow="Teklif Kapsamı"
+        title="Kısa kapsam özeti"
+        text="Mutfak, banyo, salon ve dış cephe alanlarında değer artırma odaklı renovasyon; malzeme koordinasyonu ve teslim öncesi kalite kontrol dahil."
+      >
+        <div className="grid gap-3">
+          {[
+            "Mutfak ve banyo yenileme",
+            "Elektrik ve tesisat kontrolü",
+            "Seramik, boya ve zemin uygulamaları",
+            "Günlük görsel ilerleme takibi"
+          ].map((item) => (
+            <div
+              key={item}
+              className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4 text-sm text-black/64"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </Panel>
+    </section>
+  );
+}
+
+function DocumentsMode() {
+  return (
+    <Panel eyebrow="Belgeler" title="Dosya merkezi" text="Teklif, sözleşme ve garanti belgeleri burada toplanır.">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {documentCards.map((doc) => (
+          <article
+            key={doc.name}
+            className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-5"
+          >
+            <FileText className="text-black/62" size={22} />
+            <h3 className="mt-4 text-sm font-medium">{doc.name}</h3>
+            <p className="mt-1 text-sm text-black/54">{doc.type}</p>
+            <div className="mt-4">
+              <span className={statusChipClass(doc.status)}>{doc.status}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
 function RequestsMode({
   requests,
   requestType,
@@ -810,143 +471,153 @@ function RequestsMode({
 
   return (
     <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-      <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm uppercase tracking-[0.25em] text-black/35">Yeni Talep</p>
-        <h2 className="mt-2 text-3xl font-semibold">Kontrollü talep oluşturun</h2>
-        <p className="mt-3 text-sm leading-6 text-muted">
-          WhatsApp yerine kayıtlı, takip edilebilir bir talep iletin.
-        </p>
-        <div className="mt-6 grid gap-4">
+      <Panel eyebrow="Yeni Talep" title="Kayıtlı talep oluşturun" text="Talep ve sorular aynı akışta izlenir.">
+        <div className="grid gap-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <SelectDemo label="Talep tipi" value={requestType} onChange={setRequestType} items={requestTypes} />
-            <SelectDemo label="İlgili alan" value={requestArea} onChange={setRequestArea} items={requestAreas} />
+            <SelectDemo
+              label="Talep tipi"
+              value={requestType}
+              onChange={(value) => {
+                setRequestType(value);
+                setRequestSent(false);
+              }}
+              items={requestTypes}
+            />
+            <SelectDemo
+              label="İlgili alan"
+              value={requestArea}
+              onChange={(value) => {
+                setRequestArea(value);
+                setRequestSent(false);
+              }}
+              items={requestAreas}
+            />
           </div>
           <textarea
             value={requestMessage}
-            onChange={(event) => setRequestMessage(event.target.value)}
-            className="min-h-32 rounded-2xl border border-border bg-cream px-4 py-3 outline-none"
-            placeholder="Talebinizi veya sorunuzu kısa ve net şekilde yazın."
+            onChange={(event) => {
+              setRequestMessage(event.target.value);
+              setRequestSent(false);
+            }}
+            className="min-h-32 rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-4 py-3 outline-none"
+            placeholder="Talebinizi kısa ve net şekilde yazın."
+            maxLength={500}
           />
+          <p className="text-sm text-black/46">{requestMessage.length}/500 karakter</p>
           <button
+            type="button"
             onClick={onSubmit}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-stoneDark px-5 py-4 font-medium text-white"
+            disabled={!requestMessage.trim()}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-black px-5 py-4 text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Send size={18} />
+            <Send size={16} />
             Talebi Gönder
           </button>
-          {requestSent && <Notice text="Talebiniz alındı. Ekibimiz değerlendirdikten sonra sizinle iletişime geçecek." />}
+          {requestSent ? <Notice text="Talebiniz alındı." /> : null}
         </div>
-      </div>
+      </Panel>
 
-      <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm uppercase tracking-[0.25em] text-black/35">Talep Listesi</p>
-        <h2 className="mt-2 text-3xl font-semibold">Kayıtlı talepler</h2>
-        <div className="mt-6 grid gap-3">
+      <Panel eyebrow="Talep Listesi" title="Kayıtlı talepler" text="Açık ve incelenen talepler burada görünür.">
+        <div className="grid gap-3">
           {requests.map((request) => (
-            <article key={request.id} className="rounded-2xl bg-cream p-4">
+            <article
+              key={request.id}
+              className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
+            >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.16em] text-black/35">{request.date}</p>
-                  <p className="mt-2 font-medium">
-                    {request.type} - {request.area}
+                  <p className="text-xs uppercase tracking-[0.16em] text-black/38">{request.date}</p>
+                  <p className="mt-2 text-sm font-medium">
+                    {request.type} · {request.area}
                   </p>
-                  <p className="mt-1 text-sm leading-6 text-muted">{request.message}</p>
+                  <p className="mt-1 text-sm leading-6 text-black/58">{request.message}</p>
                 </div>
                 <span className={statusChipClass(request.status)}>{request.status}</span>
               </div>
             </article>
           ))}
         </div>
-      </div>
+      </Panel>
     </section>
   );
 }
-function WarrantyMode({
-  serviceArea,
-  setServiceArea,
-  serviceSubject,
-  setServiceSubject,
-  serviceDescription,
-  setServiceDescription,
-  serviceSent,
-  setServiceSent
-}) {
-  const serviceAreas = ["Mutfak", "Banyo", "Salon", "Dış Cephe", "Elektrik", "Tesisat", "Diğer"];
 
+function WarrantyMode() {
   return (
     <section className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
-      <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm uppercase tracking-[0.25em] text-black/35">Teslim ve Garanti</p>
-        <h2 className="mt-2 text-3xl font-semibold">Teslim güvence alanı</h2>
-        <div className="mt-6 grid gap-3">
-          <InfoRow label="Proje durumu" value={warrantyInfo.completionStatus} />
-          <InfoRow label="Teslim tarihi" value={warrantyInfo.deliveryDate} />
-          <InfoRow label="Garanti başlangıcı" value={warrantyInfo.warrantyStart} />
-          <InfoRow label="Garanti bitişi" value={warrantyInfo.warrantyEnd} />
-          <InfoRow label="Sorumlu" value={warrantyInfo.responsible} />
+      <Panel eyebrow="Teslim & Garanti" title="Teslim güvence alanı" text="Teslim sonrası görünür kayıt ve garanti kontrolü aynı yüzeydedir.">
+        <div className="grid gap-3">
+          <InfoRow label="Proje durumu" value="Teslime Hazırlanıyor" chip />
+          <InfoRow label="Teslim tarihi" value="30 Mayıs 2026" />
+          <InfoRow label="Garanti başlangıcı" value="01 Haziran 2026" />
+          <InfoRow label="Garanti bitişi" value="01 Haziran 2028" />
         </div>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <button className="rounded-2xl border border-border bg-cream px-5 py-4 font-medium hover:border-gold hover:bg-white">
-            Teslim Tutanağını Görüntüle
-          </button>
-          <button
-            onClick={() => setServiceSent(false)}
-            className="rounded-2xl bg-stoneDark px-5 py-4 font-medium text-white"
-          >
-            Servis Talebi Oluştur
-          </button>
-        </div>
-      </div>
+      </Panel>
 
-      <div className="grid gap-6">
-        <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Son Kontrol</p>
-          <h2 className="mt-2 text-2xl font-semibold">Teslim checklist</h2>
-          <div className="mt-5 grid gap-3">
-            {warrantyInfo.checklist.map((item) => (
-              <div key={item.label} className="flex items-center justify-between gap-4 rounded-2xl bg-cream p-4">
-                <span className="text-sm font-medium">{item.label}</span>
-                <span className={statusChipClass(item.status)}>{item.status}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-border bg-surface p-6 sm:p-8">
-          <p className="text-sm uppercase tracking-[0.25em] text-black/35">Servis Talebi</p>
-          <div className="mt-5 grid gap-3">
-            <SelectDemo label="Alan" value={serviceArea} onChange={setServiceArea} items={serviceAreas} />
-            <input
-              value={serviceSubject}
-              onChange={(event) => setServiceSubject(event.target.value)}
-              className="rounded-2xl border border-border bg-cream px-4 py-3 outline-none"
-              placeholder="Konu"
-            />
-            <textarea
-              value={serviceDescription}
-              onChange={(event) => setServiceDescription(event.target.value)}
-              className="min-h-24 rounded-2xl border border-border bg-cream px-4 py-3 outline-none"
-              placeholder="Açıklama"
-            />
-            <button
-              onClick={() => setServiceSent(true)}
-              className="rounded-2xl bg-gold px-5 py-4 font-medium text-stoneDark"
+      <Panel eyebrow="Kontrol Listesi" title="Teslim checklist" text="Son kontroller tamamlandıkça kayıt burada güncellenir.">
+        <div className="grid gap-3">
+          {warrantyChecklist.map((item) => (
+            <div
+              key={item.label}
+              className="flex items-center justify-between gap-4 rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4"
             >
-              Servis Talebi Gönder
-            </button>
-            {serviceSent && <Notice text="Servis talebiniz alındı." />}
-          </div>
+              <span className="text-sm text-black/64">{item.label}</span>
+              <span className={statusChipClass(item.status)}>{item.status}</span>
+            </div>
+          ))}
         </div>
-      </div>
+      </Panel>
     </section>
+  );
+}
+
+function Panel({ eyebrow, title, text, children }) {
+  return (
+    <section className="rounded-[2rem] border border-black/10 bg-white p-6 sm:p-8">
+      <p className="text-xs uppercase tracking-[0.28em] text-black/42">{eyebrow}</p>
+      <h2 className="mt-3 text-[2rem] sm:text-[2.5rem]">{title}</h2>
+      {text ? <p className="mt-3 max-w-3xl text-sm leading-6 text-black/56">{text}</p> : null}
+      <div className="mt-6">{children}</div>
+    </section>
+  );
+}
+
+function MetricCard({ label, value, icon: Icon }) {
+  return (
+    <article className="rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4">
+      <Icon className="text-black/62" size={20} />
+      <p className="mt-3 text-xs uppercase tracking-[0.16em] text-black/38">{label}</p>
+      <p className="mt-2 text-sm text-black">{value}</p>
+    </article>
+  );
+}
+
+function FilterGroup({ label, filters, value, onChange }) {
+  return (
+    <div className="mt-4">
+      <p className="mb-2 text-sm text-black/54">{label}</p>
+      <div className="mobile-scroll">
+        {filters.map((filter) => (
+          <button
+            key={filter}
+            onClick={() => onChange(filter)}
+            className={`rounded-full px-4 py-2 text-sm ${
+              value === filter ? "bg-black text-white" : "bg-[#F7F7F5] text-black/64"
+            }`}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
 function InfoRow({ label, value, chip = false }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl bg-cream p-4">
-      <span className="text-sm text-muted">{label}</span>
-      {chip ? <span className={statusChipClass(value)}>{value}</span> : <strong className="text-right">{value}</strong>}
+    <div className="flex items-center justify-between gap-4 rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4">
+      <span className="text-sm text-black/54">{label}</span>
+      {chip ? <span className={statusChipClass(value)}>{value}</span> : <strong className="text-sm text-black">{value}</strong>}
     </div>
   );
 }
@@ -954,11 +625,11 @@ function InfoRow({ label, value, chip = false }) {
 function SelectDemo({ label, value, onChange, items }) {
   return (
     <label className="grid gap-2">
-      <span className="text-sm font-medium text-muted">{label}</span>
+      <span className="text-sm text-black/54">{label}</span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="rounded-2xl border border-border bg-cream px-4 py-3 outline-none"
+        className="rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-4 py-3 outline-none"
       >
         {items.map((item) => (
           <option key={item} value={item}>
@@ -970,10 +641,9 @@ function SelectDemo({ label, value, onChange, items }) {
   );
 }
 
-function Notice({ text }) {
+function Notice({ text, className = "" }) {
   return (
-    <div className="mt-6 flex gap-3 rounded-2xl bg-cream p-4 text-sm leading-6 text-muted">
-      <ShieldCheck className="mt-0.5 shrink-0 text-gold" size={18} />
+    <div className={`rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4 text-sm text-black/58 ${className}`}>
       {text}
     </div>
   );

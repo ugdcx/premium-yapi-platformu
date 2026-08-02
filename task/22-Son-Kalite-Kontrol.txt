@@ -1,0 +1,26 @@
+Perform a final production-quality audit of the BLAGG Studio website.
+
+Check:
+1. No brown, beige, taupe, bronze, gold or warm stone colors exist anywhere.
+2. No stock images or external image URLs are used.
+3. All photo areas use premium placeholders or real local images.
+4. Main CTA is consistently "Projenizi Başlatın".
+5. BLAGG Remote is not described as software, SaaS, dashboard or platform.
+6. The site language is primarily Turkish.
+7. English is used only for brand manifesto phrases.
+8. Mobile sticky CTA works.
+9. Header works on scroll.
+10. Forms are usable.
+11. No horizontal scroll.
+12. No console errors.
+13. No broken links.
+14. No unused imports.
+15. No obvious template-like design remains.
+16. Performance is acceptable.
+17. Accessibility basics are covered.
+18. All components are cleanly organized.
+
+Then:
+- List problems found.
+- Fix them.
+- Summarize final changes.

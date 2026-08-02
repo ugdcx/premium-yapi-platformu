@@ -1,0 +1,47 @@
+Create the Process section for the homepage.
+
+Section title:
+"Süreç"
+
+Eyebrow:
+"VISIBLE EXECUTION"
+
+Intro:
+"BLAGG Studio’da süreç yalnızca uygulanmaz; görünür, belgeli ve takip edilebilir şekilde yönetilir."
+
+Process steps:
+01 — Proje Değerlendirmesi
+"İhtiyacınızı, mülkünüzü ve hedefinizi netleştiriyoruz. İlk görüşmede kapsamı ve doğru yaklaşımı belirliyoruz."
+
+02 — Tasarım & Planlama
+"Mimari kararlar, malzeme tercihleri, zaman planı ve uygulama stratejisi oluşturulur."
+
+03 — Uygulama & Denetim
+"Saha süreci koordine edilir. Usta, tedarik, malzeme ve uygulama adımları tek merkezden yönetilir."
+
+04 — Görünür Takip
+"Fotoğraflar, belgeler, ödeme planı ve önemli kararlar size özel takip alanında görünür hale gelir."
+
+Design:
+- Use a vertical timeline or large numbered list.
+- No colorful icons.
+- Use thin lines.
+- Large numbers.
+- Calm spacing.
+- Premium editorial layout.
+- Each step can include a small PhotoPlaceholder slot if visually balanced.
+
+Optional visual:
+Add one horizontal PhotoPlaceholder below the process:
+Label:
+"SÜREÇ FOTOĞRAFI"
+Title:
+"Şantiye / Malzeme / Detay"
+Helper:
+"Gerçek süreç fotoğrafı eklenecek"
+
+CTA:
+"Süreci Görün"
+
+Mobile:
+- Timeline should be simple and readable.

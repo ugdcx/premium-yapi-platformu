@@ -1,0 +1,61 @@
+Create the main BLAGG Studio layout components.
+
+Build reusable components:
+1. SiteHeader
+2. SiteFooter
+3. MobileCTA
+4. SectionContainer if needed
+
+Header requirements:
+- Minimal.
+- Fixed at top.
+- Initially transparent or hidden on the intro area.
+- After scroll, it should appear with:
+  - backdrop blur
+  - semi-transparent off-white background
+  - thin bottom border using #E5E5E5
+- Left side: BLAGG Studio wordmark.
+- Right side desktop navigation:
+  - Studio
+  - Hizmetler
+  - Projeler
+  - BLAGG Remote
+  - Süreç
+  - İletişim
+  - Projenizi Başlatın as a visually separated CTA
+
+Mobile header:
+- BLAGG Studio left.
+- Hamburger right.
+- Full-screen menu overlay.
+- Large menu items.
+- Minimal black/white design.
+- No colorful icons.
+- No generic template look.
+
+Mobile sticky CTA:
+- Fixed bottom bar on mobile only.
+- Text: "Projenizi Başlatın"
+- It should not cover content awkwardly.
+- Add enough bottom padding to the page when needed.
+
+Footer:
+- Background: #050505 or #111111.
+- Text: white and grey.
+- Include:
+  - BLAGG Studio
+  - Private Architecture & Renovation Studio
+  - Design. Build. Track.
+  - Navigation links
+  - A discreet line: "Tasarım, uygulama ve takip tek sistemde."
+- Do not add phone, WhatsApp or email yet unless placeholder is needed.
+- Keep it minimal and premium.
+
+Interaction:
+- Smooth menu open/close.
+- Use Framer Motion only if already available; otherwise use simple CSS transitions.
+
+Important:
+- Do not create all page sections yet.
+- Focus only on layout components.
+- Make components clean and reusable.

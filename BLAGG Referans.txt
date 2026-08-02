@@ -1,0 +1,107 @@
+Apply the correct reference principles to the BLAGG Studio website.
+
+We are not copying any reference website. We are translating the best principles into BLAGG Studio’s own identity.
+
+Reference principles to apply:
+
+1. From Selldorf Architects:
+- calm architectural confidence
+- project-first structure
+- minimal navigation
+- large project imagery
+- restrained typography
+- short text
+
+2. From Studio KO:
+- quiet luxury atmosphere
+- material-focused visual rhythm
+- sparse presentation
+- premium interior feeling
+- no visual noise
+
+3. From Olson Kundig:
+- manifesto-led homepage
+- strong design philosophy
+- process and practice language
+- subtle motion
+- reduced-motion awareness
+
+4. From Normandy Remodeling:
+- clear renovation customer journey
+- project application CTA
+- process explanation
+- FAQ and trust-building
+- conversion structure without cheap sales language
+
+5. From Snøhetta:
+- clear discipline structure
+- process page importance
+- architecture / interior / landscape categorization
+
+BLAGG Studio must remain:
+- black and white
+- Apple-like
+- architectural
+- quiet luxury
+- Turkish-first
+- premium but conversion-focused
+- not a generic architecture template
+- not a classic construction company
+- not a SaaS platform
+- not a real estate agency
+
+Strict visual rules:
+- no brown
+- no beige
+- no taupe
+- no bronze
+- no gold
+- no warm stone
+- no colorful gradients
+- no stock images
+- no generic construction imagery
+
+Final homepage structure:
+1. Full-screen black intro
+2. Hero manifesto
+3. Studio short definition
+4. Services
+5. BLAGG Remote
+6. Selected Projects
+7. Process
+8. Short FAQ
+9. Final CTA
+10. Footer
+
+Main CTA:
+"Projenizi Başlatın"
+
+Core hero:
+"Design-led renovation. Visible execution."
+"Tasarım, uygulama ve takip tek sistemde."
+
+BLAGG Remote positioning:
+Do not describe it as software, SaaS, dashboard or platform.
+Describe it as:
+- size özel takip bağlantısı
+- proje ekranınız
+- takip alanınız
+- proje kaydınız
+
+Required trust line:
+"Uygulama indirmeniz gerekmez. Üyelik oluşturmanız gerekmez. Size özel bağlantı yeterlidir."
+
+Photo policy:
+Real photos will be added later.
+Until then, use premium architectural placeholders.
+Placeholders must look intentional, not like missing images.
+Use labels such as:
+"FOTOĞRAF ALANI"
+"Gerçek proje fotoğrafı eklenecek"
+
+Now implement these principles section by section.
+Do not redesign randomly.
+Do not add unnecessary pages.
+Do not add colors.
+Do not use external images.
+Keep the code clean, reusable and production-ready.

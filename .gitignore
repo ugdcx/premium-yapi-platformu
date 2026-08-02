@@ -12,3 +12,13 @@ pnpm-debug.log*
 
 .vercel/
 *.tsbuildinfo
+.vercel
+
+# Supabase
+supabase/.temp/
+
+# Local Supabase
+.supabase/
+
+# macOS
+.DS_Store
