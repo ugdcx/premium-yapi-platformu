@@ -4,14 +4,33 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { validateOfferPhone } from "../../lib/helpers/phone";
-import { createApplication } from "../../lib/localStorageRecords";
 
 const projectTypeOptions = [
-  "Anahtar Teslim İnşaat",
-  "Konut Yenileme & Tadilat",
-  "Peyzaj Mimarisi",
-  "Gayrimenkul Değer Artışı & Danışmanlığı",
-  "Diğer"
+  {
+    label: "Anahtar Teslim İnşaat",
+    value: "anahtar-teslim-insaat",
+    serviceSlugs: ["anahtar-teslim"]
+  },
+  {
+    label: "Konut Yenileme & Tadilat",
+    value: "konut-yenileme-tadilat",
+    serviceSlugs: ["renovasyon", "ic-mimari"]
+  },
+  {
+    label: "Peyzaj Mimarisi",
+    value: "peyzaj-mimarisi",
+    serviceSlugs: ["peyzaj-tasarimi", "peyzaj-uygulama"]
+  },
+  {
+    label: "Gayrimenkul Değer Artışı & Danışmanlığı",
+    value: "deger-artirma-danismanlik",
+    serviceSlugs: ["danismanlik"]
+  },
+  {
+    label: "Diğer",
+    value: "diger",
+    serviceSlugs: ["danismanlik"]
+  }
 ];
 
 const initialForm = {
@@ -19,7 +38,8 @@ const initialForm = {
   phone: "",
   location: "",
   projectType: "",
-  description: ""
+  description: "",
+  companyWebsite: ""
 };
 
 const trustNotes = [
@@ -32,6 +52,8 @@ export default function IntakeFlow() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submittedApplication, setSubmittedApplication] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [startedAt, setStartedAt] = useState(() => Date.now());
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -52,34 +74,71 @@ export default function IntakeFlow() {
     return { nextErrors, phoneResult };
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    if (isSubmitting) return;
+
     const { nextErrors, phoneResult } = validateForm();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
 
-    const application = createApplication({
-      fullName: form.fullName.trim(),
-      customer: form.fullName.trim(),
-      phone: form.phone.trim(),
-      normalizedPhone: phoneResult.normalizedPhone,
-      location: form.location.trim(),
-      city: form.location.trim(),
-      district: "",
-      serviceType: form.projectType,
-      service: form.projectType,
-      description: form.description.trim(),
-      projectScale: form.description.trim(),
-      status: "Yeni",
-      source: "Kısa Başvuru Formu",
-      date: new Date().toLocaleDateString("tr-TR"),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    });
+    const selectedProjectType = projectTypeOptions.find(
+      (option) => option.value === form.projectType
+    );
 
-    setSubmittedApplication(application);
-    setForm(initialForm);
-    setErrors({});
+    if (!selectedProjectType) {
+      setErrors({ projectType: "Lütfen proje türü seçin." });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          phone: phoneResult.normalizedPhone,
+          location: form.location,
+          projectType: selectedProjectType.label,
+          description: form.description,
+          source: "website",
+          serviceSlugs: selectedProjectType.serviceSlugs,
+          startedAt,
+          companyWebsite: form.companyWebsite
+        })
+      });
+
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.success) {
+        setErrors({
+          ...(result?.fieldErrors || {}),
+          form:
+            response.status >= 500
+              ? "Başvuru şu anda kaydedilemedi. Lütfen daha sonra tekrar deneyin."
+              : result?.message || "Gönderilen bilgiler kontrol edilemedi."
+        });
+        return;
+      }
+
+      setSubmittedApplication({
+        applicationNo: result.leadId,
+        leadId: result.leadId
+      });
+      setForm(initialForm);
+      setStartedAt(Date.now());
+      setErrors({});
+    } catch {
+      setErrors({
+        form: "Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (submittedApplication) {
@@ -159,6 +218,16 @@ export default function IntakeFlow() {
             noValidate
           >
             <div className="grid gap-5">
+              <input
+                type="text"
+                name="companyWebsite"
+                value={form.companyWebsite}
+                tabIndex={-1}
+                autoComplete="off"
+                onChange={(event) => updateField("companyWebsite", event.target.value)}
+                className="hidden"
+                aria-hidden="true"
+              />
               <Field
                 id="full-name"
                 label="Ad Soyad"
@@ -208,11 +277,13 @@ export default function IntakeFlow() {
               <p className="text-sm leading-6 text-black/46">
                 Zorunlu alanlar yalnızca ilk değerlendirme için kullanılır.
               </p>
+              {errors.form ? <ErrorText id="form-error">{errors.form}</ErrorText> : null}
               <button
                 type="submit"
-                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-black px-6 py-4 text-base font-medium text-white"
+                disabled={isSubmitting}
+                className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-black px-6 py-4 text-base font-medium text-white disabled:cursor-not-allowed disabled:bg-black/60"
               >
-                Başvuruyu Gönder
+                {isSubmitting ? "Gönderiliyor..." : "Başvuruyu Gönder"}
                 <ArrowRight size={18} />
               </button>
             </div>
@@ -283,8 +354,8 @@ function SelectField({ id, label, value, onChange, options, error }) {
       >
         <option value="">Seçiniz</option>
         {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option.value} value={option.value}>
+            {option.label}
           </option>
         ))}
       </select>

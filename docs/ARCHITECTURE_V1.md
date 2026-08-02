@@ -199,6 +199,52 @@ UI Component
 
 Business logic must not be placed inside React components or route handlers.
 
+## Lead Submission Flow
+
+IntakeFlow collects the public offer request without exposing Supabase credentials to
+the browser.
+
+POST /api/leads receives the JSON payload, checks the content type, validates and
+normalizes the submitted fields, and rejects unknown or invalid service selections.
+
+Validation maps the current form fields to the database shape:
+
+- fullName → leads.full_name
+- normalized phone → leads.phone
+- location → leads.city and leads.district when possible
+- projectType label → leads.project_details.selectedProjectType
+- description → leads.description
+- selected service slugs → resolved server-side to services.id
+
+leadService runs only on the server with the Supabase admin client. It creates the
+leads row, writes selected services into lead_services, and deletes the lead record
+if service relationship creation fails.
+
+Supabase stores business-critical lead fields in normal leads columns and dynamic
+form context in leads.project_details. Service relationships are stored in
+lead_services.
+
+Current temporary decisions and technical debt:
+
+- project_type_id remains null in this sprint because the public form is not yet
+  connected to the project_types catalog.
+- The current form selection is stored as
+  leads.project_details.selectedProjectType.
+- A future backend migration sprint should resolve project_types.slug
+  server-side and store the matching project_type_id.
+- Lead creation and lead_services creation currently use compensating rollback
+  instead of a real database transaction. If lead_services creation fails, the
+  service attempts to delete the lead row and reports rollback failure with
+  minimum operational context only. A future sprint should move this write path
+  to a transactional Postgres RPC.
+- startedAt is only low-cost bot friction. It is not real rate limiting and is
+  client controlled.
+- If the database write succeeds but the response is lost before reaching the
+  browser, duplicate leads may be created by a retry.
+- Durable duplicate protection requires a client-generated submission_id, a DB
+  unique constraint and server-side rate limiting in a later backend migration
+  sprint.
+
 ---
 
 ## Storage Scope

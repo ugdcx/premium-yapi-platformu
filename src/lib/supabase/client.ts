@@ -2,9 +2,10 @@
 
 import { createBrowserClient } from "@supabase/ssr";
 
-import { clientEnv } from "../env";
+import { getClientEnv } from "../env";
 
 export function createSupabaseBrowserClient() {
+  const clientEnv = getClientEnv();
   const supabaseUrl = clientEnv.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey =
     clientEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
