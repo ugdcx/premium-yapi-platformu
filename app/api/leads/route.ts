@@ -3,7 +3,13 @@ import { NextResponse } from "next/server";
 import {
   LeadServiceError,
   createLead,
+  findIdempotentLeadSubmission,
+  prepareLeadSubmission,
 } from "@/src/services/leadService";
+import {
+  LeadRateLimitError,
+  checkLeadRateLimit,
+} from "@/src/services/leadRateLimitService";
 import { validateLeadSubmission } from "@/src/lib/validation/lead";
 
 const jsonContentTypes = new Set(["application/json"]);
@@ -49,35 +55,92 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await createLead(validation.data);
+    const preparedSubmission = prepareLeadSubmission(validation.data);
+    let existingSubmission;
+
+    try {
+      existingSubmission = await findIdempotentLeadSubmission(preparedSubmission);
+    } catch (error) {
+      if (
+        error instanceof LeadServiceError &&
+        error.code === "IDEMPOTENCY_CONFLICT"
+      ) {
+        const rateLimitResponse = await getRateLimitResponse(request);
+        if (rateLimitResponse) return rateLimitResponse;
+      }
+
+      throw error;
+    }
+
+    if (existingSubmission.found) {
+      return NextResponse.json(
+        {
+          success: true,
+          leadId: existingSubmission.leadId,
+          created: false,
+          message: "Başvurunuz daha önce alınmış.",
+        },
+        { status: 200 },
+      );
+    }
+
+    const rateLimitResponse = await getRateLimitResponse(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    const result = await createLead(preparedSubmission);
+    const status = result.created ? 201 : 200;
 
     return NextResponse.json(
       {
         success: true,
         leadId: result.leadId,
-        message: "Başvurunuz başarıyla alındı.",
+        created: result.created,
+        message: result.created
+          ? "Başvurunuz başarıyla alındı."
+          : "Başvurunuz daha önce alınmış.",
       },
-      { status: 201 },
+      { status },
     );
   } catch (error) {
     if (error instanceof LeadServiceError) {
-      const status = error.code === "INVALID_SERVICE_SELECTION" ? 400 : 500;
+      const status =
+        error.code === "IDEMPOTENCY_CONFLICT"
+          ? 409
+          : error.code === "INVALID_SUBMISSION_ID"
+            ? 400
+            : error.code === "INVALID_SERVICE_SELECTION" ||
+              error.code === "INVALID_PROJECT_TYPE"
+              ? 400
+              : 500;
+      const code =
+        error.code === "IDEMPOTENCY_CONFLICT" ||
+        error.code === "INVALID_SERVICE_SELECTION" ||
+        error.code === "INVALID_PROJECT_TYPE"
+          ? error.code
+          : error.code === "INVALID_SUBMISSION_ID"
+            ? "VALIDATION_ERROR"
+            : "LEAD_CREATE_FAILED";
 
       return NextResponse.json(
         {
           success: false,
-          code:
-            error.code === "INVALID_SERVICE_SELECTION"
-              ? "VALIDATION_ERROR"
-              : "LEAD_CREATE_FAILED",
+          code,
           message:
-            error.code === "INVALID_SERVICE_SELECTION"
-              ? "Gönderilen bilgiler kontrol edilemedi."
-              : "Başvuru şu anda kaydedilemedi.",
+            error.code === "IDEMPOTENCY_CONFLICT"
+              ? "Bu başvuru farklı bilgilerle daha önce gönderilmiş."
+              : error.code === "INVALID_SERVICE_SELECTION"
+                ? "Gönderilen bilgiler kontrol edilemedi."
+                : error.code === "INVALID_PROJECT_TYPE"
+                  ? "Seçilen proje türü geçerli değil."
+                  : "Başvuru şu anda kaydedilemedi.",
           fieldErrors:
             error.code === "INVALID_SERVICE_SELECTION"
               ? { serviceSlugs: "Seçilen hizmet bilgisi geçerli değil." }
-              : {},
+              : error.code === "INVALID_PROJECT_TYPE"
+                ? { projectTypeSlug: "Seçilen proje türü geçerli değil." }
+                : error.code === "INVALID_SUBMISSION_ID"
+                  ? { submissionId: "Başvuru anahtarı geçerli değil." }
+                  : {},
         },
         { status },
       );
@@ -113,4 +176,40 @@ function validationResponse(fieldErrors: Record<string, string>) {
     },
     { status: 400 },
   );
+}
+
+async function getRateLimitResponse(request: Request) {
+  try {
+    const result = await checkLeadRateLimit(request);
+    if (result.allowed) return null;
+
+    return NextResponse.json(
+      {
+        success: false,
+        code: "RATE_LIMITED",
+        message: "Çok sık başvuru denemesi yapıldı. Lütfen biraz sonra tekrar deneyin.",
+        fieldErrors: {},
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(result.retryAfterSeconds),
+        },
+      },
+    );
+  } catch (error) {
+    if (error instanceof LeadRateLimitError || error instanceof Error) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: "LEAD_CREATE_FAILED",
+          message: "Başvuru şu anda kaydedilemedi.",
+          fieldErrors: {},
+        },
+        { status: 500 },
+      );
+    }
+
+    throw error;
+  }
 }

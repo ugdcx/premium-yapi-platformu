@@ -9,26 +9,31 @@ const projectTypeOptions = [
   {
     label: "Anahtar Teslim İnşaat",
     value: "anahtar-teslim-insaat",
+    projectTypeSlug: "anahtar-teslim-insaat",
     serviceSlugs: ["anahtar-teslim"]
   },
   {
     label: "Konut Yenileme & Tadilat",
     value: "konut-yenileme-tadilat",
+    projectTypeSlug: "konut-yenileme-tadilat",
     serviceSlugs: ["renovasyon", "ic-mimari"]
   },
   {
     label: "Peyzaj Mimarisi",
     value: "peyzaj-mimarisi",
+    projectTypeSlug: "peyzaj-mimarisi",
     serviceSlugs: ["peyzaj-tasarimi", "peyzaj-uygulama"]
   },
   {
     label: "Gayrimenkul Değer Artışı & Danışmanlığı",
     value: "deger-artirma-danismanlik",
+    projectTypeSlug: "deger-artirma-danismanlik",
     serviceSlugs: ["danismanlik"]
   },
   {
     label: "Diğer",
     value: "diger",
+    projectTypeSlug: "diger",
     serviceSlugs: ["danismanlik"]
   }
 ];
@@ -54,6 +59,7 @@ export default function IntakeFlow() {
   const [submittedApplication, setSubmittedApplication] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [submissionId, setSubmissionId] = useState(() => createSubmissionId());
 
   function updateField(field, value) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -91,6 +97,13 @@ export default function IntakeFlow() {
       return;
     }
 
+    if (!submissionId) {
+      setErrors({
+        form: "Tarayıcınız güvenli başvuru anahtarı üretemedi. Lütfen sayfayı yenileyip tekrar deneyin."
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -100,10 +113,12 @@ export default function IntakeFlow() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
+          submissionId,
           fullName: form.fullName,
           phone: phoneResult.normalizedPhone,
           location: form.location,
           projectType: selectedProjectType.label,
+          projectTypeSlug: selectedProjectType.projectTypeSlug,
           description: form.description,
           source: "website",
           serviceSlugs: selectedProjectType.serviceSlugs,
@@ -131,6 +146,7 @@ export default function IntakeFlow() {
       });
       setForm(initialForm);
       setStartedAt(Date.now());
+      setSubmissionId(createSubmissionId());
       setErrors({});
     } catch {
       setErrors({
@@ -292,6 +308,17 @@ export default function IntakeFlow() {
       </section>
     </main>
   );
+}
+
+function createSubmissionId() {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+
+  return null;
 }
 
 function Field({

@@ -13,6 +13,13 @@ const optionalString = z
   .optional()
   .or(z.literal("").transform(() => undefined));
 
+const optionalSecret = z
+  .string()
+  .trim()
+  .min(32)
+  .optional()
+  .or(z.literal("").transform(() => undefined));
+
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_APP_URL: z
     .string()
@@ -27,6 +34,7 @@ const clientEnvSchema = z.object({
 
 const serverEnvSchema = clientEnvSchema.extend({
   SUPABASE_SECRET_KEY: optionalString,
+  LEAD_RATE_LIMIT_SECRET: optionalSecret,
   OPENAI_API_KEY: optionalString,
   RESEND_API_KEY: optionalString,
 
@@ -70,6 +78,7 @@ export function getServerEnv() {
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
+    LEAD_RATE_LIMIT_SECRET: process.env.LEAD_RATE_LIMIT_SECRET,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     NOTIFICATION_EMAIL: process.env.NOTIFICATION_EMAIL,
@@ -84,4 +93,18 @@ export function getServerEnv() {
   }
 
   return Object.freeze(parsedServerEnv.data);
+}
+
+export function getLeadRateLimitSecret() {
+  const secret = process.env.LEAD_RATE_LIMIT_SECRET?.trim();
+
+  if (secret && secret.length >= 32) {
+    return secret;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("LEAD_RATE_LIMIT_SECRET is required in production.");
+  }
+
+  return "development-only-lead-rate-limit-secret";
 }

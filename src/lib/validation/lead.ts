@@ -26,12 +26,21 @@ const serviceSlugSchema = z
   .max(80)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 
+const slugSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(80)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
 const leadBodySchema = z.object({
+  submissionId: z.string().trim().uuid(),
   fullName: z.string().trim().min(1).max(80),
   phone: z.string().trim().min(1).max(24),
   email: z.string().trim().max(120).optional(),
   location: z.string().trim().max(120).optional(),
   projectType: z.string().trim().max(120).optional(),
+  projectTypeSlug: slugSchema,
   description: z.string().trim().min(1).max(600),
   source: z.string().trim().max(80).optional(),
   timeline: z.string().trim().max(120).optional(),
@@ -45,6 +54,7 @@ const leadBodySchema = z.object({
 export type LeadStatus = (typeof LEAD_STATUS_VALUES)[number];
 
 export type ValidatedLeadSubmission = {
+  submissionId: string;
   fullName: string;
   phone: string;
   normalizedPhone: string;
@@ -58,10 +68,12 @@ export type ValidatedLeadSubmission = {
   budgetMin: number | null;
   budgetMax: number | null;
   description: string;
+  projectTypeSlug: string;
   serviceSlugs: string[];
   projectDetails: {
     rawLocation: string | null;
     selectedProjectType: string | null;
+    selectedProjectTypeSlug: string;
     submittedAt: string;
   };
 };
@@ -135,6 +147,7 @@ export function validateLeadSubmission(input: unknown): LeadValidationResult {
   return {
     success: true,
     data: {
+      submissionId: body.submissionId,
       fullName: body.fullName,
       phone: phoneResult.normalizedPhone,
       normalizedPhone: phoneResult.normalizedPhone,
@@ -148,11 +161,13 @@ export function validateLeadSubmission(input: unknown): LeadValidationResult {
       budgetMin,
       budgetMax,
       description: body.description,
+      projectTypeSlug: body.projectTypeSlug,
       serviceSlugs: Array.from(new Set(body.serviceSlugs)),
       projectDetails: {
         rawLocation: toNullableString(body.location),
         selectedProjectType: toNullableString(body.projectType),
-        submittedAt: new Date().toISOString(),
+        selectedProjectTypeSlug: body.projectTypeSlug,
+        submittedAt: new Date(body.startedAt).toISOString(),
       },
     },
   };
