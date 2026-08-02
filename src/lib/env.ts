@@ -1,11 +1,10 @@
 import { z } from "zod";
 
 const optionalUrl = z
-  .string()
-  .trim()
-  .url()
-  .optional()
-  .or(z.literal("").transform(() => undefined));
+  .preprocess(
+    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+    z.string().trim().url().optional(),
+  );
 
 const optionalString = z
   .string()
@@ -45,22 +44,24 @@ function formatEnvironmentError(error: z.ZodError): string {
     .join("\n");
 }
 
-const parsedClientEnv = clientEnvSchema.safeParse({
-  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-});
+export function getClientEnv() {
+  const parsedClientEnv = clientEnvSchema.safeParse({
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  });
 
-if (!parsedClientEnv.success) {
-  throw new Error(
-    `Invalid public environment variables:\n${formatEnvironmentError(
-      parsedClientEnv.error,
-    )}`,
-  );
+  if (!parsedClientEnv.success) {
+    throw new Error(
+      `Invalid public environment variables:\n${formatEnvironmentError(
+        parsedClientEnv.error,
+      )}`,
+    );
+  }
+
+  return Object.freeze(parsedClientEnv.data);
 }
-
-export const clientEnv = Object.freeze(parsedClientEnv.data);
 
 export function getServerEnv() {
   const parsedServerEnv = serverEnvSchema.safeParse({
