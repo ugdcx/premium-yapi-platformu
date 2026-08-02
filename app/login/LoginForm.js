@@ -4,26 +4,68 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Building2 } from "lucide-react";
-import { authenticateDemoUser, saveDemoSession } from "../../lib/demoAuth";
+import { clearDemoSession } from "../../lib/demoAuth";
+import { createSupabaseBrowserClient } from "../../src/lib/supabase/client";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    if (isSubmitting) return;
 
-    const user = authenticateDemoUser(phone, password);
-
-    if (!user || user.role !== "admin") {
-      setError("Yetkili telefon numarası veya erişim kodu hatalı.");
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail || !password) {
+      setError("E-posta ve şifre alanlarını doldurun.");
       return;
     }
 
-    saveDemoSession(user);
-    router.push(user.redirect);
+    setIsSubmitting(true);
+    setError("");
+
+    const supabase = createSupabaseBrowserClient();
+
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: normalizedEmail,
+        password,
+      });
+
+      if (signInError) {
+        setError("Giriş bilgileri kontrol edilemedi.");
+        return;
+      }
+
+      const response = await fetch("/api/auth/me", {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.success) {
+        await supabase.auth.signOut();
+        clearDemoSession();
+        setError(
+          response.status === 403
+            ? "Bu alana erişim yetkiniz yok."
+            : "Yetki kontrolü tamamlanamadı.",
+        );
+        return;
+      }
+
+      clearDemoSession();
+      const next = new URLSearchParams(window.location.search).get("next");
+      router.push(getSafeInternalNextPath(next));
+    } catch {
+      setError("Giriş şu anda tamamlanamadı.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -75,19 +117,19 @@ export default function LoginForm() {
                 Bu alan yalnızca BLAGG Control yönetim erişimi içindir.
               </p>
 
-              <label htmlFor="admin-phone" className="grid gap-2">
-                <span className="text-sm text-black/54">Yetkili telefon numarası</span>
+              <label htmlFor="admin-email" className="grid gap-2">
+                <span className="text-sm text-black/54">Yetkili e-posta adresi</span>
                 <input
-                  id="admin-phone"
-                  value={phone}
+                  id="admin-email"
+                  value={email}
                   onChange={(event) => {
-                    setPhone(event.target.value);
+                    setEmail(event.target.value);
                     setError("");
                   }}
                   className="rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-5 py-4 outline-none"
-                  placeholder="Yetkili telefon numarası"
-                  autoComplete="tel"
-                  inputMode="tel"
+                  placeholder="yetkili@blaggstudio.com"
+                  autoComplete="email"
+                  inputMode="email"
                   aria-invalid={Boolean(error)}
                   aria-describedby={error ? "login-error" : undefined}
                   autoFocus
@@ -95,7 +137,7 @@ export default function LoginForm() {
               </label>
 
               <label htmlFor="admin-password" className="grid gap-2">
-                <span className="text-sm text-black/54">Erişim kodu</span>
+                <span className="text-sm text-black/54">Şifre</span>
                 <input
                   id="admin-password"
                   value={password}
@@ -104,7 +146,7 @@ export default function LoginForm() {
                     setError("");
                   }}
                   className="rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-5 py-4 outline-none"
-                  placeholder="Erişim kodunuz"
+                  placeholder="Şifreniz"
                   type="password"
                   autoComplete="current-password"
                   aria-invalid={Boolean(error)}
@@ -122,8 +164,11 @@ export default function LoginForm() {
                 </p>
               ) : null}
 
-              <button className="inline-flex items-center justify-center gap-2 rounded-full bg-black px-5 py-4 text-white">
-                Yönetim Alanına Geç
+              <button
+                disabled={isSubmitting}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-black px-5 py-4 text-white disabled:cursor-not-allowed disabled:bg-black/60"
+              >
+                {isSubmitting ? "Giriş kontrol ediliyor..." : "Yönetim Alanına Geç"}
                 <ArrowRight size={18} />
               </button>
             </form>
@@ -132,4 +177,22 @@ export default function LoginForm() {
       </div>
     </main>
   );
+}
+
+function getSafeInternalNextPath(value) {
+  if (typeof value !== "string") return "/admin";
+
+  const trimmed = value.trim();
+  if (!trimmed) return "/admin";
+  if (!trimmed.startsWith("/") || trimmed.startsWith("//")) return "/admin";
+  if (trimmed.includes("\\") || trimmed.startsWith("/\\")) return "/admin";
+  if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return "/admin";
+
+  try {
+    const parsed = new URL(trimmed, window.location.origin);
+    if (parsed.origin !== window.location.origin) return "/admin";
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  } catch {
+    return "/admin";
+  }
 }

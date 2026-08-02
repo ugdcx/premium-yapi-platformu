@@ -4,7 +4,7 @@ const MIN_SUBMISSION_TIME_MS = 2500;
 
 const emailSchema = z.string().trim().email();
 
-const leadStatusValues = [
+export const LEAD_STATUS_VALUES = [
   "new",
   "contacted",
   "qualified",
@@ -42,7 +42,7 @@ const leadBodySchema = z.object({
   companyWebsite: z.string().optional(),
 });
 
-export type LeadStatus = (typeof leadStatusValues)[number];
+export type LeadStatus = (typeof LEAD_STATUS_VALUES)[number];
 
 export type ValidatedLeadSubmission = {
   fullName: string;

@@ -245,6 +245,60 @@ Current temporary decisions and technical debt:
   unique constraint and server-side rate limiting in a later backend migration
   sprint.
 
+## Admin Lead Flow
+
+BLAGG Control uses Supabase email/password authentication for admin access. The
+browser signs in with the publishable Supabase client, then verifies admin access
+through /api/auth/me before navigating to /admin.
+
+Supabase SSR cookies are read server-side through createSupabaseServerClient and
+kept fresh by middleware on /admin, /api/admin, /api/auth/me and /control only.
+Public marketing pages do not perform a Supabase auth refresh on every request.
+Demo localStorage auth is not a security boundary and does not grant Admin API
+access.
+
+requireAdminSession validates the request with auth.getUser, then reads the
+matching profiles row. The profile must be active and have one of these roles:
+
+- super_admin
+- project_manager
+
+The BLAGG Control applications module reads real lead records from Supabase
+through guarded admin API routes. The client component does not import the
+Supabase admin client or any service-role secret.
+
+GET /api/admin/leads parses page, pageSize, status, source, search and date range
+query parameters before calling adminLeadService.listLeads. requireAdminSession
+must complete before any service-role query runs. The service applies server-side
+filters, default created_at descending order, pagination and selected service
+loading through lead_services and services.
+
+GET /api/admin/leads/[id] validates the UUID and returns a safe lead detail shape
+with contact fields, description, budget fields, project_details and selected
+services.
+
+PATCH /api/admin/leads/[id] accepts only the status field. The status value must
+match the lead_status enum from the migration. adminLeadService.updateLeadStatus
+sets updated_at explicitly while updating the status. PATCH also requires a
+same-origin Origin header before the update is accepted. The Origin header is
+compared with the canonical application origin from NEXT_PUBLIC_APP_URL, not
+with untrusted forwarded host headers.
+
+Admin API auth response contract:
+
+- 401 AUTH_REQUIRED when no valid Supabase user session exists.
+- 403 FORBIDDEN when the user is authenticated but not allowed for lead admin.
+- 500 AUTH_CHECK_FAILED when the auth/profile check cannot be completed.
+
+Operational requirement: admin users must already exist in Supabase Auth and must
+have profiles.role set to super_admin or project_manager with is_active=true.
+
+Finance auth hardening debt: /admin/finance still uses the legacy demo
+localStorage role guard. It is not yet protected at the same level as the real
+Supabase admin model. Sensitive real finance data must not be connected there
+until the page is protected server-side with requireAdminSession in a later
+auth-hardening sprint.
+
 ---
 
 ## Storage Scope

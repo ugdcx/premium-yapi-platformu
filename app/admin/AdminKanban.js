@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   CalendarDays,
@@ -13,19 +14,12 @@ import {
   Wallet,
   X
 } from "lucide-react";
-import { leadApplications, projects as baseProjects } from "../../lib/data/mockData";
+import { projects as baseProjects } from "../../lib/data/mockData";
 import { formatCurrency, formatDate } from "../../lib/helpers/format";
 import {
-  archiveApplication,
-  cancelApplication,
-  deleteApplication,
-  getApplications,
   getWorkerUploads,
-  restoreApplication,
-  updateApplicationStatus as persistApplicationStatus,
   updateWorkerUpload
 } from "../../lib/localStorageRecords";
-import { useDemoRoleGuard } from "../../lib/demoAuth";
 import { statusChipClass } from "../../lib/designSystem";
 import DemoLogoutButton from "../../components/DemoLogoutButton";
 
@@ -38,6 +32,32 @@ const kanbanStatuses = [
   "Onaylandı",
   "İptal"
 ];
+
+const leadStatusOptions = [
+  ["new", "Yeni"],
+  ["contacted", "İnceleniyor"],
+  ["qualified", "İnceleniyor"],
+  ["site_visit_planned", "İnceleniyor"],
+  ["quote_preparing", "Teklif Hazırlanıyor"],
+  ["quote_sent", "Teklif Gönderildi"],
+  ["negotiation", "Teklif Gönderildi"],
+  ["won", "Onaylandı"],
+  ["converted_to_project", "Onaylandı"],
+  ["lost", "İptal"],
+  ["unsuitable", "İptal"],
+  ["archived", "İptal"]
+];
+
+const leadStatusLabels = Object.fromEntries(leadStatusOptions);
+const leadStatusByLabel = {
+  Yeni: "new",
+  İnceleniyor: "contacted",
+  "Eksik Bilgi": "contacted",
+  "Teklif Hazırlanıyor": "quote_preparing",
+  "Teklif Gönderildi": "quote_sent",
+  Onaylandı: "won",
+  İptal: "lost"
+};
 
 const projectStatuses = [
   "Planlama",
@@ -102,24 +122,113 @@ const controlModules = [
 ];
 
 export default function AdminKanban() {
-  const canView = useDemoRoleGuard("admin");
-  const [applications, setApplications] = useState(() =>
-    leadApplications.map(mapLeadApplication)
-  );
+  const router = useRouter();
+  const [applications, setApplications] = useState([]);
   const [projects, setProjects] = useState(() => baseProjects.map(mapProject));
   const [workerUploads, setWorkerUploads] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeModule, setActiveModule] = useState("overview");
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [leadFilters, setLeadFilters] = useState({
+    status: "",
+    source: "",
+    search: "",
+    range: "recent",
+    page: 1
+  });
+  const [leadPagination, setLeadPagination] = useState({
+    page: 1,
+    pageSize: 20,
+    total: 0,
+    totalPages: 1
+  });
+  const [leadLoading, setLeadLoading] = useState(false);
+  const [leadDetailLoading, setLeadDetailLoading] = useState(false);
+  const [leadError, setLeadError] = useState("");
+  const [leadErrorKind, setLeadErrorKind] = useState("");
+  const [leadReloadKey, setLeadReloadKey] = useState(0);
+  const [updatingLeadIds, setUpdatingLeadIds] = useState(() => new Set());
 
   useEffect(() => {
-    const storedApplications = getApplications().map(mapStoredApplication);
-    if (storedApplications.length) {
-      setApplications((current) => mergeApplications(storedApplications, current));
-    }
     setWorkerUploads(getWorkerUploads());
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadLeads() {
+      setLeadLoading(true);
+      setLeadError("");
+      setLeadErrorKind("");
+
+      try {
+        const response = await fetch(buildLeadListUrl(leadFilters), {
+          headers: {
+            Accept: "application/json"
+          }
+        });
+        const result = await response.json().catch(() => null);
+
+        if (response.status === 401) {
+          router.replace("/control?next=/admin");
+          return;
+        }
+
+        if (response.status === 403) {
+          setLeadError("Bu alana erişim yetkiniz yok.");
+          setLeadErrorKind("forbidden");
+          return;
+        }
+
+        if (!response.ok || !result?.success) {
+          throw new Error(result?.message || "Lead listesi alınamadı.");
+        }
+
+        if (cancelled) return;
+
+        const nextApplications = Array.isArray(result.data)
+          ? result.data.map(mapAdminLeadApplication)
+          : [];
+
+        setApplications(nextApplications);
+        setLeadPagination(result.pagination || {
+          page: 1,
+          pageSize: 20,
+          total: nextApplications.length,
+          totalPages: 1
+        });
+        setSelectedApplication((current) =>
+          current
+            ? nextApplications.find((application) => application.id === current.id) || current
+            : current
+        );
+      } catch {
+        if (!cancelled) {
+          setLeadError("Lead listesi şu anda alınamadı.");
+          setLeadErrorKind("temporary");
+        }
+      } finally {
+        if (!cancelled) {
+          setLeadLoading(false);
+        }
+      }
+    }
+
+    loadLeads();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    router,
+    leadFilters.status,
+    leadFilters.source,
+    leadFilters.search,
+    leadFilters.range,
+    leadFilters.page,
+    leadReloadKey
+  ]);
 
   const kpis = useMemo(
     () => buildOperationalKpis(applications, projects, workerUploads),
@@ -131,10 +240,43 @@ export default function AdminKanban() {
   );
   const finance = useMemo(() => buildFinanceSummary(projects), [projects]);
 
-  function selectApplication(application) {
+  async function selectApplication(application) {
     setSelectedApplication(application);
     setSelectedProject(null);
     setActiveModule("applications");
+
+    setLeadDetailLoading(true);
+    setLeadError("");
+    setLeadErrorKind("");
+
+    try {
+      const response = await fetch(`/api/admin/leads/${application.id}`, {
+        headers: {
+          Accept: "application/json"
+        }
+      });
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.success) {
+        if (response.status === 401) {
+          router.replace("/control?next=/admin");
+          return;
+        }
+        if (response.status === 403) {
+          setLeadError("Bu alana erişim yetkiniz yok.");
+          setLeadErrorKind("forbidden");
+          return;
+        }
+        throw new Error(result?.message || "Lead detayı alınamadı.");
+      }
+
+      setSelectedApplication(mapAdminLeadApplication(result.data));
+    } catch {
+      setLeadError("Lead detayı şu anda alınamadı.");
+      setLeadErrorKind("temporary");
+    } finally {
+      setLeadDetailLoading(false);
+    }
   }
 
   function selectProject(project) {
@@ -166,73 +308,64 @@ export default function AdminKanban() {
     }
   }
 
-  function updateApplicationStatus(id, status) {
-    setApplications((current) =>
-      current.map((application) =>
-        application.id === id
-          ? { ...application, status, updatedAt: new Date().toISOString() }
-          : application
-      )
-    );
-    setSelectedApplication((current) =>
-      current?.id === id ? { ...current, status } : current
-    );
-    persistApplicationStatus(id, status);
+  async function updateApplicationStatus(id, status) {
+    const apiStatus = leadStatusByLabel[status] || status;
+    if (updatingLeadIds.has(id)) return;
+
+    setUpdatingLeadIds((current) => new Set(current).add(id));
+    setLeadError("");
+    setLeadErrorKind("");
+
+    try {
+      const response = await fetch(`/api/admin/leads/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: apiStatus })
+      });
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.success) {
+        if (response.status === 401) {
+          router.replace("/control?next=/admin");
+          return;
+        }
+        if (response.status === 403) {
+          setLeadError("Bu alana erişim yetkiniz yok.");
+          setLeadErrorKind("forbidden");
+          return;
+        }
+        throw new Error(result?.message || "Lead durumu güncellenemedi.");
+      }
+
+      const updatedApplication = mapAdminLeadApplication(result.data);
+      setApplications((current) =>
+        current.map((application) =>
+          application.id === id ? updatedApplication : application
+        )
+      );
+      setSelectedApplication((current) =>
+        current?.id === id ? updatedApplication : current
+      );
+    } catch {
+      setLeadError("Lead durumu şu anda güncellenemedi.");
+      setLeadErrorKind("temporary");
+    } finally {
+      setUpdatingLeadIds((current) => {
+        const next = new Set(current);
+        next.delete(id);
+        return next;
+      });
+    }
   }
 
-  function refreshApplicationsFromStorage(fallbackApplications = applications) {
-    const storedApplications = getApplications().map(mapStoredApplication);
-    setApplications(mergeApplications(storedApplications, fallbackApplications));
-  }
-
-  function cancelSelectedApplication(application, cancelReason) {
-    cancelApplication(application.id, cancelReason);
-    refreshApplicationsFromStorage();
-    setSelectedApplication((current) =>
-      current?.id === application.id
-        ? {
-            ...current,
-            status: "İptal",
-            cancelled: true,
-            archived: true,
-            cancelReason,
-            cancelledAt: new Date().toISOString()
-          }
-        : current
-    );
-  }
-
-  function archiveSelectedApplication(application) {
-    archiveApplication(application.id);
-    refreshApplicationsFromStorage();
-    setSelectedApplication((current) =>
-      current?.id === application.id
-        ? { ...current, archived: true, archivedAt: new Date().toISOString() }
-        : current
-    );
-  }
-
-  function restoreSelectedApplication(application) {
-    restoreApplication(application.id);
-    refreshApplicationsFromStorage();
-    setSelectedApplication((current) =>
-      current?.id === application.id
-        ? {
-            ...current,
-            status: "İnceleniyor",
-            archived: false,
-            cancelled: false,
-            deleted: false,
-            cancelReason: ""
-          }
-        : current
-    );
-  }
-
-  function deleteSelectedApplication(application) {
-    deleteApplication(application.id);
-    refreshApplicationsFromStorage();
-    setSelectedApplication(null);
+  function updateLeadFilters(updates) {
+    setLeadFilters((current) => ({
+      ...current,
+      ...updates,
+      page: updates.page || 1
+    }));
   }
 
   function convertApplicationToProject(application) {
@@ -300,16 +433,6 @@ export default function AdminKanban() {
     setWorkerUploads(updateWorkerUpload(id, updates));
   }
 
-  if (!canView) {
-    return (
-      <main className="min-h-screen bg-[#F7F7F5] px-6 py-10 text-[#111111]">
-        <div className="mx-auto max-w-7xl rounded-[2rem] border border-black/10 bg-white p-8">
-          Oturum kontrol ediliyor...
-        </div>
-      </main>
-    );
-  }
-
   const activeModuleConfig =
     controlModules.find((module) => module.id === activeModule) || controlModules[0];
   const detailPanel = (
@@ -319,10 +442,8 @@ export default function AdminKanban() {
       workerUploads={workerUploads}
       onApplicationStatusChange={updateApplicationStatus}
       onConvertApplication={convertApplicationToProject}
-      onCancelApplication={cancelSelectedApplication}
-      onArchiveApplication={archiveSelectedApplication}
-      onRestoreApplication={restoreSelectedApplication}
-      onDeleteApplication={deleteSelectedApplication}
+      updatingLeadIds={updatingLeadIds}
+      leadDetailLoading={leadDetailLoading}
       onClear={() => {
         setSelectedApplication(null);
         setSelectedProject(null);
@@ -389,6 +510,14 @@ export default function AdminKanban() {
                   selectedApplication={selectedApplication}
                   onSelect={selectApplication}
                   onStatusChange={updateApplicationStatus}
+                  leadFilters={leadFilters}
+                  leadPagination={leadPagination}
+                  leadLoading={leadLoading}
+                  leadError={leadError}
+                  leadErrorKind={leadErrorKind}
+                  updatingLeadIds={updatingLeadIds}
+                  onFilterChange={updateLeadFilters}
+                  onRetry={() => setLeadReloadKey((current) => current + 1)}
                 />
                 {detailPanel}
               </section>
@@ -840,10 +969,8 @@ function OperationalRecordPanel({
   workerUploads,
   onApplicationStatusChange,
   onConvertApplication,
-  onCancelApplication,
-  onArchiveApplication,
-  onRestoreApplication,
-  onDeleteApplication,
+  updatingLeadIds,
+  leadDetailLoading,
   onClear
 }) {
   return (
@@ -874,10 +1001,8 @@ function OperationalRecordPanel({
           application={selectedApplication}
           onStatusChange={onApplicationStatusChange}
           onConvert={onConvertApplication}
-          onCancel={onCancelApplication}
-          onArchive={onArchiveApplication}
-          onRestore={onRestoreApplication}
-          onDelete={onDeleteApplication}
+          updating={updatingLeadIds.has(selectedApplication.id)}
+          detailLoading={leadDetailLoading}
           onClear={onClear}
         />
       ) : null}
@@ -897,34 +1022,11 @@ function ApplicationRecordDetail({
   application,
   onStatusChange,
   onConvert,
-  onCancel,
-  onArchive,
-  onRestore,
-  onDelete,
+  updating,
+  detailLoading,
   onClear
 }) {
-  const [cancelReason, setCancelReason] = useState(application.cancelReason || "");
   const nextAction = nextApplicationAction(application.status);
-  const archived = isApplicationArchived(application);
-
-  useEffect(() => {
-    setCancelReason(application.cancelReason || "");
-  }, [application.id, application.cancelReason]);
-
-  function handleCancel() {
-    const reason =
-      cancelReason.trim() ||
-      window.prompt("İptal sebebi")?.trim() ||
-      "Sebep belirtilmedi";
-    setCancelReason(reason);
-    onCancel(application, reason);
-  }
-
-  function handleDelete() {
-    if (window.confirm("Bu başvuru kalıcı olarak silinecek. Devam edilsin mi?")) {
-      onDelete(application);
-    }
-  }
 
   return (
     <div>
@@ -936,6 +1038,14 @@ function ApplicationRecordDetail({
       />
 
       <div className="mt-5 grid gap-3">
+        {detailLoading ? (
+          <DarkBlock title="Detay yükleniyor">
+            <p className="text-sm leading-7 text-white/68">
+              Lead detay bilgileri getiriliyor.
+            </p>
+          </DarkBlock>
+        ) : null}
+
         <DarkBlock title="Sonraki Aksiyon">
           <p className="text-sm leading-7 text-white/68">{nextAction}</p>
         </DarkBlock>
@@ -946,6 +1056,8 @@ function ApplicationRecordDetail({
           <DarkFact title="Nerede?" value={`${application.city} / ${application.district}`} />
           <DarkFact title="Ne zaman geldi?" value={formatDate(application.createdAt)} />
           <DarkFact title="Telefon" value={application.phone} />
+          <DarkFact title="E-posta" value={application.email} />
+          <DarkFact title="Kaynak" value={application.source} />
           <DarkFact title="Ne bekliyor?" value={applicationStateLabel(application)} />
         </div>
 
@@ -953,10 +1065,35 @@ function ApplicationRecordDetail({
           <p className="text-sm leading-7 text-white/68">{application.description}</p>
         </DarkBlock>
 
-        <DarkBlock title="Eksik bilgi / operasyon notu">
-          <p className="text-sm leading-7 text-white/68">
-            {application.adminNotes || "Bu başvuru için kayıtlı operasyon notu yok."}
-          </p>
+        <DarkBlock title="Seçilen hizmetler">
+          <div className="flex flex-wrap gap-2">
+            {application.selectedServices?.length ? (
+              application.selectedServices.map((service) => (
+                <span
+                  key={service.slug}
+                  className="rounded-full border border-white/14 bg-white/8 px-3 py-1 text-xs text-white/72"
+                >
+                  {service.name}
+                </span>
+              ))
+            ) : (
+              <p className="text-sm leading-7 text-white/68">
+                Bu lead için seçili hizmet kaydı yok.
+              </p>
+            )}
+          </div>
+        </DarkBlock>
+
+        <DarkBlock title="Ek bilgiler">
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <DarkFact title="Zamanlama" value={application.timeline} />
+            <DarkFact title="Bütçe alt" value={formatOptionalCurrency(application.budgetMin)} />
+            <DarkFact title="Bütçe üst" value={formatOptionalCurrency(application.budgetMax)} />
+            <DarkFact
+              title="Form seçimi"
+              value={application.projectDetails?.selectedProjectType}
+            />
+          </div>
         </DarkBlock>
 
         <div className="rounded-[1.25rem] border border-white/10 bg-white/8 p-4">
@@ -966,6 +1103,7 @@ function ApplicationRecordDetail({
           <select
             value={application.status}
             onChange={(event) => onStatusChange(application.id, event.target.value)}
+            disabled={updating}
             className="mt-3 w-full rounded-[1rem] border border-white/10 bg-black px-3 py-3 text-sm text-white outline-none"
           >
             {kanbanStatuses.map((status) => (
@@ -974,78 +1112,18 @@ function ApplicationRecordDetail({
               </option>
             ))}
           </select>
+          {updating ? (
+            <p className="mt-2 text-xs text-white/46">Durum güncelleniyor...</p>
+          ) : null}
           <button
             type="button"
             onClick={() => onConvert(application)}
+            disabled={updating}
             className="mt-3 min-h-12 w-full rounded-full bg-white px-5 py-3 text-sm text-black"
           >
             Projeye dönüştür
           </button>
         </div>
-
-        <DarkBlock title="Başvuru Aksiyonları">
-          <div className="grid gap-3">
-            {application.cancelled ? (
-              <div className="rounded-[1rem] border border-white/10 bg-black/20 p-3">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/34">
-                  İptal sebebi
-                </p>
-                <p className="mt-2 text-sm leading-6 text-white/68">
-                  {application.cancelReason || "Sebep belirtilmedi"}
-                </p>
-              </div>
-            ) : null}
-
-            {!application.cancelled ? (
-              <label className="grid gap-2 text-sm text-white/62">
-                İptal sebebi
-                <textarea
-                  value={cancelReason}
-                  onChange={(event) => setCancelReason(event.target.value)}
-                  rows={3}
-                  placeholder="Müşteri erteledi, bütçe uygun değil, kapsam değişti..."
-                  className="w-full rounded-[1rem] border border-white/10 bg-black px-3 py-3 text-sm text-white outline-none placeholder:text-white/28"
-                />
-              </label>
-            ) : null}
-
-            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
-              {!application.cancelled ? (
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="min-h-11 rounded-full border border-white/14 bg-white px-4 py-2 text-sm text-black"
-                >
-                  İptal edildi olarak işaretle
-                </button>
-              ) : null}
-              {!archived ? (
-                <button
-                  type="button"
-                  onClick={() => onArchive(application)}
-                  className="min-h-11 rounded-full border border-white/14 bg-white/8 px-4 py-2 text-sm text-white"
-                >
-                  Arşivle
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => onRestore(application)}
-                  className="min-h-11 rounded-full border border-white/14 bg-white/8 px-4 py-2 text-sm text-white"
-                >
-                  Aktife al
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="min-h-11 rounded-full border border-white/10 bg-transparent px-4 py-2 text-sm text-white/48"
-              >
-                Kalıcı sil
-              </button>
-            </div>
-          </div>
-        </DarkBlock>
       </div>
     </div>
   );
@@ -1198,7 +1276,15 @@ function ApplicationManagement({
   applications,
   selectedApplication,
   onSelect,
-  onStatusChange
+  onStatusChange,
+  leadFilters,
+  leadPagination,
+  leadLoading,
+  leadError,
+  leadErrorKind,
+  updatingLeadIds,
+  onFilterChange,
+  onRetry
 }) {
   const activeApplication = selectedApplication;
   const activeApplications = applications.filter(isApplicationActive);
@@ -1213,6 +1299,110 @@ function ApplicationManagement({
         title="Teklif öncesi karar akışı"
         text="Başvurular üç ana grupta izlenir. Durum değişikliği ve projeye dönüştürme korunur."
       />
+      <div className="mt-6 grid gap-3 rounded-[1.5rem] border border-black/10 bg-[#F7F7F5] p-4 lg:grid-cols-[1fr_0.65fr_0.65fr_0.55fr_auto] lg:items-end">
+        <label className="grid gap-2">
+          <span className="text-xs uppercase tracking-[0.14em] text-black/42">
+            Arama
+          </span>
+          <input
+            value={leadFilters.search}
+            onChange={(event) => onFilterChange({ search: event.target.value })}
+            placeholder="İsim, telefon veya e-posta"
+            className="min-h-11 rounded-[1rem] border border-black/10 bg-white px-4 text-sm outline-none"
+          />
+        </label>
+        <label className="grid gap-2">
+          <span className="text-xs uppercase tracking-[0.14em] text-black/42">
+            Durum
+          </span>
+          <select
+            value={leadFilters.status}
+            onChange={(event) => onFilterChange({ status: event.target.value })}
+            className="min-h-11 rounded-[1rem] border border-black/10 bg-white px-4 text-sm outline-none"
+          >
+            <option value="">Tümü</option>
+            {leadStatusOptions.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label} ({value})
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-2">
+          <span className="text-xs uppercase tracking-[0.14em] text-black/42">
+            Kaynak
+          </span>
+          <input
+            value={leadFilters.source}
+            onChange={(event) => onFilterChange({ source: event.target.value })}
+            placeholder="website"
+            className="min-h-11 rounded-[1rem] border border-black/10 bg-white px-4 text-sm outline-none"
+          />
+        </label>
+        <label className="grid gap-2">
+          <span className="text-xs uppercase tracking-[0.14em] text-black/42">
+            Zaman
+          </span>
+          <select
+            value={leadFilters.range}
+            onChange={(event) => onFilterChange({ range: event.target.value })}
+            className="min-h-11 rounded-[1rem] border border-black/10 bg-white px-4 text-sm outline-none"
+          >
+            <option value="recent">Son 30 gün</option>
+            <option value="all">Tümü</option>
+          </select>
+        </label>
+        {leadErrorKind !== "forbidden" ? (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="min-h-11 rounded-full bg-black px-5 py-2 text-sm text-white"
+          >
+            Yenile
+          </button>
+        ) : null}
+      </div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-black/52">
+        <p>
+          {leadLoading
+            ? "Lead listesi yükleniyor..."
+            : `${leadPagination.total} kayıt / ${leadPagination.page}. sayfa`}
+        </p>
+        {leadPagination.totalPages > 1 ? (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              disabled={leadPagination.page <= 1}
+              onClick={() => onFilterChange({ page: leadPagination.page - 1 })}
+              className="rounded-full border border-black/10 px-4 py-2 disabled:opacity-40"
+            >
+              Önceki
+            </button>
+            <button
+              type="button"
+              disabled={leadPagination.page >= leadPagination.totalPages}
+              onClick={() => onFilterChange({ page: leadPagination.page + 1 })}
+              className="rounded-full border border-black/10 px-4 py-2 disabled:opacity-40"
+            >
+              Sonraki
+            </button>
+          </div>
+        ) : null}
+      </div>
+      {leadError ? (
+        <div className="mt-4 rounded-[1.25rem] border border-black/10 bg-[#F7F7F5] p-4 text-sm text-black/62">
+          <p>{leadError}</p>
+          {leadErrorKind !== "forbidden" ? (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="mt-3 rounded-full bg-black px-4 py-2 text-sm text-white"
+            >
+              Tekrar dene
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {applicationGroups.map((group) => {
           const groupApplications = activeApplications.filter((application) =>
@@ -1238,6 +1428,7 @@ function ApplicationManagement({
                       selected={activeApplication?.id === application.id}
                       onSelect={onSelect}
                       onStatusChange={onStatusChange}
+                      updating={updatingLeadIds.has(application.id)}
                     />
                   ))
                 ) : (
@@ -1280,7 +1471,7 @@ function ApplicationManagement({
   );
 }
 
-function ApplicationCard({ application, selected, onSelect, onStatusChange }) {
+function ApplicationCard({ application, selected, onSelect, onStatusChange, updating }) {
   return (
     <article
       className={`rounded-[1.25rem] border bg-white p-4 ${
@@ -1292,12 +1483,31 @@ function ApplicationCard({ application, selected, onSelect, onStatusChange }) {
           <div>
             <h3 className="text-base font-medium">{application.fullName}</h3>
             <p className="mt-1 text-sm text-black/54">{application.serviceType}</p>
+            <p className="mt-1 text-xs text-black/42">{application.source}</p>
           </div>
           <span className={statusChipClass(application.status)}>{application.status}</span>
         </div>
         <div className="mt-4 grid gap-2 text-sm text-black/54">
           <InfoLine icon={MapPin} text={`${application.city} / ${application.district}`} />
           <InfoLine icon={CalendarDays} text={formatDate(application.createdAt)} />
+          <p>{application.phone}</p>
+          {application.email ? <p>{application.email}</p> : null}
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {application.selectedServices?.length ? (
+            application.selectedServices.map((service) => (
+              <span
+                key={service.slug}
+                className="rounded-full border border-black/10 bg-[#F7F7F5] px-3 py-1 text-xs text-black/54"
+              >
+                {service.name}
+              </span>
+            ))
+          ) : (
+            <span className="rounded-full border border-black/10 bg-[#F7F7F5] px-3 py-1 text-xs text-black/54">
+              Hizmet seçilmedi
+            </span>
+          )}
         </div>
         <p className="mt-4 line-clamp-2 text-sm leading-6 text-black/56">
           {application.description}
@@ -1306,6 +1516,7 @@ function ApplicationCard({ application, selected, onSelect, onStatusChange }) {
       <select
         value={application.status}
         onChange={(event) => onStatusChange(application.id, event.target.value)}
+        disabled={updating}
         className="mt-4 w-full rounded-[1rem] border border-black/10 bg-[#F7F7F5] px-3 py-3 text-sm outline-none"
       >
         {kanbanStatuses.map((status) => (
@@ -1314,6 +1525,7 @@ function ApplicationCard({ application, selected, onSelect, onStatusChange }) {
           </option>
         ))}
       </select>
+      {updating ? <p className="mt-2 text-xs text-black/42">Güncelleniyor...</p> : null}
     </article>
   );
 }
@@ -1709,6 +1921,66 @@ function applicationStateLabel(application) {
   return application.status;
 }
 
+function buildLeadListUrl(filters) {
+  const params = new URLSearchParams({
+    page: String(filters.page || 1),
+    pageSize: "20"
+  });
+
+  if (filters.status) params.set("status", filters.status);
+  if (filters.source.trim()) params.set("source", filters.source.trim());
+  if (filters.search.trim()) params.set("search", filters.search.trim());
+
+  if (filters.range === "recent") {
+    const dateFrom = new Date();
+    dateFrom.setDate(dateFrom.getDate() - 30);
+    params.set("dateFrom", dateFrom.toISOString());
+  }
+
+  return `/api/admin/leads?${params.toString()}`;
+}
+
+function mapAdminLeadApplication(lead) {
+  const selectedServices = Array.isArray(lead.selectedServices)
+    ? lead.selectedServices
+    : [];
+  const serviceType =
+    lead.projectDetails?.selectedProjectType ||
+    selectedServices.map((service) => service.name).join(", ") ||
+    "Belirtilmedi";
+
+  return {
+    id: lead.id,
+    applicationNo: lead.id,
+    fullName: lead.fullName || "Belirtilmedi",
+    phone: lead.phone || "Belirtilmedi",
+    normalizedPhone: lead.phone || "",
+    email: lead.email || "",
+    city: lead.city || "Belirtilmedi",
+    district: lead.district || "Belirtilmedi",
+    source: lead.source || "website",
+    serviceType,
+    selectedServices,
+    projectDetails: lead.projectDetails || {},
+    description: lead.description || "Açıklama yok.",
+    timeline: lead.timeline || "",
+    budgetMin: lead.budgetMin ?? null,
+    budgetMax: lead.budgetMax ?? null,
+    status: leadStatusLabels[lead.status] || "Yeni",
+    apiStatus: lead.status || "new",
+    createdAt: lead.createdAt,
+    updatedAt: lead.updatedAt,
+    adminNotes: "",
+    archived: false,
+    archivedAt: "",
+    cancelled: false,
+    cancelledAt: "",
+    cancelReason: "",
+    deleted: false,
+    deletedAt: ""
+  };
+}
+
 function mapLeadApplication(application, index) {
   return {
     id: application.id,
@@ -1735,6 +2007,11 @@ function mapLeadApplication(application, index) {
     deleted: Boolean(application.deleted),
     deletedAt: application.deletedAt || ""
   };
+}
+
+function formatOptionalCurrency(value) {
+  if (typeof value !== "number") return "Belirtilmedi";
+  return formatCurrency(value);
 }
 
 function mapStoredApplication(application) {
