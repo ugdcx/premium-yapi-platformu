@@ -203,8 +203,8 @@ anon or authenticated policies are defined in this sprint, so direct browser Dat
 API access is intentionally closed by default.
 
 The public lead form uses only POST /api/leads. The route validates the payload
-and writes leads through the server-only Supabase admin client. The browser does
-not insert into leads or lead_services directly.
+and writes leads through a server-only Supabase admin RPC. The browser does not
+insert into leads or lead_services directly.
 
 The admin UI uses only guarded /api/admin/* routes for lead access. Every admin
 lead route must complete requireAdminSession before any service-role query runs.
@@ -218,6 +218,12 @@ Catalog data used by the current public frontend comes from static application
 sources, not direct browser Supabase reads. If profile self-service access or
 public catalog reads are needed later, add them through a separate migration with
 explicit column grants and narrow policies.
+
+Lead reliability functions are called only through trusted server routes with the
+server-only admin client. Direct execute grants for public, anon and
+authenticated are revoked from create_lead_submission and check_lead_rate_limit.
+The lead_rate_limit_events table has RLS enabled and direct client grants
+revoked.
 
 SQL Editor and Table Editor can run with owner-level privileges and are not
 sufficient RLS tests. RLS must be tested with anon and authenticated API
@@ -246,41 +252,58 @@ normalizes the submitted fields, and rejects unknown or invalid service selectio
 
 Validation maps the current form fields to the database shape:
 
+- submissionId → leads.submission_id idempotency key
 - fullName → leads.full_name
 - normalized phone → leads.phone
 - location → leads.city and leads.district when possible
-- projectType label → leads.project_details.selectedProjectType
+- projectTypeSlug → server-resolved project_types.id → leads.project_type_id
+- projectType label → leads.project_details.selectedProjectType for context
 - description → leads.description
 - selected service slugs → resolved server-side to services.id
 
-leadService runs only on the server with the Supabase admin client. It creates the
-leads row, writes selected services into lead_services, and deletes the lead record
-if service relationship creation fails.
+leadService runs only on the server with the Supabase admin client. It calls
+public.create_lead_submission, which creates the leads row and lead_services rows
+inside one PostgreSQL transaction.
 
 Supabase stores business-critical lead fields in normal leads columns and dynamic
 form context in leads.project_details. Service relationships are stored in
 lead_services.
 
-Current temporary decisions and technical debt:
+Lead reliability rules:
 
-- project_type_id remains null in this sprint because the public form is not yet
-  connected to the project_types catalog.
-- The current form selection is stored as
-  leads.project_details.selectedProjectType.
-- A future backend migration sprint should resolve project_types.slug
-  server-side and store the matching project_type_id.
-- Lead creation and lead_services creation currently use compensating rollback
-  instead of a real database transaction. If lead_services creation fails, the
-  service attempts to delete the lead row and reports rollback failure with
-  minimum operational context only. A future sprint should move this write path
-  to a transactional Postgres RPC.
+- submission_id is a client-generated UUID used only for idempotency. It is not a
+  security boundary and is not treated as a database permission.
+- A new submission returns HTTP 201 with created=true.
+- A retry with the same submission_id returns HTTP 200 with created=false and the
+  existing lead ID. No second lead or duplicate lead_services rows are created.
+- Reusing the same submission_id with different normalized business payload is
+  counted as an attempt and returns HTTP 409 with code IDEMPOTENCY_CONFLICT when
+  the rate limit has not already been exceeded.
+- project_type_id is resolved server-side from projectTypeSlug. Unknown project
+  type slugs return INVALID_PROJECT_TYPE and no lead is created.
+- Service slugs are resolved server-side. Unknown service slugs return
+  INVALID_SERVICE_SELECTION and no lead is created.
 - startedAt is only low-cost bot friction. It is not real rate limiting and is
   client controlled.
-- If the database write succeeds but the response is lost before reaching the
-  browser, duplicate leads may be created by a retry.
-- Durable duplicate protection requires a client-generated submission_id, a DB
-  unique constraint and server-side rate limiting in a later backend migration
-  sprint.
+
+POST /api/leads also applies PostgreSQL-backed server-side rate limiting before
+expensive lead creation work. The current policy allows up to 5 distinct
+submission attempts per 10-minute window for the same hashed client key. Honeypot
+and validation failures that pass request schema validation are counted. Exact
+idempotent retries with the same existing submission_id and fingerprint are
+returned before rate limiting, so network retries are not accidentally blocked.
+All non-idempotent attempts insert a fresh rate-limit event.
+
+Rate-limit keys are HMAC-SHA256 hashes of the resolved request IP using the
+server-only LEAD_RATE_LIMIT_SECRET. Raw IP addresses are not stored. In production
+the endpoint prefers the Vercel-provided x-vercel-forwarded-for header. On Vercel
+it may fall back to x-forwarded-for as a platform-managed proxy header. In local
+development only, x-forwarded-for or x-real-ip may be used as a fallback. The
+endpoint does not expose the secret to the client bundle.
+
+When the rate limit is exceeded, POST /api/leads returns HTTP 429 with code
+RATE_LIMITED and a Retry-After header. Database and PostgreSQL exception details
+are not returned to the browser.
 
 ## Admin Lead Flow
 
