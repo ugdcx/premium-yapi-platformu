@@ -186,6 +186,43 @@ Alternative terminal state:
 - Customers only see explicitly published or approved data.
 - Field engineers cannot publish customer-visible content directly.
 
+## Database Access and RLS
+
+All current public domain tables have Row Level Security enabled:
+
+- profiles
+- categories
+- project_types
+- services
+- project_type_services
+- leads
+- lead_services
+
+Direct table grants for anon and authenticated are revoked for these tables. No
+anon or authenticated policies are defined in this sprint, so direct browser Data
+API access is intentionally closed by default.
+
+The public lead form uses only POST /api/leads. The route validates the payload
+and writes leads through the server-only Supabase admin client. The browser does
+not insert into leads or lead_services directly.
+
+The admin UI uses only guarded /api/admin/* routes for lead access. Every admin
+lead route must complete requireAdminSession before any service-role query runs.
+The service-role key bypasses RLS, so route guards are a required security
+boundary and must stay server-only.
+
+profiles.role and profiles.is_active cannot be changed by normal clients. They
+are managed only by trusted server or operational database actions.
+
+Catalog data used by the current public frontend comes from static application
+sources, not direct browser Supabase reads. If profile self-service access or
+public catalog reads are needed later, add them through a separate migration with
+explicit column grants and narrow policies.
+
+SQL Editor and Table Editor can run with owner-level privileges and are not
+sufficient RLS tests. RLS must be tested with anon and authenticated API
+contexts, plus server-side service-role checks.
+
 ---
 
 ## Application Layers
